@@ -2,10 +2,11 @@
 
 html,
 body {
-    background: #faf8ef;
-    color: #776e65;
+    background: #ffffffab;
+    color: #ffffff;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
     font-size: 18px;
+    margin: 0;
 }
 
 .game {
@@ -113,7 +114,7 @@ body {
 }
 
 .makeTileConatiner {
-    padding-left: 80px !important;
+    padding-left: 60px !important;
 }
 
 .sidepanel input:checked, .themepannel input:checked{
@@ -151,9 +152,16 @@ body {
 .openbtn:hover {
     background-color: #444;
 }
-
+button:hover {
+    background-color: #444;
+}
 h1 {
     font-size: 72px;
+}
+
+h2 {
+    font-size: 60px;
+    margin-left: 20px;
 }
 
 

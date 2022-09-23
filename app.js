@@ -1,15 +1,23 @@
 document.addEventListener('DOMContentLoaded', loaded);
 //make ai, ai give hint or image
-//themeing -custom image, customfont,custom ga,e bg and page bg, maybe animation
+//themeing -custom image
 //Gamemode exporting
 //Other customizations: Custom spawn number (must be reflected with the goal to make possible), splitscreen multiplayer, flappy, tertirs
-function loaded() {
 
-    function getUrlVar(varible){
+
+///THEMEING BUGS
+//only loads theme element for nums 2-4, betwen line 400smth and 518 it gets overwriten to weird ass value : #42ffe0
+function loaded() {
+    function debug(text,bugfixingid){
+
+
+    }
+    function getUrlVar(varible) {
+        debug("funct_geturl",2);
         vars = window.location.search.split("?");
         for (let x = 0; x < vars.length; x++) {
             varibleData = vars[x].split("=");
-            if(varibleData[0] == varible){
+            if (varibleData[0] == varible) {
                 return varibleData[1];
             }
         }
@@ -119,7 +127,9 @@ function loaded() {
         ["4096"],
         [def_4096]
     ];
-    def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele);
+    ////Example game theme data: Empty Board Background Body
+    def_gametheme = [def_0, "#cacece", "#72b182ab", "#776e65"];
+    def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele, def_gametheme);
     //////////////////////////////////THEME GENARATOR//////////////////
     var customThemeActive = false;
     /////DEFAULT ELEMENTS
@@ -137,18 +147,22 @@ function loaded() {
     cus_1024 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 8px red");
     cus_2048 = new BoardElement("black", "white", "0 0 5px 8px white");
     der_morethen2048 = false;
+    cus_gametheme = [cus_0, "#cacece", "#72b182ab", "#776e65"];
     cus_morele = [
         [""],
         [""]
     ];
+    cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
     ///////////UI
     customThemeLoaded = false;
-    default_glowamt = 2;
+    default_glowamt = 0;
     default_textcol = "#000000";
     default_bgcol = "#FFFFFF";
     default_glowCol = "#FFFFFF";
-
-
+    zerocol = "rgb(128, 190, 128)"
+    boardcol = "#cacece"
+    bodytextcol = "#776e65"
+    bodybgcol = "#72b182ab"
     //OpenClose
     const themeMakerDisplay = document.querySelector('.themepannel');
     const themeMakerClose = document.querySelector('.theme_closebtn');
@@ -158,13 +172,15 @@ function loaded() {
     themeMakerClose.addEventListener("click", closeThemeMaker);
 
     function openThemeMaker() {
+        debug("funct_openthememaker",2);
         themeMakerDisplay.style.width = "250px";
-        setCookie("theme-open","yes",1);
+        setCookie("theme-open", "yes", 1);
     }
 
     function closeThemeMaker() {
+        debug("funct_closethememaker",2);
         themeMakerDisplay.style.width = "0";
-        setCookie("theme-open","no",1);
+        setCookie("theme-open", "no", 1);
     }
     let thememakerOpened = getCookie("theme-open");
     if (thememakerOpened != "") {
@@ -184,23 +200,26 @@ function loaded() {
     var tilenum = 2;
 
     function themeTileincrese() {
+        debug("funct_increasetile",2);
         tilenum = tilenum * 2;
         themeTilelDisplay.innerHTML = "<p>" + tilenum + "</p>";
-        loadfromsave()
+        loadtilefromsave()
     }
 
     function themeTiledecrese() {
+        debug("funct_decreasetile",2);
         tilenum = tilenum / 2;
         if (tilenum == 1) {
             tilenum = 2;
         }
         themeTilelDisplay.innerHTML = "<p>" + tilenum + "</p>";
-        loadfromsave()
+        loadtilefromsave()
     }
 
     //Realtime
 
     function setreal() {
+        debug("funct_setreal",2);
         setCookie("realtime", realtimeCheck.checked, 1);
     }
     if (realtime) {
@@ -209,6 +228,53 @@ function loaded() {
         realtimeCheck.checked = false
     }
     realtimeCheck.addEventListener("change", setreal);
+
+    ///////Theme Mode//////
+    const themeModeDisplay = document.querySelector('#themeMode');
+    const colurmode = document.querySelector('.colourmode');
+    const imagemode = document.querySelector('.imagemode');
+    modes = [colurmode,imagemode]
+    const themeModeincrease = document.querySelector('#themeModeincrese');
+    const themeModedecrease = document.querySelector('#themeModedecrese');
+    themeModeincrease.addEventListener("click", themeModeincrese);
+    themeModedecrease.addEventListener("click", themeModedecrese);
+    var currentmode = 0;
+    function themeModeincrese() {
+        console.log("Increase");
+        for (let y = 0; y < modes.length; y++) {
+
+            if(y == currentmode){
+                modes[y].display = "block";
+                console.log(y)
+            }else{
+                modes[y].display = "none";
+            }
+        }
+        if(currentmode + 1 == modes.length){
+            currentmode = 0;
+        }else{
+            currentmode += 1;
+        }
+    }
+    function themeModedecrese() {
+        console.log("Decrease");
+        for (let y = 0; y < modes.length; y++) {
+            if(y == currentmode){
+                modes[y].display = "block";
+            }else{
+                modes[y].display = "none";
+            }
+        }
+        if(currentmode - 1 == -1){
+            currentmode = modes.length-1;
+        }else{
+            currentmode -= 1;
+        }
+    }
+
+    //////Image
+
+    ///////Colours
     //TextColour
     var textcolpciker = new iro.ColorPicker('#textcolpciker', {
         width: 150,
@@ -242,6 +308,7 @@ function loaded() {
     var glowAmtnum = default_glowamt;
 
     function themeglowAmtincrese() {
+        debug("funct_glowincraese",2);
         glowAmtnum += 2;
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
         if (realtime) {
@@ -250,6 +317,7 @@ function loaded() {
     }
 
     function themeglowAmtdecrese() {
+        debug("funct_glowdecrease",2);
         glowAmtnum -= 2;
         if (glowAmtnum == 0) {
             glowAmtnum = 2;
@@ -271,18 +339,21 @@ function loaded() {
             makeintotile();
         }
     });
-    function loadfromsave() {
+    function loadtilefromsave() {
+        debug("funct_loadtile",2);
         storedtheme = getCookie("customTheme");
+        debug(storedtheme,1);
         if (storedtheme != "") {
             customThemeLoaded = true;
             jsonedTheme = JSON.parse(storedtheme);
             //console.log(storedtheme)
-            if (tilenum > 2048) {
+            if (tilenum >= 4096) {
 
-            } else {
-                for (let y = 0; y < jsonedTheme.options.length; y++) {
-                    if (tilenum == parseInt(jsonedTheme.number[y])) {
-                        boxshadow = jsonedTheme.options[y].boxshadow;
+                for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
+                    if (tilenum == parseInt(jsonedTheme.elementMore[1][y])) {
+                        cus_morele = jsonedTheme.elementMore;
+                        console.log(cus_morele)
+                        boxshadow = jsonedTheme.elementMore[1][y].boxshadow;
                         if (boxshadow != "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
@@ -297,35 +368,137 @@ function loaded() {
 
                     }
                 }
+            } else {
+                for (let y = 0; y < jsonedTheme.options.length; y++) {
+                    if (tilenum == parseInt(jsonedTheme.number[y])) {
+                        boxshadow = jsonedTheme.options[y].boxshadow;
+                        if (boxshadow != "") {
+                            glowData = boxshadow.split(" ");
+                            default_glowCol = glowData[4]
+                            default_glowamt = parseInt(glowData[3].replace('px', ''));
+                        }
+                        console.log(jsonedTheme.options[y].textcol)
+                        default_textcol = jsonedTheme.options[y].textcol;
+                        default_bgcol = jsonedTheme.options[y].bg;
+                        bgcolpciker.color.set(default_bgcol);
+                        textcolpciker.color.set(default_textcol);
+                        glowcolpciker.color.set(default_glowCol);
+
+                    }
+                }
+            }
+        }
+
+    }
+
+    //ZeroCol
+    var zerocolpciker = new iro.ColorPicker('#zeropicker', {
+        width: 150,
+        color: zerocol
+    });
+    zerocol = zerocolpciker.color.hexString;
+    zerocolpciker.on('color:change', function () {
+        zerocol = zerocolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var boardcolpciker = new iro.ColorPicker('#boardpicker', {
+        width: 150,
+        color: boardcol
+    });
+    boardcol = boardcolpciker.color.hexString;
+    boardcolpciker.on('color:change', function () {
+        boardcol = boardcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var bodybgcolpciker = new iro.ColorPicker('#worldbgpicker', {
+        width: 150,
+        color: bodybgcol
+    });
+    bodybgcol = bodybgcolpciker.color.hexString;
+    bodybgcolpciker.on('color:change', function () {
+        bodybgcol = bodybgcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var bodytextcolpciker = new iro.ColorPicker('#worldtextpicker', {
+        width: 150,
+        color: bodytextcol
+    });
+    bodytextcol = bodytextcolpciker.color.hexString;
+    bodytextcolpciker.on('color:change', function () {
+        bodytextcol = bodytextcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    const submitbutton = document.querySelector('.makeTile');
+    if(!realtime){
+        submitbutton.innerHTML = "Set Tile"
+    }else{
+        submitbutton.innerHTML = "Apply Theme"
+    }
+    submitbutton.addEventListener("click", function () {
+        if(!realtime){
+            makeintotile();
+            applytheme();
+        }else{
+            applytheme();
+        }
+
+    });
+    if (customThemeLoaded) {
+        makeintotile();
+    }
+
+    function loadallfromsave() {
+        debug("funct_loadall",2);
+        cache_tilenum = tilenum;
+        storedtheme = getCookie("customTheme");
+        if (storedtheme != "") {
+            customThemeLoaded = true;
+            jsonedTheme = JSON.parse(storedtheme);
+            while (tilenum != 2048) {
+                tilenum = tilenum + tilenum;
+                loadtilefromsave();
+                makeintotile(false);
             }
 
-
+            for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
+                tilenum = tilenum * 2;
+                loadtilefromsave();
+                makeintotile(false);
+            }
+            tilenum = cache_tilenum;
+            zerocol = jsonedTheme.zero.bg;
+            boardcol = jsonedTheme.gamethem[1];
+            bodybgcol = jsonedTheme.gamethem[2];
+            bodytextcol = jsonedTheme.gamethem[3];
+            makeintotile();
         }
-        //update pickers re changes
-    }
 
-    loadfromsave();
-    ///Sumbmit button
-    const submitbutton = document.querySelector('.makeTile');
-    submitbutton.addEventListener("click", function () {
-        makeintotile();
-    });
-    if(customThemeLoaded){
-        makeintotile();
     }
-
-    function makeintotile() {
+    loadallfromsave();
+    function makeintotile(save = true) {
+        debug("funct_maketile",2);
         customThemeActive = true;
         //check  if cus_x
         //set cux_x to theme items
+        cus_0 = new BoardElement(zerocol, zerocol, "");
         if (tilenum == 2) {
             cus_2 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+
         }
         if (tilenum == 4) {
             cus_4 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 8) {
             cus_8 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+
         }
         if (tilenum == 16) {
             cus_16 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
@@ -353,13 +526,38 @@ function loaded() {
         }
         if (tilenum > 2048) {
             der_morethen2048 = true;
-            cus_morele[0].push(tilenum);
-            cus_morele[1].push(new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
+            if (cus_morele.length != 0) {
+                replaced = false;
+                for (let x = 0; x < cus_morele.length; x++) {
+                    if (parseInt(cus_morele[0][x]) == tilenum) {
+                        cus_morele[0][x] = tilenum;
+                        cus_morele[1][x] = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+                        replaced = true;
+                    }
+
+                }
+                if (!replaced) {
+                    cus_morele[0].push(tilenum);
+                    cus_morele[1].push(new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
+                }
+            } else {
+                cus_morele[0].push(tilenum);
+                cus_morele[1].push(new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
+            }
+
         }
-        cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele);
+        cus_gametheme[1] = boardcol;
+        cus_gametheme[2] = bodybgcol;
+        cus_gametheme[3] = bodytextcol;
+        cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
         themeData = JSON.stringify(cus_theme);
-        setCookie("customTheme", themeData, 365);
+        setCookie("storedTheme", "cus_theme", 365);
+        setCookie("storedTheme", cus_theme, 365);
+        debug(themeData,1);
         themeBoard(cus_theme);
+
+
+
     }
 
     //Theme externally loading and sharing
@@ -376,27 +574,36 @@ function loaded() {
     sharethemebutton.addEventListener("click", sharemytheme);
     loadthemebutton.addEventListener("click", loadtheme);
     loadbutton.addEventListener("click", loadthemedata);
-    function sharemytheme(){
-        makeintotile();
+    website = window.location.href.split(".html")
+    function applytheme(){
+        sharemytheme();
+        loadthemedata()
+    }
+    function sharemytheme() {
+        debug("sharetheme_loadtheme",2);
+        debug(cus_theme,2);
         sharethemediv.style.display = "block";
         loadbutton.style.display = "none";
         sharetitle.innerHTML = "Share Theme";
-        website = window.location.href.split(".html")
-
-        storedtheme = getCookie("customTheme");
+        storedtheme =  JSON.stringify(cus_theme);
         if (storedtheme != "") {
+            debug("Unparsed cokie",1)
+            debug(storedtheme,1)
             jsonedTheme = JSON.parse(storedtheme);
+            debug("Parsed JSON",1);
+            debug(jsonedTheme,1);
             var encoded = btoa(JSON.stringify(jsonedTheme));
             sharethemeinputbox.value = encoded;
-            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='"+website[0]+".html?rawTheme="+encoded+"'>Link to Theme</a>";
-        }else{
+            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
+        } else {
             sharetext.innerHTML = "Please note you need a theme to use this tool."
         }
     }
-    function closeshare(){
+    function closeshare() {
         sharethemediv.style.display = "none";
     }
-    function loadtheme(){
+    function loadtheme() {
+        debug("funct_loadtheme",2);
         makeintotile();
         sharethemediv.style.display = "block";
         loadbutton.style.display = "block";
@@ -405,37 +612,40 @@ function loaded() {
 
 
     }
-    function loadthemedata(){
-        console.log("Loading..")
+    function loadthemedata() {
+        debug("funct_loadthemedata",2);
         let shareddata = sharethemeinputbox.value;
-        try{
+        try {
             var decoded = atob(shareddata);
-        }catch(err) {
+        } catch (err) {
             sharethemeinputbox.value = "ERROR LOADING";
         }
-        try{
+        try {
             var jsondata = JSON.parse(decoded)
-        }catch(err) {
+        } catch (err) {
             sharethemeinputbox.value = "ERROR LOADING";
         }
 
-        if(jsondata == ""){
+        if (jsondata == "") {
             sharethemeinputbox.value = "ERROR LOADING";
         }
-        if(jsondata.encodedproperly == ""){
+        if (jsondata.encodedproperly == "") {
             sharethemeinputbox.value = "ERROR LOADING";
         }
-        if(jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks"){
-            console.log("WORKS")
+        if (jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
+            debug("DECODED",1);
+            debug(jsondata,1);
             setCookie("customTheme", decoded, 365);
-            loadfromsave();
+            loadtilefromsave();
             closeshare();
-        }else{
+            window.location = website[0] + ".html";
+        } else {
             sharethemeinputbox.value = "ERROR LOADING";
         }
     }
 
     function createBoard() {
+        debug("funct_createboard",2);
         gridDisplay.style.width = width * 100 + "px";
         gridDisplay.style.height = width * 100 + "px";
         for (let x = 0; x < width * width; x++) {
@@ -457,7 +667,7 @@ function loaded() {
         this.boxshadow = boxshadow;
     }
 
-    function Theme(zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight, more2048, elemore) {
+    function Theme(zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight, more2048, elemore, gameThemeData) {
         this.zero = zero;
         this.two = two;
         this.four = four;
@@ -474,10 +684,13 @@ function loaded() {
         this.options = [zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight];
         this.moreenabled = more2048;
         this.elementMore = elemore;
+        this.gamethem = gameThemeData;
         this.encodedproperly = "it_works_pls_dont_mess_with_this_otherwise_it_breaks";
     }
 
     function themeBoard(Theme) {
+        debug("funct_themetheboard",2);
+        debug(Theme,2);
         t_0 = Theme.zero;
         t_2 = Theme.two;
         t_4 = Theme.four;
@@ -490,6 +703,7 @@ function loaded() {
         t_512 = Theme.fivetwelve;
         t_1024 = Theme.oneohtwentyfour;
         t_2048 = Theme.twozerofoureight;
+        gameTheme = Theme.gamethem;
         for (let x = 0; x < squares.length; x++) {
             for (let y = 0; y < Theme.options.length; y++) {
                 if (parseInt(squares[x].innerHTML) == parseInt(Theme.number[y])) {
@@ -497,6 +711,7 @@ function loaded() {
                     squares[x].style.background = Theme.options[y].bg;
                     squares[x].style.boxShadow = Theme.options[y].boxshadow;
                 }
+
             }
             if (parseInt(squares[x].innerHTML) > 2048) {
                 if (Theme.moreenabled) {
@@ -522,10 +737,26 @@ function loaded() {
 
             }
         }
+
+        if (gameTheme != undefined) {
+            document.body.style.background = gameTheme[2];
+            document.body.style.color = gameTheme[3];
+            gridDisplay.style.border = "5px solid " + gameTheme[1];
+            gridDisplay.style.backgroundColor = gameTheme[2];
+            tilestotheme = gridDisplay.children;
+            for (let y = 0; y < tilestotheme.length; y++) {
+                tilestotheme[y].style.backgroundColor = gameTheme[1];
+            }
+            // document.getElementsByClassName("grid")
+        }
     }
 
     createBoard();
-    themeBoard(def_theme)
+    if (customThemeActive) {
+        themeBoard(cus_theme);
+    } else {
+        themeBoard(def_theme);
+    }
     //GOAL
     function setgoal(mode) {
         //console.log("Clicked");
@@ -596,6 +827,7 @@ function loaded() {
 
 
     function generate() {
+        debug("genarate",2);
         let randNum = Math.floor(Math.random() * squares.length);
         if (squares[randNum].innerHTML == 0) {
             if (reverse) {
@@ -994,7 +1226,11 @@ function loaded() {
                     keyup();
                 else if (rand == 4)
                     keydown();
-                themeBoard(def_theme)
+                if (customThemeActive) {
+                    themeBoard(cus_theme);
+                } else {
+                    themeBoard(def_theme);
+                }
                 autoplay();
             }, 100);
         } else {
@@ -1003,7 +1239,7 @@ function loaded() {
 
     }
     var passedTheme = getUrlVar("rawTheme")
-    if (passedTheme != undefined){
+    if (passedTheme != undefined) {
         sharethemeinputbox.value = passedTheme;
         loadthemedata();
     }
@@ -1041,7 +1277,7 @@ function closeNav() {
     setCookie("open", "no", 1);
     document.getElementById("settingspannel").style.width = "0";
 }
-function resetTheme(){
+function resetTheme() {
     setCookie("customTheme", "", 365);
     location.reload();
 }
