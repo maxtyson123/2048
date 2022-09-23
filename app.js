@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', loaded);
 //make ai
-//themeing
+//themeing -custom image, more then 2048 supports, customfont,custom pagebg
+//fix themeing on reverse
 //make  custom  themeing.
 //fix loose  for combining
 function loaded() {
@@ -71,8 +72,21 @@ function loaded() {
     let squares = [];
     let score = 0;
 
-
-
+    /////////DEFAULT THEME//////
+    def_temp = new BoardElement("","","");
+    def_0  = new BoardElement("rgb(128, 190, 128)","rgb(128, 190, 128)","");
+    def_2 = new BoardElement("rgb(84, 193, 84)","#776e65","");
+    def_4 = new BoardElement("rgb(84, 193, 84)","#776e65","");
+    def_8 = new BoardElement("rgb(66, 255, 224)","#776e65","");
+    def_16 = new BoardElement("rgb(0, 132, 255)","white","");
+    def_32 = new BoardElement("rgb(0, 81, 255)","white","");
+    def_64 = new BoardElement("rgb(25, 0, 255)","white","");
+    def_128 = new BoardElement("rgb(98, 0, 255)","white","0 0 5px 2px red");
+    def_256 = new BoardElement("rgb(98, 0, 255)","white","0 0 5px 4px red");
+    def_512 = new BoardElement("rgb(98, 0, 255)","white","0 0 5px 6px red");
+    def_1024 = new BoardElement("rgb(98, 0, 255)","white","0 0 5px 8px red");
+    def_2048 = new BoardElement("black","white","0 0 5px 8px white");
+    def_theme = new Theme(def_0,def_2,def_4,def_8,def_16,def_32,def_64,def_128,def_256,def_512,def_1024,def_2048);
     function createBoard() {
         gridDisplay.style.width = width * 100 + "px";
         gridDisplay.style.height = width * 100 + "px";
@@ -88,8 +102,60 @@ function loaded() {
         generate();
         generate();
     }
-    createBoard();
 
+    function BoardElement(bg, textcol, boxshadow){
+        this.bg = bg;
+        this.textcol = textcol;
+        this.boxshadow = boxshadow;
+    }
+
+    function Theme(zero,two,four,eight,sixteen,thirtytwo,sixtyfour,onetwentyeight,twofiftysix,fivetwelve,oneohtwentyfour,twozerofoureight){
+        this.zero = zero;
+        this.two = two;
+        this.four = four;
+        this.eight = eight;
+        this.sixteen = sixteen;
+        this.thirtytwo = thirtytwo;
+        this.sixtyfour = sixtyfour;
+        this.onetwentyeight = onetwentyeight;
+        this.twofiftysix = twofiftysix;
+        this.fivetwelve = fivetwelve;
+        this.oneohtwentyfour = oneohtwentyfour;
+        this.twozerofoureight = twozerofoureight;
+        this.number  =  ["0","2","4","8","16","32","64","128","256","512","1024","2408"];
+        this.options  =  [zero,two,four,eight,sixteen,thirtytwo,sixtyfour,onetwentyeight,twofiftysix,fivetwelve,oneohtwentyfour,twozerofoureight];
+    }
+    function themeBoard(Theme){
+        t_0 = Theme.zero;
+        t_2 = Theme.two;
+        t_4 = Theme.four;
+        t_8 = Theme.eight;
+        t_16 = Theme.sixteen;
+        t_32 = Theme.thirtytwo;
+        t_64 = Theme.sixtyfour;
+        t_128 = Theme.onetwentyeight;
+        t_256 = Theme.twofiftysix;
+        t_512 = Theme.fivetwelve;
+        t_1024 = Theme.oneohtwentyfour;
+        t_2408 = Theme.twozerofoureight;
+        for (let x = 0; x < squares.length; x++) {
+            for(let y = 0; y < Theme.options.length; y++){
+                if(parseInt(squares[x].innerHTML) ==  parseInt(Theme.number[y])){
+                    squares[x].style.color = Theme.options[y].textcol;
+                    squares[x].style.background = Theme.options[y].bg;
+                    squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                }
+            }
+            if(parseInt(squares[x].innerHTML) >=  parseInt(Theme.number[Theme.options.length])){
+                squares[x].style.color = Theme.options[Theme.options.length].textcol;
+                squares[x].style.background = Theme.options[Theme.options.length].bg;
+                squares[x].style.boxShadow = Theme.options[Theme.options.length].boxshadow;
+            }
+        }
+    }
+
+    createBoard();
+    themeBoard(def_theme)
     //GOAL
     function setgoal(mode) {
         //console.log("Clicked");
@@ -153,16 +219,22 @@ function loaded() {
     function generate() {
         let randNum = Math.floor(Math.random() * squares.length);
         if (squares[randNum].innerHTML == 0) {
-            if (reverse)
-                squares[randNum].innerHTML = 2048;
-            else
+            if (reverse){
                 var newel = squares[randNum].cloneNode(true);
-            squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
-            squares[randNum] = newel;
-            squares[randNum].innerHTML = 2;
+                squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
+                squares[randNum] = newel;
+                squares[randNum].innerHTML = 2048;
+            } else{
+                var newel = squares[randNum].cloneNode(true);
+                squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
+                squares[randNum] = newel;
+                squares[randNum].innerHTML = 2;
+            }
+
         } else {
             generate();
         }
+
         checkGameOver()
     }
 
@@ -278,14 +350,16 @@ function loaded() {
                     combinedTotal = parseInt(squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + 1].innerHTML);
-                score += combinedTotal;
+                if(mode != "nocheck")
+                    score += combinedTotal;
                 scoreDisplay.innerHTML = score;
                 checkhigh();
                 squares[x].innerHTML = combinedTotal;
-                checkbest();
+                if(mode != "nocheck")
+                    checkbest();
                 squares[x + 1].innerHTML = 0;
                 if(mode == "left"){
-                    console.log("Left: "+x)
+                    //console.log("Left: "+x)
                     if(parseInt(squares[x].innerHTML) != 0){
                         squares[x].parentNode.classList.add("animate-pop");
                         squares[x].parentNode.addEventListener('animationend', function() {
@@ -307,7 +381,8 @@ function loaded() {
             }
 
         }
-        checkWin();
+        if(mode != "nocheck")
+            checkWin();
     }
 
     function combineCol(mode) {
@@ -318,7 +393,8 @@ function loaded() {
                     combinedTotal = parseInt(squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + width].innerHTML);
-                score += combinedTotal;
+                if(mode != "nocheck")
+                    score += combinedTotal;
                 scoreDisplay.innerHTML = score;
                 checkhigh();
                 squares[x].innerHTML = combinedTotal;
@@ -337,12 +413,15 @@ function loaded() {
                         })
                     }
                 }
-                checkbest();
+                if(mode != "nocheck")
+                    checkbest();
+
                 squares[x + width].innerHTML = 0;
             }
 
         }
-        checkWin();
+        if(mode != "nocheck")
+            checkWin();
     }
     function continueGame() {
         scoreResult.style.display = "none";
@@ -355,7 +434,7 @@ function loaded() {
         for (let x = 0; x < squares.length; x++) {
             if (squares[x].innerHTML == goal && !continueEnabled) {
                 scoreResult.style.display = "block";
-                scoreResult.style.width = width*100+"px";
+                scoreResult.style.width = (width*100)+"px";
                 scoreResult.style.height = width*100+"px";
                 scoreResult.style.background = "lightgreen";
                 scoreResult.innerHTML = "<h1 style='font-size: "+(width*width)*5+"px;'>You Win!</h1><button onclick='location.reload()'>Replay</button><button id='cont'>Continue</button>"
@@ -370,20 +449,40 @@ function loaded() {
 
     function checkGameOver() {
         let zeros = 0;
+
+        let tmpsquares  = [];
         for (let x = 0; x < squares.length; x++) {
             if (squares[x].innerHTML == 0) {
                 zeros++;
+
             }
+            tmpsquares.push(squares[x])
         }
         if (zeros === 0) {
-            scoreResult.style.display = "block";
-            scoreResult.style.width = width*100+"px";
-            scoreResult.style.height = width*100+"px";
-            scoreResult.innerHTML = "<h1 style='font-size: "+(width*width)*5+"px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
-            autoplayCheck.enabled = false;
-            autoplayCheck.removeEventListener("change", autoplay);
-            document.removeEventListener('keyup', control);
+            let possible = false;
+            for (let x = 0; x < (width * width) - 1; x++) {
+                if (tmpsquares[x].innerHTML === tmpsquares[x + 1].innerHTML) {
+                    possible = true;
+                }
+            }
+            for (let x = 0; x < (width * width) - width; x++) {
+                if (squares[x].innerHTML === squares[x + width].innerHTML) {
+                    possible = true;
+                }}
+            if(!possible){
+                scoreResult.style.display = "block";
+                scoreResult.style.width = width*100+"px";
+                scoreResult.style.height = width*100+"px";
+                scoreResult.innerHTML = "<h1 style='font-size: "+(width*width)*5+"px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
+                autoplayCheck.enabled = false;
+                autoplayCheck.removeEventListener("change", autoplay);
+                document.removeEventListener('keyup', control);
+            }
+
+
         }
+
+
     }
 
     function checkhigh(){
@@ -454,6 +553,7 @@ function loaded() {
         } else if (e.keyCode === 40) {
             keydown();
         }
+        themeBoard(def_theme)
     }
 
     function keyup() {
@@ -497,6 +597,7 @@ function loaded() {
                 keyup();
             else if(rand == 4)
                 keydown();
+            themeBoard(def_theme)
             autoplay();
         },100);
         }else{

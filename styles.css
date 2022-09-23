@@ -116,6 +116,11 @@ h1 {
     background-color: #cacece;
 
 
+
+}
+
+.test{
+    color: rgb(255, 0, 0);
 }
 
 .grid .tile {
@@ -197,7 +202,7 @@ h1 {
         transform:scale(1)
     }
     to{
-        transform:scale(1.25)
+        transform:scale(1.175)
     }
 }
 .settingrow {
@@ -256,9 +261,17 @@ h1 {
 
 #result h1 {
     margin-left: 20%;
+    font-size: 30px;
 }
 
 #result button {
     margin-left: 20%;
-    width: 40%;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    background-color: rgb(43, 41, 41);
+    display: block;
+    transition: 0.3s;
+
 }
