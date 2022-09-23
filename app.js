@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', loaded);
 //make ai
-//make css
+//make animations
 //make  custom  themeing.
-//high  score
-//best current tile
+//make all options  cooked
 //fix loose  for combining
 function loaded() {
 
     document.addEventListener('keyup', control);
     //////////////////GAME////////////
     const gridDisplay = document.querySelector('.grid');
+    const headertext = document.querySelector('.goaltext');
+    const headertext2 = document.querySelector('.goaltext2');
     //Scores
     const scoreDisplay = document.querySelector('#score');
     const hscoreDisplay = document.querySelector('#hscore');
@@ -34,6 +35,7 @@ function loaded() {
 
     var width = 4;
     let reverse = false;
+    let continueEnabled = false;
     let widthcookie = getCookie("width");
     if (widthcookie != "") {
 
@@ -81,6 +83,8 @@ function loaded() {
         if (mode == 2) {
             goal = goal * 2;
         }
+        headertext.innerHTML = goal;
+        headertext2.innerHTML = goal;
         goalDisplay.innerHTML = goal;
         document.title = goal;
     }
@@ -254,13 +258,23 @@ function loaded() {
         }
         checkWin();
     }
-
+    function continueGame() {
+        scoreResult.style.display = "none";
+        continueEnabled = true;
+        autoplayCheck.addEventListener("change", autoplay);
+        document.addEventListener('keyup', control);
+    }
     function checkWin() {
         // console.log("CHECKING")
         for (let x = 0; x < squares.length; x++) {
-            if (squares[x].innerHTML == goal) {
-                scoreResult.innerHTML = "YOU WIN!";
-                autoplayCheck.enabled = false;
+            if (squares[x].innerHTML == goal && !continueEnabled) {
+                scoreResult.style.display = "block";
+                scoreResult.style.width = width*100+"px";
+                scoreResult.style.height = width*100+"px";
+                scoreResult.style.background = "lightgreen";
+                scoreResult.innerHTML = "<h1 style='font-size: "+(width*width)*5+"px;'>You Win!</h1><button onclick='location.reload()'>Replay</button><button id='cont'>Continue</button>"
+                document.getElementById("cont").addEventListener("click", continueGame);
+                autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
             }
@@ -276,7 +290,10 @@ function loaded() {
             }
         }
         if (zeros === 0) {
-            scoreResult.innerHTML = "YOU LOOSE!";
+            scoreResult.style.display = "block";
+            scoreResult.style.width = width*100+"px";
+            scoreResult.style.height = width*100+"px";
+            scoreResult.innerHTML = "<h1 style='font-size: "+(width*width)*5+"px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
             autoplayCheck.enabled = false;
             autoplayCheck.removeEventListener("change", autoplay);
             document.removeEventListener('keyup', control);
@@ -425,4 +442,11 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+function openNav() {
+    document.getElementById("settingspannel").style.width = "250px";
+}
+
+function closeNav() {
+    document.getElementById("settingspannel").style.width = "0";
 }

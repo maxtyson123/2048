@@ -9,42 +9,91 @@
 </head>
 
 <body>
-<div class="headerrow">
-    <div class="score-title">Score:</div>
-    <span id="score">0</span>
-    <div class="hscore-title">Highscore:</div>
-    <span id="hscore">0</span>
+<script>window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);</script>
+<div class="game">
+    <div class="header">
+        <div class="row">
+            <div class="column">
+                <h1 class="goaltext">2048</h1>
+            </div>
+            <div class="column" style="padding-top: 15%;">
+                <div class="scoretab">
+                    <div class="score-title"><strong>Score:</strong></div>
+                    <span id="score">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <p>Join the numbers and get to the <strong class="goaltext2">2048</strong> tile!</p>
+            </div>
+            <div class="column" style="padding-top: 4%;">
+                <div class="scoretab">
+                    <div class="hscore-title">Highscore:</div>
+                    <span id="hscore">0</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
-<div class="headerrow">
-    <div class="score-title">Current Best:</div>
-    <span id="best">0</span>
-    <div class="hscore-title">Alltime Best:</div>
-    <span id="hbest">0</span>
-</div>
-<div class="grid">
+<div class="row">
+    <div id="result">
+        <h1>You Lose</h1>
+        <button>Replay</button>
+    </div>
+    <div class="grid">
+    </div>
 
 </div>
 
-<div id="result"></div>
+<br>
+<div class="header">
+    <div class="row">
+        <div class="column">
+            <div class="scoretab" style="padding: 10px;">
+                <div class="score-title inline">Current Best:</div>
+                <span class="inline" id="best">0</span>
+            </div>
+        </div>
+        <div class="column">
+            <div class="scoretab" style="padding: 10px;">
+                <div class="hscore-title inline">Alltime Best:</div>
+                <span class="inline" id="hbest">0</span>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div id="settings">
-    <div class="settingrow">
-        <p>Goal:&nbsp;&nbsp;</p>
-        <button id="goaldecrease">-</button>
-        <div id="goal">--</div><button id="goalincrease">+</button>
-    </div>
-    <div class="settingrow">
-        <p>Size:&nbsp;&nbsp;</p>
-        <button id="sizedecrease">-</button>
-        <div id="size">--</div><button id="sizeincrease">+</button>
-    </div>
-    <div class="settingrow">
-        <p>Reverse:&nbsp;&nbsp;</p>
-        <input type="checkbox" id="reverse">
-    </div>
-    <div class="settingrow">
-        <p>Autoplay:&nbsp;&nbsp;</p>
-        <input type="checkbox" id="auto">
+<button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
+<div id="settingspannel" class="sidepanel">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <div id="settings">
+        <div class="settingrow">
+            <p>Goal:&nbsp;&nbsp;</p>
+            <button id="goaldecrease">-</button>
+            <div id="goal">--</div>
+            <button id="goalincrease">+</button>
+        </div>
+        <div class="settingrow">
+            <p>Size:&nbsp;&nbsp;</p>
+            <button id="sizedecrease">-</button>
+            <div id="size">--</div>
+            <button id="sizeincrease">+</button>
+        </div>
+        <div class="settingrow">
+            <p>Reverse:&nbsp;&nbsp;</p>
+            <input type="checkbox" id="reverse">
+        </div>
+        <div class="settingrow">
+            <p>Autoplay:&nbsp;&nbsp;</p>
+            <input type="checkbox" id="auto">
+        </div>
     </div>
 </div>
 </body>
