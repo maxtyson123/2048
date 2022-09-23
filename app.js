@@ -8,12 +8,15 @@ if (!window.location.href.includes("index.html")) {
 //NEXT:
 //Preset themes
 //Other customizations: addition or combine mode,game saving and loading, undo,
+//May have  to remake tiles  and animations before gamemodes
 //modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
 //Gamemode exporting
 
 //BUGS mostly theming ofc
-//fix theming loading for more then 2048 - fuck it  imtired of theming ill do it later,  making image support was way easier then this bs, also probaly gonna be the last addition to the theme maker
-//2048 num not being  themed
+//cant set/load bg when in image  mode
+//Image beign weird when cycling through ("MOST LIKELY BC OF MODES")
+//theme needs  a change for inputted theme bgdata to load
+
 
 //ORGANISE CODE b4 GAMEMODES
 
@@ -174,8 +177,8 @@ function loaded() {
     der_morethen2048 = false;
     cus_gametheme = [cus_0, "#cacece", "#72b182ab", "#776e65"];
     cus_morele = [
-        [""],
-        [""]
+        [],
+        []
     ];
     cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
     ///////////UI
@@ -427,6 +430,10 @@ function loaded() {
             }
 
             if (tilenum >= 4096) {
+                if(jsonedTheme.elementMore[0].length != 0){
+                    cus_morele = jsonedTheme.elementMore;
+
+                }
 
                 for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
                     if (stpnum == parseInt(jsonedTheme.elementMore[0][y])) {
@@ -437,8 +444,8 @@ function loaded() {
                             default_glowCol = glowData[4]
                             default_glowamt = parseInt(glowData[3].replace('px', ''));
                         }
-                        default_textcol = jsonedTheme.options[y].textcol;
-                        default_bgcol = jsonedTheme.options[y].bg;
+                        default_textcol = jsonedTheme.elementMore[1][y].textcol;
+                        default_bgcol = jsonedTheme.elementMore[1][y].bg;
                         bgcolpciker.color.set(default_bgcol);
                         textcolpciker.color.set(default_textcol);
                         glowcolpciker.color.set(default_glowCol);
@@ -453,6 +460,7 @@ function loaded() {
                     }
                 }
             } else {
+
                 for (let y = 0; y < jsonedTheme.options.length; y++) {
                     if (stpnum == parseInt(jsonedTheme.number[y])) {
                         boxshadow = jsonedTheme.options[y].boxshadow;
@@ -551,8 +559,7 @@ function loaded() {
         debug("funct_loadall", 2);
         cache_tilenum = tilenum;
         storedtheme = getCookie("customTheme");
-        //console.log(storedtheme);
-        //console.log("CHECK_POINT")
+
         if (storedtheme != "") {
             customThemeLoaded = true;
             jsonedTheme = JSON.parse(storedtheme);
@@ -565,9 +572,9 @@ function loaded() {
             loadtilefromsave(true);
             makeintotile(false);
             for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
+
                 tilenum = tilenum * 2;
                 loadtilefromsave();
-
                 makeintotile(false);
             }
             tilenum = cache_tilenum;
@@ -575,7 +582,7 @@ function loaded() {
             boardcol = jsonedTheme.gamethem[1];
             bodybgcol = jsonedTheme.gamethem[2];
             bodytextcol = jsonedTheme.gamethem[3];
-            makeintotile();
+            // makeintotile(); THIS LINE  WAS CAUSING THE MF 2 not beign coloure corclty BUG, I  STG 2 HRS WASTED UGHHHHHHHHHHH
         }
 
     }
@@ -584,12 +591,9 @@ function loaded() {
     function makeintotile(save = true) {
         debug("funct_maketile", 2);
         customThemeActive = true;
-        //check  if cus_x
-        //set cux_x to theme items
         cus_0 = new BoardElement(zerocol, zerocol, "");
         if (tilenum == 2) {
             cus_2 = newBoardElemet();
-
         }
         if (tilenum == 4) {
             cus_4 = newBoardElemet();
@@ -624,7 +628,8 @@ function loaded() {
         }
         if (tilenum >= 4096) {
             firnum = 2;
-            stpnum = 0;
+            stpnum = 1;
+
             for (let y = 1; y < tilenum; y++) {
                 if (firnum == tilenum) {
                     stpnum = y;
@@ -633,24 +638,27 @@ function loaded() {
                     firnum = firnum * 2;
                 }
             }
-            tilenum = stpnum;
+
+
             der_morethen2048 = true;
             if (cus_morele.length != 0) {
                 replaced = false;
-                for (let x = 0; x < cus_morele.length; x++) {
-                    if (parseInt(cus_morele[0][x]) == tilenum) {
-                        cus_morele[0][x] = tilenum;
-                        cus_morele[1][x] = newBoardElemet();
+                for (let y = 0; y < cus_morele[0].length; y++) {
+                    if (stpnum == parseInt(cus_morele[0][y])) {
+                        cus_morele[0][y] = stpnum;
+                        cus_morele[1][y] = newBoardElemet();
+
                         replaced = true;
                     }
 
                 }
                 if (!replaced) {
-                    cus_morele[0].push(tilenum);
+                    cus_morele[0].push(stpnum);
                     cus_morele[1].push(newBoardElemet());
                 }
             } else {
-                cus_morele[0].push(tilenum);
+
+                cus_morele[0].push(stpnum);
                 cus_morele[1].push(newBoardElemet());
             }
 
@@ -661,7 +669,7 @@ function loaded() {
             element = "";
 
             if (modename[currentmode] == "Colour") {
-                console.log("Setting for: " + tilenum)
+
                 element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
             } else
                 element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, false, "none")
@@ -677,6 +685,7 @@ function loaded() {
         setCookie("storedTheme", "cus_theme", 365);
         setCookie("storedTheme", cus_theme, 365);
         themeBoard(cus_theme);
+
 
 
 
@@ -763,7 +772,6 @@ function loaded() {
 
 
             setCookie("customTheme", decoded, 365);
-            //console.log("LOADING SAVE")
             tilenum = 0;
             loadtilefromsave();
             closeshare();
@@ -854,7 +862,7 @@ function loaded() {
                     if (Theme.options[y].imagemode) {
 
                         squares[x].style.fontSize = "0px";
-                        squares[x].style.background = Theme.options[y].bg;
+                        squares[x].style.background = "white"; //Fixed for transparancy
                         squares[x].style.boxShadow = Theme.options[y].boxshadow;
                         squares[x].style.backgroundSize = "cover";
                         squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
@@ -878,6 +886,7 @@ function loaded() {
 
                                 squares[x].style.fontSize = "0px";
                                 squares[x].style.background = Theme.elementMore[1][y].bg;
+
                                 squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
                                 squares[x].style.backgroundSize = "cover";
                                 squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
@@ -886,6 +895,7 @@ function loaded() {
                                 squares[x].style.fontSize = "40px";
                                 squares[x].style.color = Theme.elementMore[1][y].textcol;
                                 squares[x].style.background = Theme.elementMore[1][y].bg;
+
                                 squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
                             }
                             themedtile = true;
@@ -917,6 +927,7 @@ function loaded() {
         }
 
         if (gameTheme != undefined) {
+            console.log("data")
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
             gridDisplay.style.border = "5px solid " + gameTheme[1];
@@ -1304,7 +1315,7 @@ function loaded() {
                 scoreResult.style.display = "block";
                 scoreResult.style.width = width * 100 + "px";
                 scoreResult.style.height = width * 100 + "px";
-                scoreResult.innerHTML = "<h1 style='font-size: " + (width * width) * 5 + "px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
                 autoplayCheck.enabled = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
