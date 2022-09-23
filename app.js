@@ -6,16 +6,17 @@ if (!window.location.href.includes("index.html")) {
 //make ai, ai give hint or image
 
 //NEXT:
+//Scores make  Customisable, add tagline
+//Track Moves
 //Preset themes
 //Other customizations: addition or combine mode,game saving and loading, undo,
+//make more effeceint: looping: x, cookie:  done.
 //May have  to remake tiles  and animations before gamemodes
 //modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
 //Gamemode exporting
 
 //BUGS mostly theming ofc
-//cant set/load bg when in image  mode
-//Image beign weird when cycling through ("MOST LIKELY BC OF MODES")
-//theme needs  a change for inputted theme bgdata to load
+//FUCK THEMING
 
 
 //ORGANISE CODE b4 GAMEMODES
@@ -230,7 +231,6 @@ function loaded() {
     if (reverse)
         tempnum = goal
     themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
-
     function themeTileincrese() {
         debug("funct_increasetile", 2);
         tilenum = tilenum * 2;
@@ -243,6 +243,9 @@ function loaded() {
     function themeTiledecrese() {
         debug("funct_decreasetile", 2);
         tilenum = tilenum / 2;
+        if(tilenum == 1){
+            themeTileincrese();
+        }
         if (reverse) {
             if (tempnum / 2 <= goal) {
                 tempnum = goal;
@@ -285,43 +288,43 @@ function loaded() {
     themeModeincrease.addEventListener("click", themeModeincrese);
     themeModedecrease.addEventListener("click", themeModedecrese);
     var currentmode = 0;
-
-    function themeModeincrese() {
-        //console.log("Increase");
+    function updatemode(){
         for (let y = 0; y < modes.length; y++) {
 
             if (y == currentmode) {
                 modes[y].style.display = "block";
 
+
             } else {
                 modes[y].style.display = "none";
+
             }
         }
         themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
+    }
+    function themeModeincrese() {
+        //console.log("Increase");
+
+
         if (currentmode + 1 == modes.length) {
             currentmode = 0;
         } else {
             currentmode += 1;
         }
+        updatemode()//put this bellow increeser later
     }
 
     function themeModedecrese() {
         //console.log("Decrease");
-        for (let y = 0; y < modes.length; y++) {
-            if (y == currentmode) {
-                modes[y].style.display = "block";
-            } else {
-                modes[y].style.display = "none";
-            }
-        }
-        themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
+
         if (currentmode - 1 == -1) {
             currentmode = modes.length - 1;
         } else {
             currentmode -= 1;
         }
+        updatemode();
     }
-    themeModeincrese();
+    updatemode();
 
 
     //////Image
@@ -451,9 +454,15 @@ function loaded() {
                         glowcolpciker.color.set(default_glowCol);
                         if (jsonedTheme.elementMore[1][y].imagemode) {
                             currentmode = 0;
+                            updatemode();
                             urldata = jsonedTheme.elementMore[1][y].imageurl;
+                            urlinput.value  = urldata;
+                            makeintotile()
                         } else {
                             currentmode = 1;
+                            updatemode()
+                            urlinput.value  = "";
+
 
                         }
 
@@ -463,6 +472,8 @@ function loaded() {
 
                 for (let y = 0; y < jsonedTheme.options.length; y++) {
                     if (stpnum == parseInt(jsonedTheme.number[y])) {
+                        if(stpnum == 10)
+                            console.log(jsonedTheme.options[y])
                         boxshadow = jsonedTheme.options[y].boxshadow;
                         if (boxshadow != "") {
                             glowData = boxshadow.split(" ");
@@ -476,10 +487,15 @@ function loaded() {
                         textcolpciker.color.set(default_textcol);
                         glowcolpciker.color.set(default_glowCol);
                         if (jsonedTheme.options[y].imagemode) {
-                            currentmode = 0;
-                            urldata = jsonedTheme.options[y].imageurl;
-                        } else {
                             currentmode = 1;
+                            updatemode();
+                            urldata = jsonedTheme.options[y].imageurl;
+                            urlinput.value  = urldata;
+                            makeintotile()//single  line fixed the theming problemds, once again
+                        } else {
+                            currentmode = 0;
+                            updatemode()
+                            urlinput.value  = "";
 
                         }
 
@@ -587,6 +603,9 @@ function loaded() {
 
     }
     loadallfromsave();
+    tilenum = -99
+    makeintotile();
+    tilenum = 2;
 
     function makeintotile(save = true) {
         debug("funct_maketile", 2);
@@ -621,7 +640,9 @@ function loaded() {
             cus_512 = newBoardElemet();
         }
         if (tilenum == 1024) {
+
             cus_1024 = newBoardElemet();
+
         }
         if (tilenum == 2048) {
             cus_2048 = newBoardElemet();
@@ -665,10 +686,10 @@ function loaded() {
         }
 
         function newBoardElemet() {
-            //shits reversed bc i change the number at the end cbf fixing it
+
             element = "";
 
-            if (modename[currentmode] == "Colour") {
+            if (modename[currentmode] == "Image") {
 
                 element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
             } else
@@ -683,7 +704,6 @@ function loaded() {
         debug("cus_theme", 1)
         themeData = JSON.stringify(cus_theme);
         setCookie("storedTheme", "cus_theme", 365);
-        setCookie("storedTheme", cus_theme, 365);
         themeBoard(cus_theme);
 
 
@@ -808,17 +828,7 @@ function loaded() {
 
     function Theme(zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight, more2048, elemore, gameThemeData) {
         this.zero = zero;
-        this.two = two;
-        this.four = four;
-        this.eight = eight;
-        this.sixteen = sixteen;
-        this.thirtytwo = thirtytwo;
-        this.sixtyfour = sixtyfour;
-        this.onetwentyeight = onetwentyeight;
-        this.twofiftysix = twofiftysix;
-        this.fivetwelve = fivetwelve;
-        this.oneohtwentyfour = oneohtwentyfour;
-        this.twozerofoureight = twozerofoureight;
+
         this.number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
         this.options = [zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight];
         this.moreenabled = more2048;
@@ -927,7 +937,7 @@ function loaded() {
         }
 
         if (gameTheme != undefined) {
-            console.log("data")
+
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
             gridDisplay.style.border = "5px solid " + gameTheme[1];
