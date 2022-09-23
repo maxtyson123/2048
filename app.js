@@ -6,11 +6,11 @@ document.addEventListener('DOMContentLoaded', loaded);
 //Preset themes
 //Make code more effeinct
 
-//fix theming loading
+//fix theming loading for more then 2048
+//fix reverse for theme number
 
 function loaded() {
     function debug(text,bugfixingid){
-
 
     }
     function getUrlVar(varible) {
@@ -117,7 +117,7 @@ function loaded() {
     let continueEnabled = false;
 
 
-    //	console.log(reverse)
+    //	//console.log(reverse)
     let container = [];
     let squares = [];
     let score = 0;
@@ -264,7 +264,7 @@ function loaded() {
     themeModedecrease.addEventListener("click", themeModedecrese);
     var currentmode = 0;
     function themeModeincrese() {
-        console.log("Increase");
+        //console.log("Increase");
         for (let y = 0; y < modes.length; y++) {
 
             if(y == currentmode){
@@ -281,7 +281,7 @@ function loaded() {
         }
     }
     function themeModedecrese() {
-        console.log("Decrease");
+        //console.log("Decrease");
         for (let y = 0; y < modes.length; y++) {
             if(y == currentmode){
                 modes[y].style.display = "block";
@@ -363,20 +363,55 @@ function loaded() {
             makeintotile();
         }
     });
-    function loadtilefromsave() {
+    function loadtilefromsave(initial=false) {
+        debug("loadfromsave",1);
         storedtheme = getCookie("customTheme");
-        debug(storedtheme,1);
+
+
         if (storedtheme != "") {
             customThemeLoaded = true;
             jsonedTheme = JSON.parse(storedtheme);
-            //console.log(storedtheme)
+            tinum = tilenum;
+            firnum = 2;
+            stpnum = 1;
+            if(tinum != 0){
+                for (let y = 1; y < 12+jsonedTheme.elementMore[0].length; y++) {
+                    if(firnum == tinum){
+                        stpnum = y;
+
+
+                        break
+                    }else{
+                        firnum = firnum*2;
+                    }
+                }
+            }
+
             if (tilenum >= 4096) {
 
                 for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
-                    if (tilenum == parseInt(jsonedTheme.elementMore[1][y])) {
+                    if (stpnum == parseInt(jsonedTheme.elementMore[1][y])) {
                         cus_morele = jsonedTheme.elementMore;
-                        console.log(cus_morele)
+                        //console.log(cus_morele)
                         boxshadow = jsonedTheme.elementMore[1][y].boxshadow;
+                        if (boxshadow != "") {
+                            glowData = boxshadow.split(" ");
+                            default_glowCol = glowData[4]
+                            default_glowamt = parseInt(glowData[3].replace('px', ''));
+                        }
+                        ////console.log(jsonedTheme.options[y].textcol)
+                        default_textcol = jsonedTheme.options[y].textcol;
+                        default_bgcol = jsonedTheme.options[y].bg;
+                        bgcolpciker.color.set(default_bgcol);
+                        textcolpciker.color.set(default_textcol);
+                        glowcolpciker.color.set(default_glowCol);
+
+                    }
+                }
+            } else {
+                for (let y = 0; y < jsonedTheme.options.length; y++) {
+                    if (stpnum == parseInt(jsonedTheme.number[y])) {
+                        boxshadow = jsonedTheme.options[y].boxshadow;
                         if (boxshadow != "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
@@ -389,29 +424,13 @@ function loaded() {
                         textcolpciker.color.set(default_textcol);
                         glowcolpciker.color.set(default_glowCol);
 
-                    }
-                }
-            } else {
-                for (let y = 0; y < jsonedTheme.options.length; y++) {
-                    if (tilenum == parseInt(jsonedTheme.number[y])) {
-                        boxshadow = jsonedTheme.options[y].boxshadow;
-                        if (boxshadow != "") {
-                            glowData = boxshadow.split(" ");
-                            default_glowCol = glowData[4]
-                            default_glowamt = parseInt(glowData[3].replace('px', ''));
-                        }
-                        console.log(jsonedTheme.options[y].textcol)
-                        default_textcol = jsonedTheme.options[y].textcol;
-                        default_bgcol = jsonedTheme.options[y].bg;
-                        bgcolpciker.color.set(default_bgcol);
-                        textcolpciker.color.set(default_textcol);
-                        glowcolpciker.color.set(default_glowCol);
+
 
                     }
                 }
             }
         }
-
+        //console.log("LOADEE")
     }
 
     //ZeroCol
@@ -482,18 +501,23 @@ function loaded() {
         debug("funct_loadall",2);
         cache_tilenum = tilenum;
         storedtheme = getCookie("customTheme");
+        //console.log(storedtheme);
+        //console.log("CHECK_POINT")
         if (storedtheme != "") {
             customThemeLoaded = true;
             jsonedTheme = JSON.parse(storedtheme);
             while (tilenum != 2048) {
-                tilenum = tilenum + tilenum;
-                loadtilefromsave();
+
+                loadtilefromsave(true);
+                //console.log(tilenum)
                 makeintotile(false);
+                tilenum = tilenum + tilenum;
             }
 
             for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
                 tilenum = tilenum * 2;
                 loadtilefromsave();
+
                 makeintotile(false);
             }
             tilenum = cache_tilenum;
@@ -514,7 +538,8 @@ function loaded() {
         cus_0 = new BoardElement(zerocol, zerocol, "");
         if (tilenum == 2) {
             cus_2 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
-
+            debug(default_bgcol);
+            debug(default_bgcol);
         }
         if (tilenum == 4) {
             cus_4 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
@@ -584,10 +609,11 @@ function loaded() {
         cus_gametheme[2] = bodybgcol;
         cus_gametheme[3] = bodytextcol;
         cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
+        debug(cus_theme,1)
+        debug("cus_theme",1)
         themeData = JSON.stringify(cus_theme);
         setCookie("storedTheme", "cus_theme", 365);
         setCookie("storedTheme", cus_theme, 365);
-        debug(themeData,1);
         themeBoard(cus_theme);
 
 
@@ -667,9 +693,11 @@ function loaded() {
             sharethemeinputbox.value = "ERROR LOADING";
         }
         if (jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
-            debug("DECODED",1);
-            debug(jsondata,1);
+
+
             setCookie("customTheme", decoded, 365);
+            //console.log("LOADING SAVE")
+            tilenum = 0;
             loadtilefromsave();
             closeshare();
             window.location = website[0] + ".html";
@@ -724,7 +752,8 @@ function loaded() {
 
     function themeBoard(Theme) {
         debug("funct_themetheboard",2);
-        debug(Theme,2);
+        debug(Theme,1);
+        debug("CHECK POINT",1);
         gameTheme = Theme.gamethem;
         for (let x = 0; x < squares.length; x++) {
             tinum = parseInt(squares[x].innerHTML);
@@ -807,7 +836,7 @@ function loaded() {
 
     //SPAWN
     function setspawn(mode) {
-        //console.log("Clicked");
+        ////console.log("Clicked");
         if (mode == 1) {
             if (spwantile != 1)
                 spwantile -= 1;
@@ -832,7 +861,7 @@ function loaded() {
     setspawn(0);
     //GOAL
     function setgoal(mode) {
-        //console.log("Clicked");
+        ////console.log("Clicked");
 
         let stepscookie = getCookie("steps");
         if(stepscookie == ""){
@@ -843,7 +872,7 @@ function loaded() {
         }
         currentstep = 1;
         if(!reverse){	 startnum = spwantile;
-            for (let y = 1; y < setps+1; y++) {
+            for (let y = 2; y < setps+1; y++) {
                 startnum = startnum*2;
             }
             goal = startnum;}
@@ -875,7 +904,7 @@ function loaded() {
     });
     setgoal(0);
     function setsize(mode) {
-        //console.log("Clicked");
+        ////console.log("Clicked");
         if (mode == 1) {
             if (width != 2)
                 size = width - 2;
@@ -912,7 +941,7 @@ function loaded() {
     } else if (!reverse) {
         reverseCheck.checked = false
     }
-    //	console.log(reverseCheck.checked +"="+reverse);
+    //	//console.log(reverseCheck.checked +"="+reverse);
     reverseCheck.addEventListener("change", setreverse);
     autoplayCheck.addEventListener("change", autoplay);
 
@@ -1054,7 +1083,7 @@ function loaded() {
                     checkbest();
                 squares[x + 1].innerHTML = 0;
                 if (mode == "left") {
-                    //console.log("Left: "+x)
+                    ////console.log("Left: "+x)
                     if (parseInt(squares[x].innerHTML) != 0) {
                         squares[x].parentNode.classList.add("animate-pop");
                         squares[x].parentNode.addEventListener('animationend', function () {
@@ -1127,7 +1156,7 @@ function loaded() {
     }
 
     function checkWin() {
-        // console.log("CHECKING")
+        // //console.log("CHECKING")
         for (let x = 0; x < squares.length; x++) {
             if (squares[x].innerHTML == goal && !continueEnabled) {
                 scoreResult.style.display = "block";
