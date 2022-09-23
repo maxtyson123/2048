@@ -18,7 +18,7 @@
     <div class="header">
         <div class="row">
             <div class="column">
-                <h1 class="goaltext">2048</h1>
+                <h1 class="goaltext animate-down">2048</h1>
             </div>
             <div class="column" style="padding-top: 15%;">
                 <div class="scoretab">
@@ -68,34 +68,38 @@
             </div>
         </div>
     </div>
-</div>
+    <br>
+    <div class="row">
+        <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
+        <div>
+        </div>
 
-<button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
-<div id="settingspannel" class="sidepanel">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-    <div id="settings">
-        <div class="settingrow">
-            <p>Goal:&nbsp;&nbsp;</p>
-            <button id="goaldecrease">-</button>
-            <div id="goal">--</div>
-            <button id="goalincrease">+</button>
+
+        <div id="settingspannel" class="sidepanel">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+            <div id="settings">
+                <div class="settingrow">
+                    <p>Goal:&nbsp;&nbsp;</p>
+                    <button id="goaldecrease">-</button>
+                    <div id="goal">--</div>
+                    <button id="goalincrease">+</button>
+                </div>
+                <div class="settingrow">
+                    <p>Size:&nbsp;&nbsp;</p>
+                    <button id="sizedecrease">-</button>
+                    <div id="size">--</div>
+                    <button id="sizeincrease">+</button>
+                </div>
+                <div class="settingrow">
+                    <p>Reverse:&nbsp;&nbsp;</p>
+                    <input type="checkbox" id="reverse">
+                </div>
+                <div class="settingrow">
+                    <p>Autoplay:&nbsp;&nbsp;</p>
+                    <input type="checkbox" id="auto">
+                </div>
+            </div>
         </div>
-        <div class="settingrow">
-            <p>Size:&nbsp;&nbsp;</p>
-            <button id="sizedecrease">-</button>
-            <div id="size">--</div>
-            <button id="sizeincrease">+</button>
-        </div>
-        <div class="settingrow">
-            <p>Reverse:&nbsp;&nbsp;</p>
-            <input type="checkbox" id="reverse">
-        </div>
-        <div class="settingrow">
-            <p>Autoplay:&nbsp;&nbsp;</p>
-            <input type="checkbox" id="auto">
-        </div>
-    </div>
-</div>
 </body>
 
 </html>
