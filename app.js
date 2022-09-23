@@ -6,7 +6,6 @@ if (!window.location.href.includes("index.html")) {
 //make ai, ai give hint or image
 
 //NEXT:
-//Scores make  Customisable, add tagline
 //Track Moves
 //Preset themes
 //Other customizations: addition or combine mode,game saving and loading, undo,
@@ -16,7 +15,7 @@ if (!window.location.href.includes("index.html")) {
 //Gamemode exporting
 
 //BUGS mostly theming ofc
-//FUCK THEMING
+//FUCK THEMING nvm its done
 
 
 //ORGANISE CODE b4 GAMEMODES
@@ -156,7 +155,7 @@ function loaded() {
         ["4096"],
         [def_4096]
     ];
-    ////Example game theme data: Empty Board Background Body
+    ////Example game theme data: Empty Board Background Body Score colours tagline
     def_gametheme = [def_0, "#cacece", "#72b182ab", "#776e65"];
     def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele, def_gametheme);
     //////////////////////////////////THEME GENARATOR//////////////////
@@ -176,7 +175,7 @@ function loaded() {
     cus_1024 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 8px red");
     cus_2048 = new BoardElement("black", "white", "0 0 5px 8px white");
     der_morethen2048 = false;
-    cus_gametheme = [cus_0, "#cacece", "#72b182ab", "#776e65"];
+    cus_gametheme = [cus_0, "#cacece", "#72b182ab", "#776e65", "#808080", "WildCard"];
     cus_morele = [
         [],
         []
@@ -192,6 +191,8 @@ function loaded() {
     boardcol = "#cacece"
     bodytextcol = "#776e65"
     bodybgcol = "#72b182ab"
+    scorecol = "#808080";
+    tagline = "WildCard";
     //OpenClose
     const themeMakerDisplay = document.querySelector('.themepannel');
     const themeMakerClose = document.querySelector('.theme_closebtn');
@@ -231,6 +232,7 @@ function loaded() {
     if (reverse)
         tempnum = goal
     themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+
     function themeTileincrese() {
         debug("funct_increasetile", 2);
         tilenum = tilenum * 2;
@@ -243,7 +245,7 @@ function loaded() {
     function themeTiledecrese() {
         debug("funct_decreasetile", 2);
         tilenum = tilenum / 2;
-        if(tilenum == 1){
+        if (tilenum == 1) {
             themeTileincrese();
         }
         if (reverse) {
@@ -288,7 +290,8 @@ function loaded() {
     themeModeincrease.addEventListener("click", themeModeincrese);
     themeModedecrease.addEventListener("click", themeModedecrese);
     var currentmode = 0;
-    function updatemode(){
+
+    function updatemode() {
         for (let y = 0; y < modes.length; y++) {
 
             if (y == currentmode) {
@@ -302,6 +305,7 @@ function loaded() {
         }
         themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
     }
+
     function themeModeincrese() {
         //console.log("Increase");
 
@@ -311,7 +315,7 @@ function loaded() {
         } else {
             currentmode += 1;
         }
-        updatemode()//put this bellow increeser later
+        updatemode() //put this bellow increeser later
     }
 
     function themeModedecrese() {
@@ -433,7 +437,7 @@ function loaded() {
             }
 
             if (tilenum >= 4096) {
-                if(jsonedTheme.elementMore[0].length != 0){
+                if (jsonedTheme.elementMore[0].length != 0) {
                     cus_morele = jsonedTheme.elementMore;
 
                 }
@@ -456,12 +460,12 @@ function loaded() {
                             currentmode = 0;
                             updatemode();
                             urldata = jsonedTheme.elementMore[1][y].imageurl;
-                            urlinput.value  = urldata;
+                            urlinput.value = urldata;
                             makeintotile()
                         } else {
                             currentmode = 1;
                             updatemode()
-                            urlinput.value  = "";
+                            urlinput.value = "";
 
 
                         }
@@ -472,7 +476,7 @@ function loaded() {
 
                 for (let y = 0; y < jsonedTheme.options.length; y++) {
                     if (stpnum == parseInt(jsonedTheme.number[y])) {
-                        if(stpnum == 10)
+                        if (stpnum == 10)
                             console.log(jsonedTheme.options[y])
                         boxshadow = jsonedTheme.options[y].boxshadow;
                         if (boxshadow != "") {
@@ -490,12 +494,12 @@ function loaded() {
                             currentmode = 1;
                             updatemode();
                             urldata = jsonedTheme.options[y].imageurl;
-                            urlinput.value  = urldata;
-                            makeintotile()//single  line fixed the theming problemds, once again
+                            urlinput.value = urldata;
+                            makeintotile() //single  line fixed the theming problemds, once again
                         } else {
                             currentmode = 0;
                             updatemode()
-                            urlinput.value  = "";
+                            urlinput.value = "";
 
                         }
 
@@ -552,6 +556,26 @@ function loaded() {
             makeintotile();
         }
     });
+    var scorecolpciker = new iro.ColorPicker('#worldscore', {
+        width: 150,
+        color: scorecol
+    });
+    scorecol = scorecolpciker.color.hexString;
+    scorecolpciker.on('color:change', function() {
+        scorecol = scorecolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    const taginput = document.querySelector('#taginput');
+
+    function settag() {
+        tagline = taginput.value;
+        //console.log(tagline)
+        if (realtime)
+            makeintotile()
+    }
+    taginput.addEventListener("change", settag);
     const submitbutton = document.querySelector('.makeTile');
     if (!realtime) {
         submitbutton.innerHTML = "Set Tile"
@@ -595,9 +619,19 @@ function loaded() {
             }
             tilenum = cache_tilenum;
             zerocol = jsonedTheme.zero.bg;
+            zerocolpciker.color.set(zerocol);
             boardcol = jsonedTheme.gamethem[1];
+            boardcolpciker.color.set(boardcol);
             bodybgcol = jsonedTheme.gamethem[2];
+            bodybgcolpciker.color.set(bodybgcol);
             bodytextcol = jsonedTheme.gamethem[3];
+            bodytextcolpciker.color.set(bodytextcol);
+            scorecol = jsonedTheme.gamethem[4];
+            scorecolpciker.color.set(scorecol);
+            tagline = jsonedTheme.gamethem[5];
+            taginput.value = tagline;
+
+
             // makeintotile(); THIS LINE  WAS CAUSING THE MF 2 not beign coloure corclty BUG, I  STG 2 HRS WASTED UGHHHHHHHHHHH
         }
 
@@ -699,6 +733,8 @@ function loaded() {
         cus_gametheme[1] = boardcol;
         cus_gametheme[2] = bodybgcol;
         cus_gametheme[3] = bodytextcol;
+        cus_gametheme[4] = scorecol;
+        cus_gametheme[5] = tagline;
         cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
         debug(cus_theme, 1)
         debug("cus_theme", 1)
@@ -940,9 +976,19 @@ function loaded() {
 
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
+            textclasses = document.querySelectorAll("p");
+            for (let y = 0; y < textclasses.length; y++) {
+                textclasses[y].style.color = gameTheme[3];
+            }
             gridDisplay.style.border = "5px solid " + gameTheme[1];
             gridDisplay.style.backgroundColor = zerocol;
             tilestotheme = gridDisplay.children;
+            document.querySelector("#tagline").innerHTML = gameTheme[5];
+            scoresclass = document.querySelectorAll(".scoretab");
+            for (let y = 0; y < scoresclass.length; y++) {
+                scoresclass[y].style.backgroundColor = gameTheme[4];
+            }
+
             for (let y = 0; y < tilestotheme.length; y++) {
                 tilestotheme[y].style.backgroundColor = gameTheme[1];
             }
@@ -1521,5 +1567,3 @@ function resetTheme() {
     setCookie("customTheme", "", 365);
     location.reload();
 }
-
-//Customisable theming was a mistake, im drowing in errors, aint gonna  bother to fix it in this commit, like where tf is the purple coming fromg ???????!?!?!??!?!?!?!?!?!!?!?!?!?!!?!?!?!?!??!?!?
