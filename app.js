@@ -2,11 +2,12 @@ document.addEventListener('DOMContentLoaded', loaded);
 //make ai, ai give hint or image
 //themeing -custom image
 //Gamemode exporting
-//Other customizations: Custom spawn number (must be reflected with the goal to make possible), splitscreen multiplayer, flappy, tertirs
+//Other customizations: addition or combine mode, splitscreen multiplayer, flappy, tertirs
+//Preset themes
+//Make code more effeinct
 
+//fix theming loading
 
-///THEMEING BUGS
-//only loads theme element for nums 2-4, betwen line 400smth and 518 it gets overwriten to weird ass value : #42ffe0
 function loaded() {
     function debug(text,bugfixingid){
 
@@ -42,6 +43,11 @@ function loaded() {
     const goalincrease = document.querySelector('#goalincrease');
     const goaldecrease = document.querySelector('#goaldecrease');
     let goal = 2048;
+    //SPAWN
+    const spawnDisplay = document.querySelector('#spawn');
+    const spawnincrease = document.querySelector('#spawnincrease');
+    const spawndecrease = document.querySelector('#spawndecrease');
+    let spwantile = 2;
     //SIZE
     const sizeDisplay = document.querySelector('#size');
     const sizeincrease = document.querySelector('#sizeincrease');
@@ -58,6 +64,12 @@ function loaded() {
         goal = savedgoal;
 
     }
+    //Spawn tile
+    let spawntilecook = getCookie("spawn");
+    if (spawntilecook != "") {
+        spwantile = parseInt(spawntilecook);
+
+    }
     //REVERSED
     const reverseCheck = document.querySelector('#reverse');
     let reverse = false;
@@ -70,8 +82,11 @@ function loaded() {
             reverse = false;
 
     }
-    if (reverse)
+    if (reverse){
         goal = 2;
+        spwantile = 2048;
+
+    }
 
     //OPENED
     let opened = getCookie("open");
@@ -198,21 +213,30 @@ function loaded() {
     themeTileincrease.addEventListener("click", themeTileincrese);
     themeTiledecrease.addEventListener("click", themeTiledecrese);
     var tilenum = 2;
-
+    var tempnum = spwantile;
+    themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
     function themeTileincrese() {
         debug("funct_increasetile",2);
         tilenum = tilenum * 2;
-        themeTilelDisplay.innerHTML = "<p>" + tilenum + "</p>";
+        tempnum = tempnum * 2;
+        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
         loadtilefromsave()
     }
 
     function themeTiledecrese() {
         debug("funct_decreasetile",2);
         tilenum = tilenum / 2;
+        if(tempnum/2 <= spwantile){
+            tempnum = spwantile;
+        }else{
+            tempnum = tempnum / 2;
+        }
+
         if (tilenum == 1) {
             tilenum = 2;
         }
-        themeTilelDisplay.innerHTML = "<p>" + tilenum + "</p>";
+
+        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
         loadtilefromsave()
     }
 
@@ -244,10 +268,10 @@ function loaded() {
         for (let y = 0; y < modes.length; y++) {
 
             if(y == currentmode){
-                modes[y].display = "block";
-                console.log(y)
+                modes[y].style.display = "block";
+
             }else{
-                modes[y].display = "none";
+                modes[y].style.display = "none";
             }
         }
         if(currentmode + 1 == modes.length){
@@ -260,9 +284,9 @@ function loaded() {
         console.log("Decrease");
         for (let y = 0; y < modes.length; y++) {
             if(y == currentmode){
-                modes[y].display = "block";
+                modes[y].style.display = "block";
             }else{
-                modes[y].display = "none";
+                modes[y].style.display = "none";
             }
         }
         if(currentmode - 1 == -1){
@@ -340,7 +364,6 @@ function loaded() {
         }
     });
     function loadtilefromsave() {
-        debug("funct_loadtile",2);
         storedtheme = getCookie("customTheme");
         debug(storedtheme,1);
         if (storedtheme != "") {
@@ -525,6 +548,17 @@ function loaded() {
             cus_2048 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum > 2048) {
+            firnum = 2;
+            stpnum = 0;
+            for (let y = 1; y < tilenum; y++) {
+                if(firnum == tilenum){
+                    stpnum = y;
+                    break
+                }else{
+                    firnum = firnum*2;
+                }
+            }
+            tilenum = stpnum;
             der_morethen2048 = true;
             if (cus_morele.length != 0) {
                 replaced = false;
@@ -680,7 +714,7 @@ function loaded() {
         this.fivetwelve = fivetwelve;
         this.oneohtwentyfour = oneohtwentyfour;
         this.twozerofoureight = twozerofoureight;
-        this.number = ["0", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024", "2048"];
+        this.number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
         this.options = [zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight];
         this.moreenabled = more2048;
         this.elementMore = elemore;
@@ -691,33 +725,45 @@ function loaded() {
     function themeBoard(Theme) {
         debug("funct_themetheboard",2);
         debug(Theme,2);
-        t_0 = Theme.zero;
-        t_2 = Theme.two;
-        t_4 = Theme.four;
-        t_8 = Theme.eight;
-        t_16 = Theme.sixteen;
-        t_32 = Theme.thirtytwo;
-        t_64 = Theme.sixtyfour;
-        t_128 = Theme.onetwentyeight;
-        t_256 = Theme.twofiftysix;
-        t_512 = Theme.fivetwelve;
-        t_1024 = Theme.oneohtwentyfour;
-        t_2048 = Theme.twozerofoureight;
         gameTheme = Theme.gamethem;
         for (let x = 0; x < squares.length; x++) {
+            tinum = parseInt(squares[x].innerHTML);
+            firnum = spwantile;
+            stpnum = 0;
+            if(tinum != 0){
+                if(reverse)
+                    for (let y = 1; y < 12; y++) {
+                        if(firnum == tinum){
+                            stpnum = 12-y;
+                            break
+                        }else{
+                            firnum = firnum/2;
+                        }
+                    }
+                else
+                    for (let y = 1; y < 12+Theme.elementMore[0].length; y++) {
+                        if(firnum == tinum){
+                            stpnum = y;
+                            break
+                        }else{
+                            firnum = firnum*2;
+                        }
+                    }
+            }
+
             for (let y = 0; y < Theme.options.length; y++) {
-                if (parseInt(squares[x].innerHTML) == parseInt(Theme.number[y])) {
+                if (stpnum == parseInt(Theme.number[y])) {
                     squares[x].style.color = Theme.options[y].textcol;
                     squares[x].style.background = Theme.options[y].bg;
                     squares[x].style.boxShadow = Theme.options[y].boxshadow;
                 }
 
             }
-            if (parseInt(squares[x].innerHTML) > 2048) {
+            if (stpnum > 11) {
                 if (Theme.moreenabled) {
                     themedtile = false;
                     for (let y = 0; y < Theme.elementMore[0].length; y++) {
-                        if (parseInt(squares[x].innerHTML) == parseInt(Theme.elementMore[0][y])) {
+                        if (stpnum == parseInt(Theme.elementMore[0][y])) {
                             squares[x].style.color = Theme.elementMore[1][y].textcol;
                             squares[x].style.background = Theme.elementMore[1][y].bg;
                             squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
@@ -757,17 +803,63 @@ function loaded() {
     } else {
         themeBoard(def_theme);
     }
+
+
+    //SPAWN
+    function setspawn(mode) {
+        //console.log("Clicked");
+        if (mode == 1) {
+            if (spwantile != 1)
+                spwantile -= 1;
+            else
+                spwantile = 1;
+        }
+        if (mode == 2) {
+            spwantile += 1;
+        }
+        spawnDisplay.innerHTML = "<p>" + spwantile + "</p>";
+        setCookie("spawn", spwantile, 1);
+        if(mode != 0){
+            window.location.reload();
+        }
+    }
+    spawnincrease.addEventListener("click", function () {
+        setspawn(2);
+    });
+    spawndecrease.addEventListener("click", function () {
+        setspawn(1);
+    });
+    setspawn(0);
     //GOAL
     function setgoal(mode) {
         //console.log("Clicked");
+
+        let stepscookie = getCookie("steps");
+        if(stepscookie == ""){
+            setCookie("steps", 11, 1);
+            setps = 11;
+        }else{
+            setps = parseInt(stepscookie);
+        }
+        currentstep = 1;
+        if(!reverse){	 startnum = spwantile;
+            for (let y = 1; y < setps+1; y++) {
+                startnum = startnum*2;
+            }
+            goal = startnum;}
+
         if (mode == 1) {
-            if (goal != 2)
+            if (goal != spwantile){
                 goal = goal / 2;
+                setCookie("steps", setps-1, 1);
+            }
+
             else
                 goal = 2;
         }
         if (mode == 2) {
             goal = goal * 2;
+            setCookie("steps", setps+1, 1);
         }
         headertext.innerHTML = goal;
         headertext2.innerHTML = goal;
@@ -782,7 +874,6 @@ function loaded() {
         setgoal(1);
     });
     setgoal(0);
-    ///SZIE
     function setsize(mode) {
         //console.log("Clicked");
         if (mode == 1) {
@@ -812,8 +903,8 @@ function loaded() {
             setCookie("goal", 2, 1);
         } else {
             setCookie("goal", 2048, 1);
+            setCookie("spawn", 2, 1);
         }
-        console.log(getCookie("reverse"))
         location.reload();
     }
     if (reverse) {
@@ -830,17 +921,10 @@ function loaded() {
         debug("genarate",2);
         let randNum = Math.floor(Math.random() * squares.length);
         if (squares[randNum].innerHTML == 0) {
-            if (reverse) {
-                var newel = squares[randNum].cloneNode(true);
-                squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
-                squares[randNum] = newel;
-                squares[randNum].innerHTML = 2048;
-            } else {
-                var newel = squares[randNum].cloneNode(true);
-                squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
-                squares[randNum] = newel;
-                squares[randNum].innerHTML = 2;
-            }
+            var newel = squares[randNum].cloneNode(true);
+            squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
+            squares[randNum] = newel;
+            squares[randNum].innerHTML = spwantile;
 
         } else {
             generate();
@@ -1281,3 +1365,5 @@ function resetTheme() {
     setCookie("customTheme", "", 365);
     location.reload();
 }
+
+//Customisable theming was a mistake, im drowing in errors, aint gonna  bother to fix it in this commit, like where tf is the purple coming fromg ???????!?!?!??!?!?!?!?!?!!?!?!?!?!!?!?!?!?!??!?!?
