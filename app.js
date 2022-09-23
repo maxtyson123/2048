@@ -6,15 +6,14 @@ if (!window.location.href.includes("index.html")) {
 //make ai, ai give hint or image
 
 //NEXT:
-//Track Moves
-//Preset themes
+//Savin andloading via setting
 //Other customizations: addition or combine mode,game saving and loading, undo,
-//make more effeceint: looping: x, cookie:  done.
-//May have  to remake tiles  and animations before gamemodes
+//May have  to remake tiles  and animations before gamemodes, scoreincrease
 //modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
 //Gamemode exporting
 
 //BUGS mostly theming ofc
+//tile 2 not loading
 //FUCK THEMING nvm its done
 
 
@@ -23,7 +22,7 @@ if (!window.location.href.includes("index.html")) {
 
 function loaded() {
     function debug(text, bugfixingid) {
-
+        //console.log(text);
     }
 
     function getUrlVar(varible) {
@@ -113,6 +112,19 @@ function loaded() {
 
     //AUTOPLAY
     const autoplayCheck = document.querySelector('#auto');
+    //Moves
+    const movesdisplay = document.querySelector('#moves');
+    const movescapdisplay = document.querySelector('#movecap');
+    const moveincrease = document.querySelector('#moveincrease');
+    const movedecrease = document.querySelector('#movedecrease');
+    var movecap = 0;
+    let movecapcookie = getCookie("movecap");
+    if (movecapcookie != "") {
+
+        movecap = parseInt(movecapcookie);
+    }
+    let moves = 0;
+
     //REVERSED
     const realtimeCheck = document.querySelector('#realtime');
     let realtime = false;
@@ -607,6 +619,7 @@ function loaded() {
 
                 loadtilefromsave(true);
                 makeintotile(false);
+
                 tilenum = tilenum + tilenum;
             }
             loadtilefromsave(true);
@@ -637,8 +650,9 @@ function loaded() {
 
     }
     loadallfromsave();
-    tilenum = -99
+    tilenum = 2
     makeintotile();
+
     tilenum = 2;
 
     function makeintotile(save = true) {
@@ -751,7 +765,10 @@ function loaded() {
     //Make shareable
     const sharethemebutton = document.querySelector('#sharethemebutton');
     const loadthemebutton = document.querySelector('#loadthemebutton');
+    const presetthemebutton = document.querySelector('#presetthemebutton');
+
     const sharetext = document.querySelector('#sharetext');
+    const presets = document.querySelector('#presetlist');
     const sharethemediv = document.querySelector('.sharethemediv');
     const sharethemeinputbox = document.querySelector('#sharethemedata');
     const share_closebtn = document.querySelector('.share_closebtn');
@@ -760,6 +777,7 @@ function loaded() {
     share_closebtn.addEventListener("click", closeshare);
     sharethemebutton.addEventListener("click", sharemytheme);
     loadthemebutton.addEventListener("click", loadtheme);
+    presetthemebutton.addEventListener("click", presettheme);
     loadbutton.addEventListener("click", loadthemedata);
     website = window.location.href.split(".html")
 
@@ -779,10 +797,12 @@ function loaded() {
             debug("Unparsed cokie", 1)
             debug(storedtheme, 1)
             jsonedTheme = JSON.parse(storedtheme);
+            presets.style.display = "none";
             debug("Parsed JSON", 1);
             debug(jsonedTheme, 1);
             var encoded = btoa(JSON.stringify(jsonedTheme));
             sharethemeinputbox.value = encoded;
+            sharethemeinputbox.style.display = "block";
             sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
         } else {
             sharetext.innerHTML = "Please note you need a theme to use this tool."
@@ -793,11 +813,24 @@ function loaded() {
         sharethemediv.style.display = "none";
     }
 
+    function presettheme(){
+        debug("funct_loadtheme", 2);
+        makeintotile();
+        sharethemediv.style.display = "block";
+        loadbutton.style.display = "none";
+        sharethemeinputbox.style.display = "none";
+
+        presets.style.display = "block";
+        sharetitle.innerHTML = "Preset Themes";
+        sharetext.innerHTML = "Share your theme with me for the chance of it beign added here";
+    }
     function loadtheme() {
         debug("funct_loadtheme", 2);
         makeintotile();
         sharethemediv.style.display = "block";
+        sharethemeinputbox.style.display = "block";
         loadbutton.style.display = "block";
+        presets.style.display = "none";
         sharetitle.innerHTML = "Load Theme";
         sharetext.innerHTML = "Paste your text and press the buton below";
 
@@ -1086,6 +1119,7 @@ function loaded() {
             size = width + 2;
         }
         setCookie("width", size, 1);
+        setCookie("savegame","",31)
         location.reload();
     }
     sizeincrease.addEventListener("click", function() {
@@ -1095,7 +1129,27 @@ function loaded() {
         setsize(1);
     });
     sizeDisplay.innerHTML = "<p>" + width + "</p>";
-
+    function setmovecap(mode) {
+        ////console.log("Clicked");
+        if (mode == 1) {
+            if (movecap != 0)
+                movecap -= 100;
+            else
+                movecap = 0;
+        }
+        if (mode == 2) {
+            movecap += 100;
+        }
+        setCookie("movecap", movecap, 1);
+        movescapdisplay.innerHTML = "<p>" + movecap + "</p>";
+    }
+    moveincrease.addEventListener("click", function() {
+        setmovecap(2);
+    });
+    movedecrease.addEventListener("click", function() {
+        setmovecap(1);
+    });
+    movescapdisplay.innerHTML = "<p>" + movecap + "</p>";
     function setreverse() {
 
         setCookie("reverse", reverseCheck.checked, 1);
@@ -1379,6 +1433,16 @@ function loaded() {
 
 
         }
+        if(moves != 0)
+            if(moves ==  movecap){
+                scoreResult.style.display = "block";
+                scoreResult.style.width = width * 100 + "px";
+                scoreResult.style.height = width * 100 + "px";
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
+                autoplayCheck.enabled = false;
+                autoplayCheck.removeEventListener("change", autoplay);
+                document.removeEventListener('keyup', control);
+            }
 
 
     }
@@ -1464,9 +1528,32 @@ function loaded() {
         } else {
             themeBoard(def_theme);
         }
-
+        moves  += 1;
+        movesdisplay.innerHTML = moves;
+        savegame();
     }
 
+    function savegame(){
+        let scoredata = [];
+        for (let x = 0; x < squares.length; x++) {
+            scoredata.push(squares[x].innerHTML);
+
+        }
+        setCookie("savegame",scoredata,31)
+    }
+    function loadgame(){
+        let scoredata = getCookie("savegame").split(",");
+        if(scoredata != "")
+            for (let x = 0; x < squares.length; x++) {
+                squares[x].innerHTML = scoredata[x];
+            }
+        if (customThemeActive) {
+            themeBoard(cus_theme);
+        } else {
+            themeBoard(def_theme);
+        }
+    }
+    loadgame()
     function keyup() {
         moveUp();
         combineCol("up");
@@ -1515,6 +1602,8 @@ function loaded() {
                 } else {
                     themeBoard(def_theme);
                 }
+                moves  += 1;
+                movesdisplay.innerHTML = moves;
                 autoplay();
             }, 100);
         } else {

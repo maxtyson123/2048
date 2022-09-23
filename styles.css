@@ -167,6 +167,13 @@ h2 {
     margin-left: 20px;
 }
 
+.game-container{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+
+}
 
 .grid {
     margin: auto;
@@ -177,6 +184,7 @@ h2 {
     background-color: black;
     border: 5px solid #cacece;
     border-radius: 5px;
+
 }
 
 .header {
