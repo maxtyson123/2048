@@ -79,7 +79,7 @@ body {
     transition: 0.3s;
 }
 
-.sidepanel input {
+.sidepanel input, .themepannel input{
     appearance: none;
     border-radius: 10px;
     border: 2.5px solid #cacece;
@@ -93,7 +93,7 @@ body {
     padding-left: 80px !important;
 }
 
-.sidepanel input:checked {
+.sidepanel input:checked, .themepannel input:checked{
     appearance: none;
     border-radius: 10px;
     border: 2.5px solid #cacece;

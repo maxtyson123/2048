@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', loaded);
-//make ai
-//themeing -custom image, customfont,custom pagebg
-//Theme saving and loading, sharing
-//make  custom  themeing.
+//make ai, ai give hint or image
+//themeing -custom image, customfont,custom ga,e bg and page bg
+//Theme  sharing
+//Other customizations: Custom spawn number (must be reflected with the goal to make possible),
 function loaded() {
 
     document.addEventListener('keyup', control);
@@ -67,6 +67,18 @@ function loaded() {
 
     //AUTOPLAY
     const autoplayCheck = document.querySelector('#auto');
+    //REVERSED
+    const realtimeCheck = document.querySelector('#realtime');
+    let realtime = false;
+    let realcook = getCookie("realtime");
+    if (realcook != "") {
+
+        if (realcook == "true")
+            realtime = true;
+        else
+            realtime = false;
+
+    }
 
 
     let continueEnabled = false;
@@ -120,9 +132,9 @@ function loaded() {
         [""]
     ];
     ///////////UI
-    //Load defaults from cookie
+    customThemeLoaded = false;
     default_glowamt = 2;
-    default_textcol = "#0000FF";
+    default_textcol = "#000000";
     default_bgcol = "#FFFFFF";
     default_glowCol = "#FFFFFF";
 
@@ -166,9 +178,83 @@ function loaded() {
         loadfromsave()
     }
 
+    //Realtime
+
+    function setreal() {
+        setCookie("realtime", realtimeCheck.checked, 1);
+    }
+    if (realtime) {
+        realtimeCheck.checked = true
+    } else if (!realtime) {
+        realtimeCheck.checked = false
+    }
+    realtimeCheck.addEventListener("change", setreal);
+    //TextColour
+    var textcolpciker = new iro.ColorPicker('#textcolpciker', {
+        width: 150,
+        color: default_textcol
+    });
+    textcol = textcolpciker.color.hexString;
+    textcolpciker.on('color:change', function () {
+        textcol = textcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    //BackgroundCol
+    var bgcolpciker = new iro.ColorPicker('#bgcolpciker', {
+        width: 150,
+        color: default_bgcol
+    });
+    bgcol = bgcolpciker.color.hexString;
+    bgcolpciker.on('color:change', function () {
+        bgcol = bgcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    //GlowAmount
+    const themeglowAmtlDisplay = document.querySelector('#themeglowAmt');
+    const themeglowAmtincrease = document.querySelector('#themeglowAmtincrese');
+    const themeglowAmtdecrease = document.querySelector('#themeglowAmtdecrese');
+    themeglowAmtincrease.addEventListener("click", themeglowAmtincrese);
+    themeglowAmtdecrease.addEventListener("click", themeglowAmtdecrese);
+    var glowAmtnum = default_glowamt;
+
+    function themeglowAmtincrese() {
+        glowAmtnum += 2;
+        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
+        if (realtime) {
+            makeintotile();
+        }
+    }
+
+    function themeglowAmtdecrese() {
+        glowAmtnum -= 2;
+        if (glowAmtnum == 0) {
+            glowAmtnum = 2;
+        }
+        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
+        if (realtime) {
+            makeintotile();
+        }
+    }
+    //GlowCol
+    var glowcolpciker = new iro.ColorPicker('#glowcolpciker', {
+        width: 150,
+        color: default_glowCol
+    });
+    glowCol = glowcolpciker.color.hexString;
+    glowcolpciker.on('color:change', function () {
+        glowCol = glowcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
     function loadfromsave() {
         storedtheme = getCookie("customTheme");
         if (storedtheme != "") {
+            customThemeLoaded = true;
             jsonedTheme = JSON.parse(storedtheme)
             //console.log(storedtheme)
             if (tilenum > 2048) {
@@ -185,111 +271,70 @@ function loaded() {
                         //console.log(jsonedTheme.options[y].textcol)
                         default_textcol = jsonedTheme.options[y].textcol;
                         default_bgcol = jsonedTheme.options[y].bg;
+                        bgcolpciker.color.set(default_bgcol);
+                        textcolpciker.color.set(default_textcol);
+                        glowcolpciker.color.set(default_glowCol);
 
                     }
                 }
             }
 
+
         }
         //update pickers re changes
     }
+
     loadfromsave();
-    //TextColour
-    var textcolpciker = new iro.ColorPicker('#textcolpciker', {
-        width: 150,
-        color: default_textcol
-    });
-    textcol = textcolpciker.color.hexString;
-    textcolpciker.on('color:change', function () {
-        textcol = textcolpciker.color.hexString;
-    });
-    //BackgroundCol
-    var bgcolpciker = new iro.ColorPicker('#bgcolpciker', {
-        width: 150,
-        color: default_bgcol
-    });
-    bgcol = bgcolpciker.color.hexString;
-    bgcolpciker.on('color:change', function () {
-        bgcol = bgcolpciker.color.hexString;
-    });
-    //GlowAmount
-    const themeglowAmtlDisplay = document.querySelector('#themeglowAmt');
-    const themeglowAmtincrease = document.querySelector('#themeglowAmtincrese');
-    const themeglowAmtdecrease = document.querySelector('#themeglowAmtdecrese');
-    themeglowAmtincrease.addEventListener("click", themeglowAmtincrese);
-    themeglowAmtdecrease.addEventListener("click", themeglowAmtdecrese);
-    var glowAmtnum = default_glowamt;
-
-    function themeglowAmtincrese() {
-        glowAmtnum += 2;
-        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
-    }
-
-    function themeglowAmtdecrese() {
-        glowAmtnum -= 2;
-        if (glowAmtnum == 0) {
-            glowAmtnum = 2;
-        }
-        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
-    }
-    //GlowCol
-    var glowcolpciker = new iro.ColorPicker('#glowcolpciker', {
-        width: 150,
-        color: default_glowCol
-    });
-    glowCol = glowcolpciker.color.hexString;
-    glowcolpciker.on('color:change', function () {
-        glowCol = glowcolpciker.color.hexString;
-    });
-
     ///Sumbmit button
     const submitbutton = document.querySelector('.makeTile');
     submitbutton.addEventListener("click", function () {
         makeintotile();
     });
+    if(customThemeLoaded){
+        makeintotile();
+    }
 
-    ///Make into tile
     function makeintotile() {
         customThemeActive = true;
         //check  if cus_x
         //set cux_x to theme items
         if (tilenum == 2) {
-            cus_2 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_2 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 4) {
-            cus_4 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_4 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 8) {
-            cus_8 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_8 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 16) {
-            cus_16 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_16 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 32) {
-            cus_32 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_32 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 64) {
-            cus_64 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_64 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 128) {
-            cus_128 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_128 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 256) {
-            cus_256 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_256 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 512) {
-            cus_512 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_512 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 1024) {
-            cus_1024 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_1024 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum == 2048) {
-            cus_2048 = new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_2048 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
         }
         if (tilenum > 2048) {
             der_morethen2048 = true;
             cus_morele[0].push(tilenum);
-            cus_morele[1].push(new BoardElement(textcol, bgcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
+            cus_morele[1].push(new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
         }
         cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele);
         themeData = JSON.stringify(cus_theme);
@@ -897,4 +942,8 @@ function openNav() {
 function closeNav() {
     setCookie("open", "no", 1);
     document.getElementById("settingspannel").style.width = "0";
+}
+function resetTheme(){
+    setCookie("customTheme", "", 365);
+    location.reload();
 }
