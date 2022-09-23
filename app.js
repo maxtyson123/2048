@@ -1,10 +1,20 @@
 document.addEventListener('DOMContentLoaded', loaded);
 //make ai, ai give hint or image
-//themeing -custom image, customfont,custom ga,e bg and page bg
-//Theme  sharing
-//Other customizations: Custom spawn number (must be reflected with the goal to make possible),
+//themeing -custom image, customfont,custom ga,e bg and page bg, maybe animation
+//Gamemode exporting
+//Other customizations: Custom spawn number (must be reflected with the goal to make possible), splitscreen multiplayer, flappy, tertirs
 function loaded() {
 
+    function getUrlVar(varible){
+        vars = window.location.search.split("?");
+        for (let x = 0; x < vars.length; x++) {
+            varibleData = vars[x].split("=");
+            if(varibleData[0] == varible){
+                return varibleData[1];
+            }
+        }
+
+    }
     document.addEventListener('keyup', control);
     //////////////////GAME////////////
     const gridDisplay = document.querySelector('.grid');
@@ -149,10 +159,20 @@ function loaded() {
 
     function openThemeMaker() {
         themeMakerDisplay.style.width = "250px";
+        setCookie("theme-open","yes",1);
     }
 
     function closeThemeMaker() {
         themeMakerDisplay.style.width = "0";
+        setCookie("theme-open","no",1);
+    }
+    let thememakerOpened = getCookie("theme-open");
+    if (thememakerOpened != "") {
+        if (thememakerOpened == "yes")
+            openThemeMaker()
+        else
+            closeThemeMaker()
+
     }
 
     //TileSelector
@@ -255,7 +275,7 @@ function loaded() {
         storedtheme = getCookie("customTheme");
         if (storedtheme != "") {
             customThemeLoaded = true;
-            jsonedTheme = JSON.parse(storedtheme)
+            jsonedTheme = JSON.parse(storedtheme);
             //console.log(storedtheme)
             if (tilenum > 2048) {
 
@@ -342,6 +362,79 @@ function loaded() {
         themeBoard(cus_theme);
     }
 
+    //Theme externally loading and sharing
+    //Make shareable
+    const sharethemebutton = document.querySelector('#sharethemebutton');
+    const loadthemebutton = document.querySelector('#loadthemebutton');
+    const sharetext = document.querySelector('#sharetext');
+    const sharethemediv = document.querySelector('.sharethemediv');
+    const sharethemeinputbox = document.querySelector('#sharethemedata');
+    const share_closebtn = document.querySelector('.share_closebtn');
+    const sharetitle = document.querySelector('#sharetitle');
+    const loadbutton = document.querySelector('#loadbutton');
+    share_closebtn.addEventListener("click", closeshare);
+    sharethemebutton.addEventListener("click", sharemytheme);
+    loadthemebutton.addEventListener("click", loadtheme);
+    loadbutton.addEventListener("click", loadthemedata);
+    function sharemytheme(){
+        makeintotile();
+        sharethemediv.style.display = "block";
+        loadbutton.style.display = "none";
+        sharetitle.innerHTML = "Share Theme";
+        website = window.location.href.split(".html")
+
+        storedtheme = getCookie("customTheme");
+        if (storedtheme != "") {
+            jsonedTheme = JSON.parse(storedtheme);
+            var encoded = btoa(JSON.stringify(jsonedTheme));
+            sharethemeinputbox.value = encoded;
+            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='"+website[0]+".html?rawTheme="+encoded+"'>Link to Theme</a>";
+        }else{
+            sharetext.innerHTML = "Please note you need a theme to use this tool."
+        }
+    }
+    function closeshare(){
+        sharethemediv.style.display = "none";
+    }
+    function loadtheme(){
+        makeintotile();
+        sharethemediv.style.display = "block";
+        loadbutton.style.display = "block";
+        sharetitle.innerHTML = "Load Theme";
+        sharetext.innerHTML = "Paste your text and press the buton below";
+
+
+    }
+    function loadthemedata(){
+        console.log("Loading..")
+        let shareddata = sharethemeinputbox.value;
+        try{
+            var decoded = atob(shareddata);
+        }catch(err) {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+        try{
+            var jsondata = JSON.parse(decoded)
+        }catch(err) {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+
+        if(jsondata == ""){
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+        if(jsondata.encodedproperly == ""){
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+        if(jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks"){
+            console.log("WORKS")
+            setCookie("customTheme", decoded, 365);
+            loadfromsave();
+            closeshare();
+        }else{
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+    }
+
     function createBoard() {
         gridDisplay.style.width = width * 100 + "px";
         gridDisplay.style.height = width * 100 + "px";
@@ -381,6 +474,7 @@ function loaded() {
         this.options = [zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight];
         this.moreenabled = more2048;
         this.elementMore = elemore;
+        this.encodedproperly = "it_works_pls_dont_mess_with_this_otherwise_it_breaks";
     }
 
     function themeBoard(Theme) {
@@ -908,9 +1002,13 @@ function loaded() {
         }
 
     }
+    var passedTheme = getUrlVar("rawTheme")
+    if (passedTheme != undefined){
+        sharethemeinputbox.value = passedTheme;
+        loadthemedata();
+    }
 
 }
-
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));

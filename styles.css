@@ -45,6 +45,29 @@ body {
     font-size: 36px;
 }
 
+.sharethemediv{
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    width: 30%;
+    position: fixed;
+    z-index: 2;
+    height: auto;
+    background-color: #111;
+    transition: 0.5s;
+    display: none;
+    padding: 10px;
+
+}
+
+.sharethemediv input{
+    width: 80%;
+    margin-left: 10%;
+    overflow-y: scroll;
+}
+
 .sidepanel {
     width: 0;
     position: fixed;
@@ -69,7 +92,7 @@ body {
 }
 
 .sidepanel button,
-.themepannel button {
+.themepannel button, #loadbutton {
     border-radius: 10px;
     text-decoration: none;
     font-size: 25px;
@@ -107,7 +130,9 @@ body {
     color: #f1f1f1;
 }
 
-.sidepanel .closebtn {
+.sidepanel .closebtn, .share_closebtn {
+    color: #818181;
+    text-decoration: none;
     position: absolute;
     top: 0;
     right: 25px;
