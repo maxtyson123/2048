@@ -12,6 +12,39 @@ body {
     padding-top: 5%;
 }
 
+.themepannel {
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    height: 100%;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    transition: 0.5s;
+    padding-top: 60px;
+    align-items: center;
+}
+
+.themepannel p,
+.themepannel a {
+
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    right: 10px;
+}
+
+.themepannel .theme_closebtn {
+    position: absolute;
+    top: 0;
+    right: 200px;
+    font-size: 36px;
+}
+
 .sidepanel {
     width: 0;
     position: fixed;
@@ -35,7 +68,8 @@ body {
     transition: 0.3s;
 }
 
-.sidepanel button {
+.sidepanel button,
+.themepannel button {
     border-radius: 10px;
     text-decoration: none;
     font-size: 25px;
@@ -53,6 +87,10 @@ body {
     display: block;
     transition: 0.3s;
     padding: 10px;
+}
+
+.makeTileConatiner {
+    padding-left: 80px !important;
 }
 
 .sidepanel input:checked {
@@ -116,10 +154,9 @@ h1 {
     background-color: #cacece;
 
 
-
 }
 
-.test{
+.test {
     color: rgb(255, 0, 0);
 }
 
@@ -131,80 +168,99 @@ h1 {
     width: 90px;
     height: 90px;
     background-color: lightgreen;
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
     font-weight: bold;
+    line-height: 80px;
+
 }
 
-.animate-down{
-    position:relative;
+
+.animate-down {
+    position: relative;
     animation: animatetop 0.2s;
 }
-@keyframes animatetop{
-    from{
-        top:-100px;
+
+@keyframes animatetop {
+    from {
+        top: -100px;
     }
-    to{
-        top:0;
-    }
-}
-.animate-up{
-    position:relative;
-    animation: animatebottom 0.2s
-}
-@keyframes animatebottom{
-    from{
-        bottom:-100px;
-    }
-    to{
-        bottom:0;
+
+    to {
+        top: 0;
     }
 }
 
-.animate-left{
-    position:relative;
+.animate-up {
+    position: relative;
+    animation: animatebottom 0.2s
+}
+
+@keyframes animatebottom {
+    from {
+        bottom: -100px;
+    }
+
+    to {
+        bottom: 0;
+    }
+}
+
+.animate-left {
+    position: relative;
     animation: animateright 0.2s
 }
-@keyframes animateright{
-    from{
-        right:-100px;
+
+@keyframes animateright {
+    from {
+        right: -100px;
     }
-    to{
-        right:0;
-    }
-}
-.animate-right{
-    position:relative;
-    animation:animateleft 0.2s
-}
-@keyframes animateleft{
-    from{
-        left:-100px;
-    }
-    to{
-        left:0;
+
+    to {
+        right: 0;
     }
 }
+
+.animate-right {
+    position: relative;
+    animation: animateleft 0.2s
+}
+
+@keyframes animateleft {
+    from {
+        left: -100px;
+    }
+
+    to {
+        left: 0;
+    }
+}
+
 @keyframes spawning {
-    from{
-        transform:scale(0)
+    from {
+        transform: scale(0)
     }
-    to{
-        transform:scale(1)
+
+    to {
+        transform: scale(1)
     }
 }
-.animate-pop{
+
+.animate-pop {
     border: 5px #cacece;
     animation: pop 0.2s;
 }
+
 @keyframes pop {
-    from{
-        transform:scale(1)
+    from {
+        transform: scale(1)
     }
-    to{
-        transform:scale(1.175)
+
+    to {
+        transform: scale(1.175)
     }
 }
+
 .settingrow {
     display: flex;
     align-items: center;

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="eng">
-
 <head>
     <meta charset="utf-8">
     <title>2048 | Max Tyson</title>
     <link rel="stylesheet" href="styles.css">
     <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 </head>
-
 <body>
 <script>window.addEventListener("keydown", function(e) {
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
         e.preventDefault();
     }
-}, false);</script>
+}, false);
+</script>
 <div class="game">
     <div class="header">
         <div class="row">
@@ -36,11 +36,9 @@
                     <div class="hscore-title">Highscore:</div>
                     <span id="hscore">0</span>
                 </div>
-
             </div>
         </div>
     </div>
-
 </div>
 <div class="row">
     <div id="result">
@@ -49,9 +47,7 @@
     </div>
     <div class="grid">
     </div>
-
 </div>
-
 <br>
 <div class="header">
     <div class="row">
@@ -73,8 +69,55 @@
         <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
         <div>
         </div>
-
-
+        <div class="themepannel">
+            <a href="javascript:void(0)" class="theme_closebtn">×</a>
+            <div class="settingrow">
+                <h2>Theme Maker</h2>
+            </div>
+            <div class="settingrow">
+                <p>Use this to desgin custom tiles. (scroll for more options)</p>
+                </p>
+            </div>
+            <div class="settingrow">
+                <p>Tile:&nbsp;&nbsp;</p>
+                <button id="themeTiledecrese">-</button>
+                <div id="themeTile">
+                    <p>2</p>
+                </div>
+                <button id="themeTileincrese">+</button>
+            </div>
+            <div class="settingrow">
+                <p>Num Col: </p>
+                <div id="textcolpciker"></div>
+            </div>
+            <div class="settingrow">
+                <p>Bg Col: </p>
+                <div id="bgcolpciker"></div>
+            </div>
+            <div class="settingrow">
+                <p>Glow Amount:&nbsp;&nbsp;</p>
+                <button id="themeglowAmtdecrese">-</button>
+                <div id="themeglowAmt">
+                    <p>2px</p>
+                </div>
+                <button id="themeglowAmtincrese">+</button>
+            </div>
+            <div class="settingrow">
+                <p>Glow Col:</p>
+                <div id="glowcolpciker"></div>
+            </div>
+            <div class="settingrow">
+                <div class="makeTileConatiner">
+                    <button class="makeTile">Set Tile</button>
+                </div>
+            </div>
+            <div class="settingrow">
+                <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
+            </div>
+            <div class="settingrow">
+                <p>2022</p>
+            </div>
+        </div>
         <div id="settingspannel" class="sidepanel">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
             <div id="settings">
@@ -98,8 +141,10 @@
                     <p>Autoplay:&nbsp;&nbsp;</p>
                     <input type="checkbox" id="auto">
                 </div>
+                <div class="settingrow">
+                    <button class="theme_openbtn">☰ Open Theme Maker</button>
+                </div>
             </div>
         </div>
 </body>
-
 </html>
