@@ -51,231 +51,243 @@
         <h1>You Lose</h1>
         <button>Replay</button>
     </div>
-    <div class="grid">
-    </div>
-    <div id="movecontainer" style="width: 400px; margin: auto;">
-        <div class="scoretab">
-            <div class="moves-title">Moves:</div>
-            <span id="moves">0</span>
+    <div class="gamecoantiner">
+        <div style="display: inline">
+            <div class="grid"></div>
         </div>
+        <div class="side-tab">
+            <button style="font-size: 28px;" class="side-item" onclick="resetGame()"><span class=reload> &nbsp&#x21bb&nbsp;</span></button>
+            <button style="font-size: 28px;" class="side-item" id="goback"><span class=reload> &nbsp&#8592&nbsp;</span></button>
+            <div class="side-item">
+                <p id="moves">0</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+<br>
+
+<br>
+<div class="header">
+    <div class="row">
+        <div class="column">
+            <div class="scoretab" style="padding: 10px;">
+                <div class="score-title inline">Current Best: </div>
+                <span class="inline" id="best">0</span>
+            </div>
+        </div>
+        <div class="column">
+            <div class="scoretab" style="padding: 10px;">
+                <div class="hscore-title inline">Alltime Best:</div>
+                <span class="inline" id="hbest">0</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <p>Use the customization settingns to recreate the game to your desire</p>
+        <p>-----</p>
+        <p>Game inspired by the original 2048 by xyz. However the code for my version game was made by me and so was the thememaker and cusomizabality
+        <p>
     </div>
     <br>
-    <div class="header">
-        <div class="row">
-            <div class="column">
-                <div class="scoretab" style="padding: 10px;">
-                    <div class="score-title inline">Current Best: </div>
-                    <span class="inline" id="best">0</span>
-                </div>
-            </div>
-            <div class="column">
-                <div class="scoretab" style="padding: 10px;">
-                    <div class="hscore-title inline">Alltime Best:</div>
-                    <span class="inline" id="hbest">0</span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <p>Use the customization settingns to recreate the game to your desire</p>
-            <p>-----</p>
-            <p>Game inspired by the original 2048 by xyz. However the code for my version game was made by me and so was the thememaker and cusomizabality
-            <p>
-        </div>
-        <br>
-        <div class="sharethemediv">
-            <a href="javascript:void(0)" class="share_closebtn">×</a>
-            <h1 id="sharetitle">Share Theme</h1>
-            <ul id="presetlist"><li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2Y5YTJiYyIsInRleHRjb2wiOiIjZjlhMmJjIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmOWEyYmMiLCJ0ZXh0Y29sIjoiI2Y5YTJiYyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmYwMDM3IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yLmpwZyJ9LHsiYmciOiIjNTRjMTU0IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy80LmpwZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy84LmpwZyJ9LHsiYmciOiIjMDA4NGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xNi5qcGcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvMzIuanBnIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzY0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMjguanBnIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzI1Ni5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvNTEyLmpwZyJ9LHsiYmciOiIjMzlmZjJiIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMDI0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yMDQ4LmpwZyJ9XSwibW9yZWVuYWJsZWQiOnRydWUsImVsZW1lbnRNb3JlIjpbWzEyXSxbeyJiZyI6IiNmZjAwMzciLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOmZhbHNlLCJpbWFnZXVybCI6Im5vbmUifV1dLCJnYW1ldGhlbSI6W3siYmciOiJyZ2IoMTI4LCAxOTAsIDEyOCkiLCJ0ZXh0Y29sIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwiYm94c2hhZG93IjoiIn0sIiNmNjcwOTgiLCIjZmZmNWY5IiwiIzc3NmU2NSJdLCJlbmNvZGVkcHJvcGVybHkiOiJpdF93b3Jrc19wbHNfZG9udF9tZXNzX3dpdGhfdGhpc19vdGhlcndpc2VfaXRfYnJlYWtzIn0=">Doughnuts</a></li></ul>
-            <input id="sharethemedata" type="textarea">
-            <p id="sharetext">Copy this text and share it with whoever. (Click inside and press ctrl-a then copy)</p>
-            <button id="loadbutton">Load Theme</button>
+    <div class="sharethemediv">
+        <a href="javascript:void(0)" class="share_closebtn">×</a>
+        <h1 id="sharetitle">Share Theme</h1>
+        <ul id="presetlist">
+            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2Y5YTJiYyIsInRleHRjb2wiOiIjZjlhMmJjIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmOWEyYmMiLCJ0ZXh0Y29sIjoiI2Y5YTJiYyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmYwMDM3IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yLmpwZyJ9LHsiYmciOiIjNTRjMTU0IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy80LmpwZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy84LmpwZyJ9LHsiYmciOiIjMDA4NGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xNi5qcGcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvMzIuanBnIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzY0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMjguanBnIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzI1Ni5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvNTEyLmpwZyJ9LHsiYmciOiIjMzlmZjJiIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMDI0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yMDQ4LmpwZyJ9XSwibW9yZWVuYWJsZWQiOnRydWUsImVsZW1lbnRNb3JlIjpbWzEyXSxbeyJiZyI6IiNmZjAwMzciLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOmZhbHNlLCJpbWFnZXVybCI6Im5vbmUifV1dLCJnYW1ldGhlbSI6W3siYmciOiJyZ2IoMTI4LCAxOTAsIDEyOCkiLCJ0ZXh0Y29sIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwiYm94c2hhZG93IjoiIn0sIiNmNjcwOTgiLCIjZmZmNWY5IiwiIzc3NmU2NSJdLCJlbmNvZGVkcHJvcGVybHkiOiJpdF93b3Jrc19wbHNfZG9udF9tZXNzX3dpdGhfdGhpc19vdGhlcndpc2VfaXRfYnJlYWtzIn0=">Doughnuts</a></li>
+        </ul>
+        <input id="sharethemedata" type="textarea">
+        <p id="sharetext">Copy this text and share it with whoever. (Click inside and press ctrl-a then copy)</p>
+        <button id="loadbutton">Load Theme</button>
 
+    </div>
+
+    <div class="row">
+        <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
+        <div>
         </div>
 
-        <div class="row">
-            <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
-            <div>
+        <div class="themepannel">
+            <a href="javascript:void(0)" class="theme_closebtn">×</a>
+            <div class="settingrow">
+                <h2>Theme Maker </h2>
+            </div>
+            <div class="settingrow">
+                <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
+                </p>
+            </div>
+            <div class="settingrow">
+                <p>Realtime:&nbsp;&nbsp;</p>
+                <input type="checkbox" id="realtime">
+            </div>
+            <div class="settingrow">
+                <h2>Game</h2>
+            </div>
+            <div class="settingrow">
+                <p>Empty Col: </p>
+                <div id="zeropicker"></div>
+            </div>
+            <div class="settingrow">
+                <p>Board Col: </p>
+                <div id="boardpicker"></div>
+            </div>
+            <div class="settingrow">
+                <p>Bg Col: </p>
+                <div id="worldbgpicker"></div>
+            </div>
+            <div class="settingrow">
+                <p>Body Text: </p>
+                <div id="worldtextpicker"></div>
+            </div>
+            <div class="settingrow">
+                <p>Tag Line:</p>
+            </div>
+            <div class="settingrow">
+                <p style="font-size: 18px">Press Enter To Update</p>
             </div>
 
-            <div class="themepannel">
-                <a href="javascript:void(0)" class="theme_closebtn">×</a>
-                <div class="settingrow">
-                    <h2>Theme Maker </h2>
+            <div class="settingrow">
+                <input id="taginput" type="textarea">
+            </div>
+            <div class="settingrow">
+                <p>Score Colour: </p>
+                <div id="worldscore"></div>
+            </div>
+            <div class="settingrow">
+                <h2>Tiles</h2>
+            </div>
+            <div class="settingrow">
+                <p>Tile:&nbsp;&nbsp;</p>
+                <button id="themeTiledecrese">-</button>
+                <div id="themeTile">
+                    <p>2</p>
                 </div>
+                <button id="themeTileincrese">+</button>
+            </div>
+            <div class="settingrow">
+                <p>Mode:</p>
+            </div>
+            <div class="makeTileConatiner">
                 <div class="settingrow">
-                    <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
-                    </p>
+
+                    <button id="themeModedecrese"><</button>
+                    <div id="themeMode">
+                        <p>Colour</p>
+                    </div>
+                    <button id="themeModeincrese">></button>
                 </div>
+            </div>
+            <div class="imagemode">
                 <div class="settingrow">
-                    <p>Realtime:&nbsp;&nbsp;</p>
-                    <input type="checkbox" id="realtime">
-                </div>
-                <div class="settingrow">
-                    <h2>Game</h2>
-                </div>
-                <div class="settingrow">
-                    <p>Empty Col: </p>
-                    <div id="zeropicker"></div>
-                </div>
-                <div class="settingrow">
-                    <p>Board Col: </p>
-                    <div id="boardpicker"></div>
-                </div>
-                <div class="settingrow">
-                    <p>Bg Col: </p>
-                    <div id="worldbgpicker"></div>
-                </div>
-                <div class="settingrow">
-                    <p>Body Text: </p>
-                    <div id="worldtextpicker"></div>
-                </div>
-                <div class="settingrow">
-                    <p>Tag Line:</p>
+                    <p>Image URL:</p>
                 </div>
                 <div class="settingrow">
                     <p style="font-size: 18px">Press Enter To Update</p>
                 </div>
+                <div class="settingrow">
+                    <input id="imgurl" type="textarea">
+                </div>
+                <br>
+                <br>
+            </div>
+
+            <div class="colourmode">
 
                 <div class="settingrow">
-                    <input id="taginput" type="textarea">
+                    <p>Num Col: </p>
+                    <div id="textcolpciker"></div>
                 </div>
                 <div class="settingrow">
-                    <p>Score Colour: </p>
-                    <div id="worldscore"></div>
+                    <p>Bg Col: </p>
+                    <div id="bgcolpciker"></div>
                 </div>
                 <div class="settingrow">
-                    <h2>Tiles</h2>
-                </div>
-                <div class="settingrow">
-                    <p>Tile:&nbsp;&nbsp;</p>
-                    <button id="themeTiledecrese">-</button>
-                    <div id="themeTile">
-                        <p>2</p>
+                    <p>Glow Amount:&nbsp;&nbsp;</p>
+                    <button id="themeglowAmtdecrese">-</button>
+                    <div id="themeglowAmt">
+                        <p>0px</p>
                     </div>
-                    <button id="themeTileincrese">+</button>
+                    <button id="themeglowAmtincrese">+</button>
                 </div>
                 <div class="settingrow">
-                    <p>Mode:</p>
+                    <p>Glow Col:</p>
+                    <div id="glowcolpciker"></div>
                 </div>
+            </div>
+            <div class="settingrow">
                 <div class="makeTileConatiner">
-                    <div class="settingrow">
-
-                        <button id="themeModedecrese"><</button>
-                        <div id="themeMode">
-                            <p>Colour</p>
-                        </div>
-                        <button id="themeModeincrese">></button>
-                    </div>
-                </div>
-                <div class="imagemode">
-                    <div class="settingrow">
-                        <p>Image URL:</p>
-                    </div>
-                    <div class="settingrow">
-                        <p style="font-size: 18px">Press Enter To Update</p>
-                    </div>
-                    <div class="settingrow">
-                        <input id="imgurl" type="textarea">
-                    </div>
-                    <br>
-                    <br>
-                </div>
-
-                <div class="colourmode">
-
-                    <div class="settingrow">
-                        <p>Num Col: </p>
-                        <div id="textcolpciker"></div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Bg Col: </p>
-                        <div id="bgcolpciker"></div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Glow Amount:&nbsp;&nbsp;</p>
-                        <button id="themeglowAmtdecrese">-</button>
-                        <div id="themeglowAmt">
-                            <p>0px</p>
-                        </div>
-                        <button id="themeglowAmtincrese">+</button>
-                    </div>
-                    <div class="settingrow">
-                        <p>Glow Col:</p>
-                        <div id="glowcolpciker"></div>
-                    </div>
-                </div>
-                <div class="settingrow">
-                    <div class="makeTileConatiner">
-                        <button class="makeTile">Set Tile</button>
-                    </div>
-                </div>
-                <div class="settingrow">
-                    <div class="makeTileConatiner">
-                        <button id="sharethemebutton">Share Theme</button>
-                    </div>
-                </div>
-                <div class="settingrow">
-                    <div class="makeTileConatiner">
-                        <button id="loadthemebutton">Load Theme</button>
-                    </div>
-                </div>
-                <div class="settingrow">
-                    <div class="makeTileConatiner">
-                        <button id="presetthemebutton">Preset Theme</button>
-                    </div>
-                </div>
-                <div class="settingrow">
-                    <div class="makeTileConatiner">
-                        <button onclick="resetTheme()">Reset Theme</button>
-                    </div>
-                </div>
-                <div class="settingrow">
-                    <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
-                </div>
-                <div class="settingrow">
-                    <p>2022</p>
+                    <button class="makeTile">Set Tile</button>
                 </div>
             </div>
-            <div id="settingspannel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <div id="settings">
-                    <div class="settingrow">
-                        <p>Goal:&nbsp;&nbsp;</p>
-                        <button id="goaldecrease">-</button>
-                        <div id="goal">--</div>
-                        <button id="goalincrease">+</button>
-                    </div>
-                    <div class="settingrow">
-                        <p>Spawn Tile:&nbsp;&nbsp;</p>
-                        <button id="spawndecrease">-</button>
-                        <div id="spawn">--</div>
-                        <button id="spawnincrease">+</button>
-                    </div>
-                    <div class="settingrow">
-                        <p>Size:&nbsp;&nbsp;</p>
-                        <button id="sizedecrease">-</button>
-                        <div id="size">--</div>
-                        <button id="sizeincrease">+</button>
-                    </div>
-                    <div class="settingrow">
-                        <p>Move Cap:&nbsp;&nbsp;</p>
-                        <button id="movedecrease">-</button>
-                        <div id="movecap">--</div>
-                        <button id="moveincrease">+</button>
-                    </div>
-                    <div class="settingrow">
-                        <p>Reverse:&nbsp;&nbsp;</p>
-                        <input type="checkbox" id="reverse">
-                    </div>
-                    <div class="settingrow">
-                        <p>Autoplay:&nbsp;&nbsp;</p>
-                        <input type="checkbox" id="auto">
-                    </div>
-                    <div class="settingrow">
-                        <button class="theme_openbtn">☰ Open Theme Maker</button>
-                    </div>
+            <div class="settingrow">
+                <div class="makeTileConatiner">
+                    <button id="sharethemebutton">Share Theme</button>
                 </div>
             </div>
+            <div class="settingrow">
+                <div class="makeTileConatiner">
+                    <button id="loadthemebutton">Load Theme</button>
+                </div>
+            </div>
+            <div class="settingrow">
+                <div class="makeTileConatiner">
+                    <button id="presetthemebutton">Preset Theme</button>
+                </div>
+            </div>
+            <div class="settingrow">
+                <div class="makeTileConatiner">
+                    <button onclick="resetTheme()">Reset Theme</button>
+                </div>
+            </div>
+            <div class="settingrow">
+                <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
+            </div>
+            <div class="settingrow">
+                <p>2022</p>
+            </div>
+        </div>
+        <div id="settingspannel" class="sidepanel">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+            <div id="settings">
+                <div class="settingrow">
+                    <p>Goal:&nbsp;&nbsp;</p>
+                    <button id="goaldecrease">-</button>
+                    <div id="goal">--</div>
+                    <button id="goalincrease">+</button>
+                </div>
+                <div class="settingrow">
+                    <p>Spawn Tile:&nbsp;&nbsp;</p>
+                    <button id="spawndecrease">-</button>
+                    <div id="spawn">--</div>
+                    <button id="spawnincrease">+</button>
+                </div>
+                <div class="settingrow">
+                    <p>Size:&nbsp;&nbsp;</p>
+                    <button id="sizedecrease">-</button>
+                    <div id="size">--</div>
+                    <button id="sizeincrease">+</button>
+                </div>
+                <div class="settingrow">
+                    <p>Move Cap:&nbsp;&nbsp;</p>
+                    <button id="movedecrease">-</button>
+                    <div id="movecap">--</div>
+                    <button id="moveincrease">+</button>
+                </div>
+                <div class="settingrow">
+                    <p>Reverse:&nbsp;&nbsp;</p>
+                    <input type="checkbox" id="reverse">
+                </div>
+                <div class="settingrow">
+                    <p>Autoplay:&nbsp;&nbsp;</p>
+                    <input type="checkbox" id="auto">
+                </div>
+                <div class="settingrow">
+                    <button class="theme_openbtn">☰ Open Theme Maker</button>
+                </div>
+            </div>
+        </div>
 </body>
 
 </html>

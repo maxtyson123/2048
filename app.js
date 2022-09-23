@@ -6,7 +6,8 @@ if (!window.location.href.includes("index.html")) {
 //make ai, ai give hint or image
 
 //NEXT:
-//Savin andloading via setting
+//Savin and loading via setting
+//Cookie-ify backbutton
 //Other customizations: addition or combine mode,game saving and loading, undo,
 //May have  to remake tiles  and animations before gamemodes, scoreincrease
 //modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
@@ -49,6 +50,8 @@ function loaded() {
     const hbestDisplay = document.querySelector('#hbest');
     //end
     const scoreResult = document.querySelector('#result');
+    //back
+    let backdata = [];
     /////////////SETTINGS/////////////////
     //GOAL
     const goalDisplay = document.querySelector('#goal');
@@ -168,7 +171,7 @@ function loaded() {
         [def_4096]
     ];
     ////Example game theme data: Empty Board Background Body Score colours tagline
-    def_gametheme = [def_0, "#cacece", "#72b182ab", "#776e65"];
+    def_gametheme = [def_0, "#cacece", "#72b182ab", "#fffff", "#808080", "WildCard"];
     def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele, def_gametheme);
     //////////////////////////////////THEME GENARATOR//////////////////
     var customThemeActive = false;
@@ -813,7 +816,7 @@ function loaded() {
         sharethemediv.style.display = "none";
     }
 
-    function presettheme(){
+    function presettheme() {
         debug("funct_loadtheme", 2);
         makeintotile();
         sharethemediv.style.display = "block";
@@ -824,6 +827,7 @@ function loaded() {
         sharetitle.innerHTML = "Preset Themes";
         sharetext.innerHTML = "Share your theme with me for the chance of it beign added here";
     }
+
     function loadtheme() {
         debug("funct_loadtheme", 2);
         makeintotile();
@@ -1009,15 +1013,19 @@ function loaded() {
 
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
-            textclasses = document.querySelectorAll("p");
+            textclasses = document.querySelectorAll("p, .scoretab, .side-item");
             for (let y = 0; y < textclasses.length; y++) {
                 textclasses[y].style.color = gameTheme[3];
+            }
+            sidecols = document.querySelectorAll(" .side-item");
+            for (let y = 0; y < sidecols.length; y++) {
+                sidecols[y].style.borderColor = gameTheme[1];
             }
             gridDisplay.style.border = "5px solid " + gameTheme[1];
             gridDisplay.style.backgroundColor = zerocol;
             tilestotheme = gridDisplay.children;
             document.querySelector("#tagline").innerHTML = gameTheme[5];
-            scoresclass = document.querySelectorAll(".scoretab");
+            scoresclass = document.querySelectorAll(".scoretab, .side-item");
             for (let y = 0; y < scoresclass.length; y++) {
                 scoresclass[y].style.backgroundColor = gameTheme[4];
             }
@@ -1052,7 +1060,7 @@ function loaded() {
         spawnDisplay.innerHTML = "<p>" + spwantile + "</p>";
         setCookie("spawn", spwantile, 1);
         if (mode != 0) {
-            window.location.reload();
+            resetGame();
         }
     }
     spawnincrease.addEventListener("click", function() {
@@ -1119,8 +1127,8 @@ function loaded() {
             size = width + 2;
         }
         setCookie("width", size, 1);
-        setCookie("savegame","",31)
-        location.reload();
+        resetGame();
+
     }
     sizeincrease.addEventListener("click", function() {
         setsize(2);
@@ -1129,6 +1137,7 @@ function loaded() {
         setsize(1);
     });
     sizeDisplay.innerHTML = "<p>" + width + "</p>";
+
     function setmovecap(mode) {
         ////console.log("Clicked");
         if (mode == 1) {
@@ -1150,6 +1159,9 @@ function loaded() {
         setmovecap(1);
     });
     movescapdisplay.innerHTML = "<p>" + movecap + "</p>";
+
+
+
     function setreverse() {
 
         setCookie("reverse", reverseCheck.checked, 1);
@@ -1159,7 +1171,7 @@ function loaded() {
             setCookie("goal", 2048, 1);
             setCookie("spawn", 2, 1);
         }
-        location.reload();
+        resetGame();
     }
     if (reverse) {
         reverseCheck.checked = true
@@ -1388,7 +1400,7 @@ function loaded() {
                 scoreResult.style.width = (width * 100) + "px";
                 scoreResult.style.height = width * 100 + "px";
                 scoreResult.style.background = "lightgreen";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1><button onclick='location.reload()'>Replay</button><button id='cont'>Continue</button>"
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1><button onclick='resetGame()'>Replay</button><button id='cont'>Continue</button>"
                 document.getElementById("cont").addEventListener("click", continueGame);
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
@@ -1425,7 +1437,7 @@ function loaded() {
                 scoreResult.style.display = "block";
                 scoreResult.style.width = width * 100 + "px";
                 scoreResult.style.height = width * 100 + "px";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='resetGame()'>Replay</button>";
                 autoplayCheck.enabled = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
@@ -1433,12 +1445,12 @@ function loaded() {
 
 
         }
-        if(moves != 0)
-            if(moves ==  movecap){
+        if (moves != 0)
+            if (moves == movecap) {
                 scoreResult.style.display = "block";
                 scoreResult.style.width = width * 100 + "px";
                 scoreResult.style.height = width * 100 + "px";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='location.reload()'>Replay</button>";
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='resetGame()'>Replay</button>";
                 autoplayCheck.enabled = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
@@ -1484,6 +1496,8 @@ function loaded() {
 
     }
 
+
+
     function checkbest() {
         let current = parseInt(bestDisplay.innerHTML);
         let best = current;
@@ -1528,32 +1542,51 @@ function loaded() {
         } else {
             themeBoard(def_theme);
         }
-        moves  += 1;
+        moves += 1;
         movesdisplay.innerHTML = moves;
         savegame();
     }
 
-    function savegame(){
+    function savegame() {
         let scoredata = [];
         for (let x = 0; x < squares.length; x++) {
             scoredata.push(squares[x].innerHTML);
-
         }
-        setCookie("savegame",scoredata,31)
+        scoredata.push(moves);
+        backdata.push(scoredata);
+        if (backdata.length >= 3) {
+            backdata.shift();
+        }
+        console.log(backdata)
+        setCookie("savegame", scoredata, 31)
     }
-    function loadgame(){
-        let scoredata = getCookie("savegame").split(",");
-        if(scoredata != "")
+
+    document.getElementById("goback").addEventListener("click", function() {
+        loadgame(backdata[backdata.length - 2]);
+    });
+
+    function loadgame(scoredata) {
+
+        if (scoredata != "") {
+            console.log(scoredata)
             for (let x = 0; x < squares.length; x++) {
                 squares[x].innerHTML = scoredata[x];
+                moves = parseInt(scoredata[scoredata.length - 1])
+                movesdisplay.innerHTML = moves;
             }
+        }
+
+
+
         if (customThemeActive) {
             themeBoard(cus_theme);
         } else {
             themeBoard(def_theme);
         }
+        savegame();
     }
-    loadgame()
+    loadgame(getCookie("savegame").split(","))
+
     function keyup() {
         moveUp();
         combineCol("up");
@@ -1602,7 +1635,7 @@ function loaded() {
                 } else {
                     themeBoard(def_theme);
                 }
-                moves  += 1;
+                moves += 1;
                 movesdisplay.innerHTML = moves;
                 autoplay();
             }, 100);
@@ -1654,5 +1687,10 @@ function closeNav() {
 
 function resetTheme() {
     setCookie("customTheme", "", 365);
+    location.reload();
+}
+
+function resetGame() {
+    setCookie("savegame", "", 31);
     location.reload();
 }
