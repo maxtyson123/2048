@@ -1,4 +1,6 @@
 @import url(fonts/clear-sans.css);
+
+
 html,
 body {
     background: #ffffffab;
@@ -6,6 +8,7 @@ body {
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
     font-size: 18px;
     margin: 0;
+
 }
 
 .game {
@@ -29,6 +32,7 @@ body {
 
 .themepannel p,
 .themepannel a {
+
     text-decoration: none;
     font-size: 25px;
     color: #818181;
@@ -44,7 +48,7 @@ body {
     font-size: 36px;
 }
 
-.sharethemediv {
+.sharethemediv{
     top: 50%;
     left: 50%;
     /* bring your own prefixes */
@@ -58,9 +62,10 @@ body {
     transition: 0.5s;
     display: none;
     padding: 10px;
+
 }
 
-.sharethemediv input {
+.sharethemediv input{
     width: 80%;
     margin-left: 10%;
     overflow-y: scroll;
@@ -81,6 +86,7 @@ body {
 
 .sidepanel p,
 .sidepanel a {
+
     text-decoration: none;
     font-size: 25px;
     color: #818181;
@@ -89,8 +95,7 @@ body {
 }
 
 .sidepanel button,
-.themepannel button,
-#loadbutton {
+.themepannel button, #loadbutton {
     border-radius: 10px;
     text-decoration: none;
     font-size: 25px;
@@ -100,8 +105,7 @@ body {
     transition: 0.3s;
 }
 
-.sidepanel input,
-.themepannel input {
+.sidepanel input, .themepannel input{
     appearance: none;
     border-radius: 10px;
     border: 2.5px solid #cacece;
@@ -116,8 +120,7 @@ body {
     padding-left: 60px !important;
 }
 
-.sidepanel input:checked,
-.themepannel input:checked {
+.sidepanel input:checked, .themepannel input:checked{
     appearance: none;
     border-radius: 10px;
     border: 2.5px solid #cacece;
@@ -126,12 +129,12 @@ body {
     transition: 0.3s;
 }
 
+
 .sidepanel a:hover {
     color: #f1f1f1;
 }
 
-.sidepanel .closebtn,
-.share_closebtn {
+.sidepanel .closebtn, .share_closebtn {
     color: #818181;
     text-decoration: none;
     position: absolute;
@@ -152,11 +155,9 @@ body {
 .openbtn:hover {
     background-color: #444;
 }
-
 button:hover {
     background-color: #444;
 }
-
 h1 {
     font-size: 72px;
 }
@@ -166,14 +167,16 @@ h2 {
     margin-left: 20px;
 }
 
-.game-container {
+.game-container{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+
+
 }
 
 .grid {
-    float: left;
+    margin: auto;
     display: flex;
     flex-wrap: wrap;
     width: 400px;
@@ -181,31 +184,11 @@ h2 {
     background-color: black;
     border: 5px solid #cacece;
     border-radius: 5px;
-}
 
-.gamecoantiner {
-    display: flex;
-    justify-content: center;
-}
-
-.side-tab {
-    padding-top: 15px;
-}
-
-.side-item {
-    background-color: green;
-    font-size: 20px;
-    padding: 5% !important;
-    width: 100%;
-    margin-top: 4px;
-    color: white;
-    display: block;
-    border-radius: 0px 15px 15px 0px;
-    border-width: 3px 3px 3px 0px;
-    border-style: solid;
 }
 
 .header {
+
     margin: auto;
     width: 400px;
 }
@@ -214,6 +197,8 @@ h2 {
     width: 100px;
     height: 100px;
     background-color: #cacece;
+
+
 }
 
 .test {
@@ -233,7 +218,9 @@ h2 {
     text-align: center;
     font-weight: bold;
     line-height: 80px;
+
 }
+
 
 .animate-down {
     position: relative;
@@ -244,6 +231,7 @@ h2 {
     from {
         top: -100px;
     }
+
     to {
         top: 0;
     }
@@ -258,6 +246,7 @@ h2 {
     from {
         bottom: -100px;
     }
+
     to {
         bottom: 0;
     }
@@ -272,6 +261,7 @@ h2 {
     from {
         right: -100px;
     }
+
     to {
         right: 0;
     }
@@ -286,6 +276,7 @@ h2 {
     from {
         left: -100px;
     }
+
     to {
         left: 0;
     }
@@ -295,6 +286,7 @@ h2 {
     from {
         transform: scale(0)
     }
+
     to {
         transform: scale(1)
     }
@@ -309,13 +301,10 @@ h2 {
     from {
         transform: scale(1)
     }
+
     to {
         transform: scale(1.175)
     }
-}
-
-.inline {
-    display: inline-block;
 }
 
 .settingrow {
@@ -345,9 +334,7 @@ h2 {
     padding-right: 20px;
 }
 
-
 /* Clear floats after the columns */
-
 .row:after {
     content: "";
     display: table;
@@ -357,6 +344,7 @@ h2 {
 
 .inline {
     display: inline;
+
 }
 
 #result {
@@ -370,6 +358,7 @@ h2 {
     height: 400px;
     z-index: 2;
     background-color: red;
+
 }
 
 #result h1 {
@@ -386,4 +375,5 @@ h2 {
     background-color: rgb(43, 41, 41);
     display: block;
     transition: 0.3s;
+
 }
