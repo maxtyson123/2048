@@ -1,0 +1,32 @@
+.grid{
+    display: flex;
+    flex-wrap: wrap;
+    width: 400px;
+    height: 400px;
+    background-color: lightcyan;
+}
+
+.grid div{
+    width: 100px;
+    height: 100px;
+    background-color: lightgreen;
+    font-size: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+.settingrow{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+.settingrow *{
+    padding: 5px;
+}
+.headerrow{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+.headerrow *{
+    padding: 5px;
+}

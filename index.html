@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <meta charset="utf-8">
+    <title>2048 | Max Tyson</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js"></script>
+</head>
+
+<body>
+<div class="headerrow">
+    <div class="score-title">Score:</div>
+    <span id="score">0</span>
+    <div class="hscore-title">Highscore:</div>
+    <span id="hscore">0</span>
+</div>
+<div class="headerrow">
+    <div class="score-title">Current Best:</div>
+    <span id="best">0</span>
+    <div class="hscore-title">Alltime Best:</div>
+    <span id="hbest">0</span>
+</div>
+<div class="grid">
+
+</div>
+
+<div id="result"></div>
+
+<div id="settings">
+    <div class="settingrow">
+        <p>Goal:&nbsp;&nbsp;</p>
+        <button id="goaldecrease">-</button>
+        <div id="goal">--</div><button id="goalincrease">+</button>
+    </div>
+    <div class="settingrow">
+        <p>Size:&nbsp;&nbsp;</p>
+        <button id="sizedecrease">-</button>
+        <div id="size">--</div><button id="sizeincrease">+</button>
+    </div>
+    <div class="settingrow">
+        <p>Reverse:&nbsp;&nbsp;</p>
+        <input type="checkbox" id="reverse">
+    </div>
+    <div class="settingrow">
+        <p>Autoplay:&nbsp;&nbsp;</p>
+        <input type="checkbox" id="auto">
+    </div>
+</div>
+</body>
+
+</html>
