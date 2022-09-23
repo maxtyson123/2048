@@ -1,20 +1,30 @@
 document.addEventListener('DOMContentLoaded', loaded);
+if (!window.location.href.includes("index.html")) {
+    window.location.href = "index.html";
+}
+//FINAL
 //make ai, ai give hint or image
-//themeing -custom image
-//Gamemode exporting
-//Other customizations: addition or combine mode, splitscreen multiplayer, flappy, tertirs
-//Preset themes
-//Make code more effeinct
 
-//fix theming loading for more then 2048
-//fix reverse for theme number
+//NEXT:
+//Preset themes
+//Other customizations: addition or combine mode,game saving and loading, undo,
+//modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
+//Gamemode exporting
+
+//BUGS mostly theming ofc
+//fix theming loading for more then 2048 - fuck it  imtired of theming ill do it later,  making image support was way easier then this bs, also probaly gonna be the last addition to the theme maker
+//2048 num not being  themed
+
+//ORGANISE CODE b4 GAMEMODES
+
 
 function loaded() {
-    function debug(text,bugfixingid){
+    function debug(text, bugfixingid) {
 
     }
+
     function getUrlVar(varible) {
-        debug("funct_geturl",2);
+        debug("funct_geturl", 2);
         vars = window.location.search.split("?");
         for (let x = 0; x < vars.length; x++) {
             varibleData = vars[x].split("=");
@@ -82,7 +92,7 @@ function loaded() {
             reverse = false;
 
     }
-    if (reverse){
+    if (reverse) {
         goal = 2;
         spwantile = 2048;
 
@@ -187,13 +197,13 @@ function loaded() {
     themeMakerClose.addEventListener("click", closeThemeMaker);
 
     function openThemeMaker() {
-        debug("funct_openthememaker",2);
+        debug("funct_openthememaker", 2);
         themeMakerDisplay.style.width = "250px";
         setCookie("theme-open", "yes", 1);
     }
 
     function closeThemeMaker() {
-        debug("funct_closethememaker",2);
+        debug("funct_closethememaker", 2);
         themeMakerDisplay.style.width = "0";
         setCookie("theme-open", "no", 1);
     }
@@ -214,26 +224,34 @@ function loaded() {
     themeTiledecrease.addEventListener("click", themeTiledecrese);
     var tilenum = 2;
     var tempnum = spwantile;
+    if (reverse)
+        tempnum = goal
     themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+
     function themeTileincrese() {
-        debug("funct_increasetile",2);
+        debug("funct_increasetile", 2);
         tilenum = tilenum * 2;
         tempnum = tempnum * 2;
+
         themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
         loadtilefromsave()
     }
 
     function themeTiledecrese() {
-        debug("funct_decreasetile",2);
+        debug("funct_decreasetile", 2);
         tilenum = tilenum / 2;
-        if(tempnum/2 <= spwantile){
-            tempnum = spwantile;
-        }else{
-            tempnum = tempnum / 2;
-        }
-
-        if (tilenum == 1) {
-            tilenum = 2;
+        if (reverse) {
+            if (tempnum / 2 <= goal) {
+                tempnum = goal;
+            } else {
+                tempnum = tempnum / 2;
+            }
+        } else {
+            if (tempnum / 2 <= spwantile) {
+                tempnum = spwantile;
+            } else {
+                tempnum = tempnum / 2;
+            }
         }
 
         themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
@@ -243,7 +261,7 @@ function loaded() {
     //Realtime
 
     function setreal() {
-        debug("funct_setreal",2);
+        debug("funct_setreal", 2);
         setCookie("realtime", realtimeCheck.checked, 1);
     }
     if (realtime) {
@@ -257,47 +275,67 @@ function loaded() {
     const themeModeDisplay = document.querySelector('#themeMode');
     const colurmode = document.querySelector('.colourmode');
     const imagemode = document.querySelector('.imagemode');
-    modes = [colurmode,imagemode]
+    modes = [colurmode, imagemode]
+    modename = ["Colour", "Image"]
     const themeModeincrease = document.querySelector('#themeModeincrese');
     const themeModedecrease = document.querySelector('#themeModedecrese');
     themeModeincrease.addEventListener("click", themeModeincrese);
     themeModedecrease.addEventListener("click", themeModedecrese);
     var currentmode = 0;
+
     function themeModeincrese() {
         //console.log("Increase");
         for (let y = 0; y < modes.length; y++) {
 
-            if(y == currentmode){
+            if (y == currentmode) {
                 modes[y].style.display = "block";
 
-            }else{
+            } else {
                 modes[y].style.display = "none";
             }
         }
-        if(currentmode + 1 == modes.length){
+        themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
+        if (currentmode + 1 == modes.length) {
             currentmode = 0;
-        }else{
+        } else {
             currentmode += 1;
         }
     }
+
     function themeModedecrese() {
         //console.log("Decrease");
         for (let y = 0; y < modes.length; y++) {
-            if(y == currentmode){
+            if (y == currentmode) {
                 modes[y].style.display = "block";
-            }else{
+            } else {
                 modes[y].style.display = "none";
             }
         }
-        if(currentmode - 1 == -1){
-            currentmode = modes.length-1;
-        }else{
+        themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
+        if (currentmode - 1 == -1) {
+            currentmode = modes.length - 1;
+        } else {
             currentmode -= 1;
         }
     }
+    themeModeincrese();
+
 
     //////Image
+    //Image Source
+    const urlinput = document.querySelector('#imgurl');
 
+    var urldata = "";
+
+    function seturl() {
+        urldata = urlinput.value;
+        if (realtime) {
+            makeintotile();
+        }
+    }
+    urlinput.addEventListener("change", seturl);
+
+    //Image Positioning on  tile
     ///////Colours
     //TextColour
     var textcolpciker = new iro.ColorPicker('#textcolpciker', {
@@ -305,7 +343,7 @@ function loaded() {
         color: default_textcol
     });
     textcol = textcolpciker.color.hexString;
-    textcolpciker.on('color:change', function () {
+    textcolpciker.on('color:change', function() {
         textcol = textcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -317,7 +355,7 @@ function loaded() {
         color: default_bgcol
     });
     bgcol = bgcolpciker.color.hexString;
-    bgcolpciker.on('color:change', function () {
+    bgcolpciker.on('color:change', function() {
         bgcol = bgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -332,7 +370,7 @@ function loaded() {
     var glowAmtnum = default_glowamt;
 
     function themeglowAmtincrese() {
-        debug("funct_glowincraese",2);
+        debug("funct_glowincraese", 2);
         glowAmtnum += 2;
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
         if (realtime) {
@@ -341,7 +379,7 @@ function loaded() {
     }
 
     function themeglowAmtdecrese() {
-        debug("funct_glowdecrease",2);
+        debug("funct_glowdecrease", 2);
         glowAmtnum -= 2;
         if (glowAmtnum == 0) {
             glowAmtnum = 2;
@@ -357,32 +395,33 @@ function loaded() {
         color: default_glowCol
     });
     glowCol = glowcolpciker.color.hexString;
-    glowcolpciker.on('color:change', function () {
+    glowcolpciker.on('color:change', function() {
         glowCol = glowcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
         }
     });
-    function loadtilefromsave(initial=false) {
-        debug("loadfromsave",1);
+
+    function loadtilefromsave(initial = false) {
+        debug("loadfromsave", 1);
         storedtheme = getCookie("customTheme");
 
 
         if (storedtheme != "") {
             customThemeLoaded = true;
-            jsonedTheme = JSON.parse(storedtheme);
+
             tinum = tilenum;
             firnum = 2;
             stpnum = 1;
-            if(tinum != 0){
-                for (let y = 1; y < 12+jsonedTheme.elementMore[0].length; y++) {
-                    if(firnum == tinum){
+            if (tinum != 0) {
+                for (let y = 1; y < 12 + jsonedTheme.elementMore[0].length; y++) {
+                    if (firnum == tinum) {
                         stpnum = y;
 
 
                         break
-                    }else{
-                        firnum = firnum*2;
+                    } else {
+                        firnum = firnum * 2;
                     }
                 }
             }
@@ -390,21 +429,26 @@ function loaded() {
             if (tilenum >= 4096) {
 
                 for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
-                    if (stpnum == parseInt(jsonedTheme.elementMore[1][y])) {
-                        cus_morele = jsonedTheme.elementMore;
-                        //console.log(cus_morele)
+                    if (stpnum == parseInt(jsonedTheme.elementMore[0][y])) {
+
                         boxshadow = jsonedTheme.elementMore[1][y].boxshadow;
                         if (boxshadow != "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
                             default_glowamt = parseInt(glowData[3].replace('px', ''));
                         }
-                        ////console.log(jsonedTheme.options[y].textcol)
                         default_textcol = jsonedTheme.options[y].textcol;
                         default_bgcol = jsonedTheme.options[y].bg;
                         bgcolpciker.color.set(default_bgcol);
                         textcolpciker.color.set(default_textcol);
                         glowcolpciker.color.set(default_glowCol);
+                        if (jsonedTheme.elementMore[1][y].imagemode) {
+                            currentmode = 0;
+                            urldata = jsonedTheme.elementMore[1][y].imageurl;
+                        } else {
+                            currentmode = 1;
+
+                        }
 
                     }
                 }
@@ -423,7 +467,13 @@ function loaded() {
                         bgcolpciker.color.set(default_bgcol);
                         textcolpciker.color.set(default_textcol);
                         glowcolpciker.color.set(default_glowCol);
+                        if (jsonedTheme.options[y].imagemode) {
+                            currentmode = 0;
+                            urldata = jsonedTheme.options[y].imageurl;
+                        } else {
+                            currentmode = 1;
 
+                        }
 
 
                     }
@@ -439,7 +489,7 @@ function loaded() {
         color: zerocol
     });
     zerocol = zerocolpciker.color.hexString;
-    zerocolpciker.on('color:change', function () {
+    zerocolpciker.on('color:change', function() {
         zerocol = zerocolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -450,7 +500,7 @@ function loaded() {
         color: boardcol
     });
     boardcol = boardcolpciker.color.hexString;
-    boardcolpciker.on('color:change', function () {
+    boardcolpciker.on('color:change', function() {
         boardcol = boardcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -461,7 +511,7 @@ function loaded() {
         color: bodybgcol
     });
     bodybgcol = bodybgcolpciker.color.hexString;
-    bodybgcolpciker.on('color:change', function () {
+    bodybgcolpciker.on('color:change', function() {
         bodybgcol = bodybgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -472,23 +522,23 @@ function loaded() {
         color: bodytextcol
     });
     bodytextcol = bodytextcolpciker.color.hexString;
-    bodytextcolpciker.on('color:change', function () {
+    bodytextcolpciker.on('color:change', function() {
         bodytextcol = bodytextcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
         }
     });
     const submitbutton = document.querySelector('.makeTile');
-    if(!realtime){
+    if (!realtime) {
         submitbutton.innerHTML = "Set Tile"
-    }else{
+    } else {
         submitbutton.innerHTML = "Apply Theme"
     }
-    submitbutton.addEventListener("click", function () {
-        if(!realtime){
+    submitbutton.addEventListener("click", function() {
+        if (!realtime) {
             makeintotile();
             applytheme();
-        }else{
+        } else {
             applytheme();
         }
 
@@ -498,7 +548,7 @@ function loaded() {
     }
 
     function loadallfromsave() {
-        debug("funct_loadall",2);
+        debug("funct_loadall", 2);
         cache_tilenum = tilenum;
         storedtheme = getCookie("customTheme");
         //console.log(storedtheme);
@@ -509,11 +559,11 @@ function loaded() {
             while (tilenum != 2048) {
 
                 loadtilefromsave(true);
-                //console.log(tilenum)
                 makeintotile(false);
                 tilenum = tilenum + tilenum;
             }
-
+            loadtilefromsave(true);
+            makeintotile(false);
             for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
                 tilenum = tilenum * 2;
                 loadtilefromsave();
@@ -530,57 +580,57 @@ function loaded() {
 
     }
     loadallfromsave();
+
     function makeintotile(save = true) {
-        debug("funct_maketile",2);
+        debug("funct_maketile", 2);
         customThemeActive = true;
         //check  if cus_x
         //set cux_x to theme items
         cus_0 = new BoardElement(zerocol, zerocol, "");
         if (tilenum == 2) {
-            cus_2 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
-            debug(default_bgcol);
-            debug(default_bgcol);
+            cus_2 = newBoardElemet();
+
         }
         if (tilenum == 4) {
-            cus_4 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_4 = newBoardElemet();
         }
         if (tilenum == 8) {
-            cus_8 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_8 = newBoardElemet();
 
         }
         if (tilenum == 16) {
-            cus_16 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_16 = newBoardElemet();
         }
         if (tilenum == 32) {
-            cus_32 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_32 = newBoardElemet();
         }
         if (tilenum == 64) {
-            cus_64 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_64 = newBoardElemet();
         }
         if (tilenum == 128) {
-            cus_128 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_128 = newBoardElemet();
         }
         if (tilenum == 256) {
-            cus_256 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_256 = newBoardElemet();
         }
         if (tilenum == 512) {
-            cus_512 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_512 = newBoardElemet();
         }
         if (tilenum == 1024) {
-            cus_1024 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_1024 = newBoardElemet();
         }
         if (tilenum == 2048) {
-            cus_2048 = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+            cus_2048 = newBoardElemet();
         }
-        if (tilenum > 2048) {
+        if (tilenum >= 4096) {
             firnum = 2;
             stpnum = 0;
             for (let y = 1; y < tilenum; y++) {
-                if(firnum == tilenum){
+                if (firnum == tilenum) {
                     stpnum = y;
                     break
-                }else{
-                    firnum = firnum*2;
+                } else {
+                    firnum = firnum * 2;
                 }
             }
             tilenum = stpnum;
@@ -590,27 +640,39 @@ function loaded() {
                 for (let x = 0; x < cus_morele.length; x++) {
                     if (parseInt(cus_morele[0][x]) == tilenum) {
                         cus_morele[0][x] = tilenum;
-                        cus_morele[1][x] = new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol);
+                        cus_morele[1][x] = newBoardElemet();
                         replaced = true;
                     }
 
                 }
                 if (!replaced) {
                     cus_morele[0].push(tilenum);
-                    cus_morele[1].push(new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
+                    cus_morele[1].push(newBoardElemet());
                 }
             } else {
                 cus_morele[0].push(tilenum);
-                cus_morele[1].push(new BoardElement(bgcol, textcol, "0 0 5px " + glowAmtnum + "px " + glowCol));
+                cus_morele[1].push(newBoardElemet());
             }
 
+        }
+
+        function newBoardElemet() {
+            //shits reversed bc i change the number at the end cbf fixing it
+            element = "";
+
+            if (modename[currentmode] == "Colour") {
+                console.log("Setting for: " + tilenum)
+                element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
+            } else
+                element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, false, "none")
+            return element;
         }
         cus_gametheme[1] = boardcol;
         cus_gametheme[2] = bodybgcol;
         cus_gametheme[3] = bodytextcol;
         cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
-        debug(cus_theme,1)
-        debug("cus_theme",1)
+        debug(cus_theme, 1)
+        debug("cus_theme", 1)
         themeData = JSON.stringify(cus_theme);
         setCookie("storedTheme", "cus_theme", 365);
         setCookie("storedTheme", cus_theme, 365);
@@ -635,23 +697,25 @@ function loaded() {
     loadthemebutton.addEventListener("click", loadtheme);
     loadbutton.addEventListener("click", loadthemedata);
     website = window.location.href.split(".html")
-    function applytheme(){
+
+    function applytheme() {
         sharemytheme();
         loadthemedata()
     }
+
     function sharemytheme() {
-        debug("sharetheme_loadtheme",2);
-        debug(cus_theme,2);
+        debug("sharetheme_loadtheme", 2);
+        debug(cus_theme, 2);
         sharethemediv.style.display = "block";
         loadbutton.style.display = "none";
         sharetitle.innerHTML = "Share Theme";
-        storedtheme =  JSON.stringify(cus_theme);
+        storedtheme = JSON.stringify(cus_theme);
         if (storedtheme != "") {
-            debug("Unparsed cokie",1)
-            debug(storedtheme,1)
+            debug("Unparsed cokie", 1)
+            debug(storedtheme, 1)
             jsonedTheme = JSON.parse(storedtheme);
-            debug("Parsed JSON",1);
-            debug(jsonedTheme,1);
+            debug("Parsed JSON", 1);
+            debug(jsonedTheme, 1);
             var encoded = btoa(JSON.stringify(jsonedTheme));
             sharethemeinputbox.value = encoded;
             sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
@@ -659,11 +723,13 @@ function loaded() {
             sharetext.innerHTML = "Please note you need a theme to use this tool."
         }
     }
+
     function closeshare() {
         sharethemediv.style.display = "none";
     }
+
     function loadtheme() {
-        debug("funct_loadtheme",2);
+        debug("funct_loadtheme", 2);
         makeintotile();
         sharethemediv.style.display = "block";
         loadbutton.style.display = "block";
@@ -672,8 +738,9 @@ function loaded() {
 
 
     }
+
     function loadthemedata() {
-        debug("funct_loadthemedata",2);
+        debug("funct_loadthemedata", 2);
         let shareddata = sharethemeinputbox.value;
         try {
             var decoded = atob(shareddata);
@@ -707,7 +774,7 @@ function loaded() {
     }
 
     function createBoard() {
-        debug("funct_createboard",2);
+        debug("funct_createboard", 2);
         gridDisplay.style.width = width * 100 + "px";
         gridDisplay.style.height = width * 100 + "px";
         for (let x = 0; x < width * width; x++) {
@@ -723,10 +790,12 @@ function loaded() {
         generate();
     }
 
-    function BoardElement(bg, textcol, boxshadow) {
+    function BoardElement(bg, textcol, boxshadow, imagemode, imageurl) {
         this.bg = bg;
         this.textcol = textcol;
         this.boxshadow = boxshadow;
+        this.imagemode = imagemode;
+        this.imageurl = imageurl;
     }
 
     function Theme(zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight, more2048, elemore, gameThemeData) {
@@ -751,40 +820,52 @@ function loaded() {
     }
 
     function themeBoard(Theme) {
-        debug("funct_themetheboard",2);
-        debug(Theme,1);
-        debug("CHECK POINT",1);
+        debug("funct_themetheboard", 2);
+        debug(Theme, 1);
+        debug("CHECK POINT", 1);
         gameTheme = Theme.gamethem;
         for (let x = 0; x < squares.length; x++) {
             tinum = parseInt(squares[x].innerHTML);
             firnum = spwantile;
             stpnum = 0;
-            if(tinum != 0){
-                if(reverse)
+            if (tinum != 0) {
+                if (reverse)
                     for (let y = 1; y < 12; y++) {
-                        if(firnum == tinum){
-                            stpnum = 12-y;
+                        if (firnum == tinum) {
+                            stpnum = 12 - y;
                             break
-                        }else{
-                            firnum = firnum/2;
+                        } else {
+                            firnum = firnum / 2;
                         }
                     }
                 else
-                    for (let y = 1; y < 12+Theme.elementMore[0].length; y++) {
-                        if(firnum == tinum){
+                    for (let y = 1; y < 12 + Theme.elementMore[0].length; y++) {
+                        if (firnum == tinum) {
                             stpnum = y;
                             break
-                        }else{
-                            firnum = firnum*2;
+                        } else {
+                            firnum = firnum * 2;
                         }
                     }
             }
 
             for (let y = 0; y < Theme.options.length; y++) {
                 if (stpnum == parseInt(Theme.number[y])) {
-                    squares[x].style.color = Theme.options[y].textcol;
-                    squares[x].style.background = Theme.options[y].bg;
-                    squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                    if (Theme.options[y].imagemode) {
+
+                        squares[x].style.fontSize = "0px";
+                        squares[x].style.background = Theme.options[y].bg;
+                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                        squares[x].style.backgroundSize = "cover";
+                        squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
+                    } else {
+
+                        squares[x].style.fontSize = "40px";
+                        squares[x].style.color = Theme.options[y].textcol;
+                        squares[x].style.background = Theme.options[y].bg;
+                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                    }
+
                 }
 
             }
@@ -793,16 +874,38 @@ function loaded() {
                     themedtile = false;
                     for (let y = 0; y < Theme.elementMore[0].length; y++) {
                         if (stpnum == parseInt(Theme.elementMore[0][y])) {
-                            squares[x].style.color = Theme.elementMore[1][y].textcol;
-                            squares[x].style.background = Theme.elementMore[1][y].bg;
-                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            if (Theme.elementMore[1][y].imagemode) {
+
+                                squares[x].style.fontSize = "0px";
+                                squares[x].style.background = Theme.elementMore[1][y].bg;
+                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                                squares[x].style.backgroundSize = "cover";
+                                squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
+                            } else {
+
+                                squares[x].style.fontSize = "40px";
+                                squares[x].style.color = Theme.elementMore[1][y].textcol;
+                                squares[x].style.background = Theme.elementMore[1][y].bg;
+                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            }
                             themedtile = true;
                         }
                     }
                     if (!themedtile) {
-                        squares[x].style.color = Theme.elementMore[1][Theme.elementMore[1].length - 1].textcol;
-                        squares[x].style.background = Theme.elementMore[1][Theme.elementMore[1].length - 1].bg;
-                        squares[x].style.boxShadow = Theme.elementMore[1][Theme.elementMore[1].length - 1].boxshadow;
+                        if (Theme.elementMore[1][y].imagemode) {
+
+                            squares[x].style.fontSize = "0px";
+                            squares[x].style.background = Theme.elementMore[1][y].bg;
+                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            squares[x].style.backgroundSize = "cover";
+                            squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
+                        } else {
+
+                            squares[x].style.fontSize = "40px";
+                            squares[x].style.color = Theme.elementMore[1][y].textcol;
+                            squares[x].style.background = Theme.elementMore[1][y].bg;
+                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                        }
                     }
                 } else {
                     squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
@@ -817,7 +920,7 @@ function loaded() {
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
             gridDisplay.style.border = "5px solid " + gameTheme[1];
-            gridDisplay.style.backgroundColor = gameTheme[2];
+            gridDisplay.style.backgroundColor = zerocol;
             tilestotheme = gridDisplay.children;
             for (let y = 0; y < tilestotheme.length; y++) {
                 tilestotheme[y].style.backgroundColor = gameTheme[1];
@@ -848,14 +951,14 @@ function loaded() {
         }
         spawnDisplay.innerHTML = "<p>" + spwantile + "</p>";
         setCookie("spawn", spwantile, 1);
-        if(mode != 0){
+        if (mode != 0) {
             window.location.reload();
         }
     }
-    spawnincrease.addEventListener("click", function () {
+    spawnincrease.addEventListener("click", function() {
         setspawn(2);
     });
-    spawndecrease.addEventListener("click", function () {
+    spawndecrease.addEventListener("click", function() {
         setspawn(1);
     });
     setspawn(0);
@@ -864,31 +967,31 @@ function loaded() {
         ////console.log("Clicked");
 
         let stepscookie = getCookie("steps");
-        if(stepscookie == ""){
+        if (stepscookie == "") {
             setCookie("steps", 11, 1);
             setps = 11;
-        }else{
+        } else {
             setps = parseInt(stepscookie);
         }
         currentstep = 1;
-        if(!reverse){	 startnum = spwantile;
-            for (let y = 2; y < setps+1; y++) {
-                startnum = startnum*2;
+        if (!reverse) {
+            startnum = spwantile;
+            for (let y = 2; y < setps + 1; y++) {
+                startnum = startnum * 2;
             }
-            goal = startnum;}
+            goal = startnum;
+        }
 
         if (mode == 1) {
-            if (goal != spwantile){
+            if (goal != spwantile) {
                 goal = goal / 2;
-                setCookie("steps", setps-1, 1);
-            }
-
-            else
+                setCookie("steps", setps - 1, 1);
+            } else
                 goal = 2;
         }
         if (mode == 2) {
             goal = goal * 2;
-            setCookie("steps", setps+1, 1);
+            setCookie("steps", setps + 1, 1);
         }
         headertext.innerHTML = goal;
         headertext2.innerHTML = goal;
@@ -896,13 +999,14 @@ function loaded() {
         document.title = goal + " | Max Tyson";
         setCookie("goal", goal, 1);
     }
-    goalincrease.addEventListener("click", function () {
+    goalincrease.addEventListener("click", function() {
         setgoal(2);
     });
-    goaldecrease.addEventListener("click", function () {
+    goaldecrease.addEventListener("click", function() {
         setgoal(1);
     });
     setgoal(0);
+
     function setsize(mode) {
         ////console.log("Clicked");
         if (mode == 1) {
@@ -917,10 +1021,10 @@ function loaded() {
         setCookie("width", size, 1);
         location.reload();
     }
-    sizeincrease.addEventListener("click", function () {
+    sizeincrease.addEventListener("click", function() {
         setsize(2);
     });
-    sizedecrease.addEventListener("click", function () {
+    sizedecrease.addEventListener("click", function() {
         setsize(1);
     });
     sizeDisplay.innerHTML = "<p>" + width + "</p>";
@@ -947,7 +1051,7 @@ function loaded() {
 
 
     function generate() {
-        debug("genarate",2);
+        debug("genarate", 2);
         let randNum = Math.floor(Math.random() * squares.length);
         if (squares[randNum].innerHTML == 0) {
             var newel = squares[randNum].cloneNode(true);
@@ -979,7 +1083,7 @@ function loaded() {
                     squares[x + y].innerHTML = newRow[0 + y];
                     if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
                         squares[x + y].parentNode.classList.add("animate-right");
-                        squares[x + y].parentNode.addEventListener('animationend', function () {
+                        squares[x + y].parentNode.addEventListener('animationend', function() {
                             squares[x + y].parentNode.classList.remove('animate-right');
                         })
                     }
@@ -1007,7 +1111,7 @@ function loaded() {
                     squares[x + y].innerHTML = newRow[0 + y];
                     if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
                         squares[x + y].parentNode.classList.add("animate-left");
-                        squares[x + y].parentNode.addEventListener('animationend', function () {
+                        squares[x + y].parentNode.addEventListener('animationend', function() {
                             squares[x + y].parentNode.classList.remove('animate-left');
                         })
                     }
@@ -1033,7 +1137,7 @@ function loaded() {
                 squares[x + y * width].innerHTML = newCol[0 + y];
                 if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
                     squares[x + y * width].parentNode.classList.add("animate-down");
-                    squares[x + y * width].parentNode.addEventListener('animationend', function () {
+                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
                         squares[x + y * width].parentNode.classList.remove('animate-down');
                     })
                 }
@@ -1058,7 +1162,7 @@ function loaded() {
                 squares[x + y * width].innerHTML = newCol[0 + y];
                 if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
                     squares[x + y * width].parentNode.classList.add("animate-up");
-                    squares[x + y * width].parentNode.addEventListener('animationend', function () {
+                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
                         squares[x + y * width].parentNode.classList.remove('animate-up');
                     })
                 }
@@ -1086,7 +1190,7 @@ function loaded() {
                     ////console.log("Left: "+x)
                     if (parseInt(squares[x].innerHTML) != 0) {
                         squares[x].parentNode.classList.add("animate-pop");
-                        squares[x].parentNode.addEventListener('animationend', function () {
+                        squares[x].parentNode.addEventListener('animationend', function() {
                             squares[x].parentNode.classList.remove('animate-pop');
                         })
                     }
@@ -1095,7 +1199,7 @@ function loaded() {
                     if (parseInt(squares[x].innerHTML) != 0) {
 
                         squares[x + 1].parentNode.classList.add("animate-pop");
-                        squares[x + 1].parentNode.addEventListener('animationend', function () {
+                        squares[x + 1].parentNode.addEventListener('animationend', function() {
                             squares[x + 1].parentNode.classList.remove('animate-pop');
                         })
                     }
@@ -1125,14 +1229,14 @@ function loaded() {
                 if (mode == "up") {
                     if (parseInt(squares[x].innerHTML) != 0) {
                         squares[x].parentNode.classList.add("animate-pop");
-                        squares[x].parentNode.addEventListener('animationend', function () {
+                        squares[x].parentNode.addEventListener('animationend', function() {
                             squares[x].parentNode.classList.remove('animate-pop');
                         })
                     }
                 } else {
                     if (parseInt(squares[x].innerHTML) != 0) {
                         squares[x + width].parentNode.classList.add("animate-pop");
-                        squares[x + width].parentNode.addEventListener('animationend', function () {
+                        squares[x + width].parentNode.addEventListener('animationend', function() {
                             squares[x + width].parentNode.classList.remove('animate-pop');
                         })
                     }
@@ -1163,7 +1267,7 @@ function loaded() {
                 scoreResult.style.width = (width * 100) + "px";
                 scoreResult.style.height = width * 100 + "px";
                 scoreResult.style.background = "lightgreen";
-                scoreResult.innerHTML = "<h1 style='font-size: " + (width * width) * 5 + "px;'>You Win!</h1><button onclick='location.reload()'>Replay</button><button id='cont'>Continue</button>"
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1><button onclick='location.reload()'>Replay</button><button id='cont'>Continue</button>"
                 document.getElementById("cont").addEventListener("click", continueGame);
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
@@ -1326,7 +1430,7 @@ function loaded() {
 
     function autoplay() {
         if (autoplayCheck.checked) {
-            setTimeout(function () {
+            setTimeout(function() {
                 document.removeEventListener('keyup', control);
                 let min = Math.ceil(1);
                 let max = Math.floor(5);
@@ -1358,6 +1462,7 @@ function loaded() {
     }
 
 }
+
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -1390,6 +1495,7 @@ function closeNav() {
     setCookie("open", "no", 1);
     document.getElementById("settingspannel").style.width = "0";
 }
+
 function resetTheme() {
     setCookie("customTheme", "", 365);
     location.reload();

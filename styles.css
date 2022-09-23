@@ -1,5 +1,6 @@
 @import url(fonts/clear-sans.css);
 
+
 html,
 body {
     background: #ffffffab;
@@ -7,6 +8,7 @@ body {
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
     font-size: 18px;
     margin: 0;
+
 }
 
 .game {
@@ -171,8 +173,9 @@ h2 {
     flex-wrap: wrap;
     width: 400px;
     height: 400px;
-    background-color: lightgreen;
+    background-color: black;
     border: 5px solid #cacece;
+    border-radius: 5px;
 }
 
 .header {
@@ -195,6 +198,7 @@ h2 {
 
 .grid .tile {
     top: 5px;
+    border-radius: 5px;
     animation: spawning 0.2s;
     left: 5px;
     position: relative;

@@ -30,6 +30,7 @@
         <div class="row">
             <div class="column">
                 <p>Join the numbers and get to the <strong class="goaltext2">2048</strong> tile!</p>
+
             </div>
             <div class="column" style="padding-top: 4%;">
                 <div class="scoretab">
@@ -38,8 +39,10 @@
                 </div>
             </div>
         </div>
+        <p>Scroll  down below to use the customization settingns to recreate the game to your desire</p>
     </div>
 </div>
+
 <div class="row">
     <div id="result">
         <h1>You Lose</h1>
@@ -64,6 +67,7 @@
             </div>
         </div>
     </div>
+    <div class="row"><p>Game inspired by the original 2048 by xyz. However the code for my version game was made by me and so was the thememaker and cusomizabality<p></div>
     <br>
     <div class="sharethemediv">
         <a href="javascript:void(0)" class="share_closebtn">×</a>
@@ -84,7 +88,7 @@
                 <h2>Theme Maker </h2>
             </div>
             <div class="settingrow">
-                <p>Use this to desgin custom game page and custom tiles. (scroll for more options)</p>
+                <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
                 </p>
             </div>
             <div class="settingrow">
@@ -114,6 +118,14 @@
                 <h2>Tiles</h2>
             </div>
             <div class="settingrow">
+                <p>Tile:&nbsp;&nbsp;</p>
+                <button id="themeTiledecrese">-</button>
+                <div id="themeTile">
+                    <p>2</p>
+                </div>
+                <button id="themeTileincrese">+</button>
+            </div>
+            <div class="settingrow">
                 <p>Mode:</p>
             </div>
             <div class="makeTileConatiner">
@@ -126,16 +138,22 @@
                     <button id="themeModeincrese">></button>
                 </div>
             </div>
-            <div class="imagemode"></div>
-            <div class="colourmode">
+            <div class="imagemode">
                 <div class="settingrow">
-                    <p>Tile:&nbsp;&nbsp;</p>
-                    <button id="themeTiledecrese">-</button>
-                    <div id="themeTile">
-                        <p>2</p>
-                    </div>
-                    <button id="themeTileincrese">+</button>
+                    <p>Image URL:</p>
                 </div>
+                <div class="settingrow">
+                    <p style="font-size: 18px">Press Enter To Update</p>
+                </div>
+                <div class="settingrow">
+                    <input id="imgurl" type="textarea">
+                </div>
+                <br>
+                <br>
+            </div>
+
+            <div class="colourmode">
+
                 <div class="settingrow">
                     <p>Num Col: </p>
                     <div id="textcolpciker"></div>
