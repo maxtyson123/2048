@@ -59,7 +59,21 @@ body {
     display: none;
     padding: 10px;
 }
-
+.newboarddiv {
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    width: 30%;
+    position: fixed;
+    z-index: 3;
+    height: auto;
+    background-color: #111;
+    transition: 0.5s;
+    display: none;
+    padding: 10px;
+}
 .sharethemediv input {
     width: 80%;
     margin-left: 10%;
@@ -256,8 +270,9 @@ h2 {
     --anim-move: -100px;
 }
 
-.class_scoreadd{
+#scoreadd{
     position: relative;
+
     left: 65%;
     opacity: 0;
 }
@@ -409,13 +424,13 @@ h2 {
     position: absolute;
     display: none;
     left: 0;
-    right: 50px;
+    right: 1;
     margin-left: auto;
     margin-right: auto;
     width: 400px;
     height: 400px;
     z-index: 2;
-    background-color: red;
+    background-color: rgba(144, 238, 144, 0.2);
 }
 
 .result h1 {

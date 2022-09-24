@@ -10,10 +10,14 @@ closeNav="";
 //NEXT:
 
 //SplitScreen multiplayer
-//----Fix animation w binding
-//----Multiboard looping setup
-//---- INPUT
-//-- Settings Mirroring as option
+//-----Un Center Final
+//----cookiefy movecap
+//----Reset on reverse
+//---Foix back
+//---Fix spawm tile score
+
+//redesign loose
+//Can combine thru walls
 //Zoom
 //Preformace
 //Co-Op Multiplayer
@@ -24,6 +28,7 @@ closeNav="";
 //Upsidedown
 //tertirs
 
+//cnsl ver
 //Remake Tiles b4:
 //flappy
 //racing
@@ -36,7 +41,7 @@ function loaded() {
 
     //MUST BE HERE
 
-    var Game =  {
+    var GameClass =  {
         gridDisplay : "",
         gridDisplayId: "",
         movesdisplay:"",
@@ -200,7 +205,7 @@ function loaded() {
             this.bestDisplay = document.querySelector('#best-'+selector);
             this.hbestDisplay = document.querySelector('#hbest-'+selector);
             this.scoreResult = document.querySelector('#result-'+selector);
-
+            this.gridDisplay  = document.getElementById(this.gridDisplayId);
 
         },
         goback : function(){
@@ -211,10 +216,7 @@ function loaded() {
         },
         reset2 : function(){
             resetGame(this,2);
-        },
-
-        getgridDisplay: function(){
-            this.gridDisplay  = document.getElementById(this.gridDisplayId);
+            this.allowInput = true;
         },
         squares : [],
         moves : 0,
@@ -252,10 +254,10 @@ function loaded() {
             this.checkGameOver()
         }
     }
+    games = [];
 
-    game1 = Object.assign({}, Game);
-    game1.createboardhtml("1");
-    game1.getgridDisplay();
+
+    //for (let g = 0; g < games.length; g++) {
 
     const headertext = document.querySelector('.goaltext');
     const headertext2 = document.querySelector('.goaltext2');
@@ -333,7 +335,7 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
     //SPAWN
     function setspawn(mode) {
-        //////console.log("Clicked");
+
         if (mode == 1) {
             if (spwantile != 1)
                 settingsData.spwantile -= 1;
@@ -346,8 +348,10 @@ function loaded() {
         spawnDisplay.innerHTML = "<p>" + settingsData.spwantile + "</p>";
         setCookie("settingsData", JSON.stringify(settingsData), 1);
         if (mode != 0) {
-
-            resetGame(game1,1); //INSET LOOP //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                resetGame(games[g],1);
+            }
+            ReloadPage();
         }
     }
     spawnincrease.addEventListener("click", function() {
@@ -359,7 +363,6 @@ function loaded() {
 
     //GOAL
     function setgoal(mode) {
-        //////console.log("Clicked");
 
         let stepscookie = getCookie("steps");
         if (stepscookie == "") {
@@ -405,7 +408,7 @@ function loaded() {
 
 
     function setsize(mode) {
-        //////console.log("Clicked");
+
         if (mode == 1) {
             if (width != 2)
                 size = width - 2;
@@ -417,7 +420,10 @@ function loaded() {
         }
         settingsData.width = size;
         setCookie("settingsData", JSON.stringify(settingsData), 1);
-        resetGame(game1,1); //INSET LOOP
+        for (let g = 0; g < games.length; g++) {
+            resetGame(games[g],1);
+        }
+        ReloadPage();
 
     }
     sizeincrease.addEventListener("click", function() {
@@ -429,7 +435,7 @@ function loaded() {
 
 
     function setmovecap(mode) {
-        //////console.log("Clicked");
+
         if (mode == 1) {
             if (movecap != 0)
                 movecap -= 100;
@@ -465,14 +471,17 @@ function loaded() {
             settingsData.spwantile = 2;
         }
         setCookie("settingsData", JSON.stringify(settingsData), 1);
-        resetGame(game1,1); //INSET LOOP
+        for (let g = 0; g < games.length; g++) {
+            resetGame(games[g],1);
+        }
+        ReloadPage();
     }
     if (reverse) {
         reverseCheck.checked = true
     } else if (!reverse) {
         reverseCheck.checked = false
     }
-    //	////console.log(reverseCheck.checked +"="+reverse);
+
 
 
     function setsave() {
@@ -487,7 +496,7 @@ function loaded() {
     } else if (!savemode) {
         savemodeCheck.checked = false
     }
-    //	////console.log(reverseCheck.checked +"="+reverse);
+
 
 
     openNav = function openNavFunct() {
@@ -733,7 +742,9 @@ function loaded() {
         urldata = urlinput.value;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     }
 
@@ -748,7 +759,9 @@ function loaded() {
         textcol = textcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     //BackgroundCol
@@ -761,7 +774,9 @@ function loaded() {
         bgcol = bgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     //GlowAmount
@@ -776,7 +791,9 @@ function loaded() {
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     }
 
@@ -789,7 +806,9 @@ function loaded() {
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     }
     //GlowCol
@@ -802,7 +821,9 @@ function loaded() {
         glowCol = glowcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
 
@@ -816,7 +837,9 @@ function loaded() {
         zerocol = zerocolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     var boardcolpciker = new iro.ColorPicker('#boardpicker', {
@@ -828,7 +851,9 @@ function loaded() {
         boardcol = boardcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     var bodybgcolpciker = new iro.ColorPicker('#worldbgpicker', {
@@ -840,7 +865,9 @@ function loaded() {
         bodybgcol = bodybgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     var bodytextcolpciker = new iro.ColorPicker('#worldtextpicker', {
@@ -852,7 +879,9 @@ function loaded() {
         bodytextcol = bodytextcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     var scorecolpciker = new iro.ColorPicker('#worldscore', {
@@ -864,14 +893,16 @@ function loaded() {
         scorecol = scorecolpciker.color.hexString;
         if (realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
         }
     });
     const taginput = document.querySelector('#taginput');
 
     function settag() {
         tagline = taginput.value;
-        ////console.log(tagline)
+
         if (realtime)
             makeintotile()
     }
@@ -885,7 +916,9 @@ function loaded() {
     submitbutton.addEventListener("click", function() {
         if (!realtime) {
             makeintotile();
-            game1.themeBoard(cus_theme); //INSET LOOP
+            for (let g = 0; g < games.length; g++) {
+                games[g].themeBoard(cus_theme);
+            }
             applytheme();
         } else {
             applytheme();
@@ -970,7 +1003,7 @@ function loaded() {
                             glowAmtnum = parseInt(glowData[3].replace('px', ''));
 
                         }
-                        ////console.log(jsonedTheme.options[y].textcol)
+
                         default_textcol = jsonedTheme.options[y].textcol;
                         default_bgcol = jsonedTheme.options[y].bg;
                         bgcolpciker.color.set(default_bgcol);
@@ -994,7 +1027,7 @@ function loaded() {
                 }
             }
         }
-        ////console.log("LOADEE")
+
     }
 
     function loadallfromsave() {
@@ -1009,7 +1042,7 @@ function loaded() {
 
                 loadtilefromsave(true);
                 makeintotile(false);
-                //console.log(tilenum+": _loaded_ "+glowAmtnum);
+
                 tilenum = tilenum + tilenum;
             }
             loadtilefromsave(true);
@@ -1124,7 +1157,7 @@ function loaded() {
         function newBoardElemet() {
 
             element = "";
-            //console.log(tilenum+": _boaring_ "+glowAmtnum);
+
             if (modename[currentmode] == "Image") {
 
                 element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
@@ -1456,8 +1489,8 @@ function loaded() {
                         this.squares[x + y].parentNode.classList.add("animate-right");
 
                         this.squares[x + y].parentNode.addEventListener('animationend', function() {
-                            game1.squares[x + y].parentNode.classList.remove('animate-right');
-                        })
+                            this.squares[x + y].parentNode.classList.remove('animate-right');
+                        }.bind(this))
                     }
                 }
             }
@@ -1485,9 +1518,9 @@ function loaded() {
                     if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
                         this.squares[x + y].parentNode.classList.add("animate-left");
                         this.squares[x + y].parentNode.addEventListener('animationend', function() {
-                            game1.squares[x + y].parentNode.classList.remove('animate-left');
+                            this.squares[x + y].parentNode.classList.remove('animate-left');
 
-                        })
+                        }.bind(this))
                     }
                 }
             }
@@ -1512,8 +1545,8 @@ function loaded() {
                 if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-down");
                     this.squares[x + y * width].parentNode.addEventListener('animationend', function() {
-                        game1.squares[x + y * width].parentNode.classList.remove('animate-down');
-                    })
+                        this.squares[x + y * width].parentNode.classList.remove('animate-down');
+                    }.bind(this))
                 }
 
             }
@@ -1537,8 +1570,8 @@ function loaded() {
                 if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-up");
                     this.squares[x + y * width].parentNode.addEventListener('animationend', function() {
-                        game1.squares[x + y * width].parentNode.classList.remove('animate-up');
-                    })
+                        this.squares[x + y * width].parentNode.classList.remove('animate-up');
+                    }.bind(this))
                 }
             }
         }
@@ -1572,12 +1605,12 @@ function loaded() {
                     this.checkbest();
                 this.squares[x + 1].innerHTML = 0;
                 if (mode == "left") {
-                    //////console.log("Left: "+x)
+
                     if (parseInt(this.squares[x].innerHTML) != 0) {
                         this.squares[x].parentNode.classList.add("animate-pop");
                         this.squares[x].parentNode.addEventListener('animationend', function() {
-                            game1.squares[x].parentNode.classList.remove('animate-pop');
-                        })
+                            this.squares[x].parentNode.classList.remove('animate-pop');
+                        }.bind(this))
                     }
                 } else {
 
@@ -1585,8 +1618,8 @@ function loaded() {
 
                         this.squares[x + 1].parentNode.classList.add("animate-pop");
                         this.squares[x + 1].parentNode.addEventListener('animationend', function() {
-                            game1.squares[x + 1].parentNode.classList.remove('animate-pop');
-                        })
+                            this.squares[x + 1].parentNode.classList.remove('animate-pop');
+                        }.bind(this))
                     }
                 }
 
@@ -1625,15 +1658,15 @@ function loaded() {
                     if (parseInt(this.squares[x].innerHTML) != 0) {
                         this.squares[x].parentNode.classList.add("animate-pop");
                         this.squares[x].parentNode.addEventListener('animationend', function() {
-                            game1.squares[x].parentNode.classList.remove('animate-pop');
-                        })
+                            this.squares[x].parentNode.classList.remove('animate-pop');
+                        }.bind(this))
                     }
                 } else {
                     if (parseInt(this.squares[x].innerHTML) != 0) {
                         this.squares[x + width].parentNode.classList.add("animate-pop");
                         this.squares[x + width].parentNode.addEventListener('animationend', function() {
-                            game1.squares[x + width].parentNode.classList.remove('animate-pop');
-                        })
+                            this.squares[x + width].parentNode.classList.remove('animate-pop');
+                        }.bind(this))
                     }
                 }
                 if (mode != "nocheck")
@@ -1672,13 +1705,19 @@ function loaded() {
             }
             if (!possible) {
                 this.scoreResult.style.display = "block";
+                this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = width * 100 + "px";
                 this.scoreResult.style.height = width * 100 + "px";
+                this.scoreResult.style.backgroundColor = "rgba(255, 0, 0, 0.2)"
                 this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-"+this.gameId+"'>Replay</button>";
-                document.getElementById('replay-'+this.gameId).addEventListener('click', this.reset.bind(this), false);  ///BINDING
+                document.getElementById('replay-'+this.gameId).addEventListener('click', function(){
+                    this.reset2();
+                    this.scoreResult.style.display = "none";
+                    document.addEventListener('keyup', control);
+                }.bind(this), false);  ///BINDING
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
-                document.removeEventListener('keyup', control);
+                this.allowInput = false;
             }
 
 
@@ -1686,13 +1725,19 @@ function loaded() {
         if (movecap != 0)
             if (this.moves >= movecap) {
                 this.scoreResult.style.display = "block";
+                this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = width * 100 + "px";
                 this.scoreResult.style.height = width * 100 + "px";
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><<button id='replay-"+this.gameId+"'>Replay</button>";
-                document.getElementById('replay-'+this.gameId).addEventListener('click', this.reset.bind(this), false);  ///BINDING
+                this.scoreResult.style.backgroundColor = "rgba(255, 0, 0, 0.2)"
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-"+this.gameId+"'>Replay</button>";
+                document.getElementById('replay-'+this.gameId).addEventListener('click', function(){
+                    this.reset2();
+                    this.scoreResult.style.display = "none";
+                    document.addEventListener('keyup', control);
+                }.bind(this), false);  ///BINDING
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
-                document.removeEventListener('keyup', control);
+                this.allowInput = false;
             }
 
 
@@ -1709,9 +1754,10 @@ function loaded() {
         for (let x = 0; x < this.squares.length; x++) {
             if (this.squares[x].innerHTML == goal && !this.continueEnabled) {
                 this.scoreResult.style.display = "block";
+                this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = (width * 100) + "px";
                 this.scoreResult.style.height = width * 100 + "px";
-                this.scoreResult.style.background = "lightgreen";
+                this.scoreResult.style.background = "rgba(144, 238, 144, 0.2)";
                 this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-"+this.gameId+"'>Replay</button><button id='cont'>Continue</button>"
                 document.getElementById('replay-'+this.gameId).addEventListener('click', this.reset.bind(this), false);  ///BINDING
                 document.getElementById("cont").addEventListener("click", function(){
@@ -1719,7 +1765,7 @@ function loaded() {
                 }.bind(this));
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
-                document.removeEventListener('keyup', control);
+                this.allowInput = false;
             }
 
         }
@@ -1728,6 +1774,9 @@ function loaded() {
 
     /////////////////////////SCORES/////////////////
     checkhighFunct = function checkhigh() {
+        if(this.hscore ==  undefined){
+            this.hscore = 0;
+        }
         if (!reverse) {
             let current = parseInt(this.scoreDisplay.innerHTML);
             let high = this.hscore;
@@ -1742,9 +1791,13 @@ function loaded() {
         } else {
             this.hscoreDisplay.innerHTML = "Unavalible in reverse mode.";
         }
+
     }
 
     checkh_bestFunct = function checkh_best() {
+        if(this.hscore ==  undefined){
+            this.hscore = 0;
+        }
         if (!reverse) {
 
             let current = parseInt(this.bestDisplay.innerHTML);
@@ -1756,7 +1809,9 @@ function loaded() {
             } else {
                 this.btile = current;
             }
+
             this.hbestDisplay.innerHTML = high;
+
         } else {
             this.hbestDisplay.innerHTML = "Unavalible in reverse mode.";
         }
@@ -1798,15 +1853,16 @@ function loaded() {
         if(cookiedGame != ""){
             loadedGame = JSON.parse(cookiedGame);
         }
-        function SaveData(gameId,saveData,hscore,besttile){
+        function SaveData(gameId,saveData,hscore,besttile,movekeys){
             this.id = gameId;
             this.data = saveData;
             this.hscore = hscore;
             this.btile = besttile;
+            this.movekeys = movekeys;
         }
         exists = false;
         for (let x = 0; x < loadedGame.boards.length; x++) {
-            if(loadedGame.boards[x].id = game.gameId){
+            if(parseInt(loadedGame.boards[x].id) == game.gameId){
                 scoredata = loadedGame.boards[x].data;
                 scoredata.length = 0;
                 for (let x = 0; x < game.squares.length; x++) {
@@ -1823,16 +1879,18 @@ function loaded() {
                     game.backdata.shift();
                 }
                 exists = true;
+
             }
         }
         if(!exists){
             scoredata = [];
+
             for (let x = 0; x < game.squares.length; x++) {
                 scoredata.push(game.squares[x].innerHTML);
             }
             scoredata.push(game.moves);
             scoredata.push(game.score);
-            loadedGame.boards.push(new SaveData(game.gameId,  scoredata,game.hscore,game.btile))
+            loadedGame.boards.push(new SaveData(game.gameId, scoredata,game.hscore,game.btile,game.keycodes))
             game.backdata.push(scoredata);
             if (game.backdata.length >= 3) {
                 game.backdata.shift();
@@ -1851,11 +1909,11 @@ function loaded() {
             scoredata = gamedata.data;
             game.btile = gamedata.btile;
             game.hscore = gamedata.hscore;
+            game.keycodes = gamedata.movekeys;
             undefinedinc = false;
             for (let x = 0; x < scoredata.length; x++) {
 
                 if(scoredata[x] == "undefined"){
-                    console.log(scoredata[x] +" : "+x)
                     undefinedinc = true}
             }
 
@@ -1882,7 +1940,9 @@ function loaded() {
         } else {
             game.themeBoard(def_theme);
         }
+
         savegame(game);
+
 
     }
     function intialLoad(game){
@@ -1891,8 +1951,7 @@ function loaded() {
         if(cookiedGame != ""){
             loadedGame = JSON.parse(cookiedGame);
             for (let x = 0; x < loadedGame.boards.length; x++) {
-                if(loadedGame.boards[x].id = game.gameId){
-
+                if(parseInt(loadedGame.boards[x].id) == game.gameId){
                     if (savemode)
                         loadgame(loadedGame.boards[x], game)
                 }
@@ -1919,13 +1978,7 @@ function loaded() {
         game.movesdisplay.innerHTML = game.moves;
         game.scoreDisplay.innerHTML = game.score;
         game.gridDisplay.innerHTML="";
-        if(mode == 1){
-
-            savegame(game);
-            location.reload();
-            setCookie("reloadRequest","yes",1)
-
-        }else{
+        if(mode != 1){
             game.createBoard();
             game.generate();
             game.generate();
@@ -1939,89 +1992,106 @@ function loaded() {
 
 
     }
-
+    function ReloadPage(){
+        location.reload();
+        setCookie("reloadRequest","yes",1)
+    }
     /////////////////////////INPUT/////////////////
     function control(e) {
-        if (e.keyCode === 39) {
-            keyRight();
-        } else if (e.keyCode === 37) {
-            keyLeft();
-        } else if (e.keyCode === 38) {
-            keyup();
-        } else if (e.keyCode === 40) {
-            keydown();
+        for (let g = 0; g < games.length; g++) {
+            if(games[g].allowInput){
+                if (e.keyCode === games[g].keycodes[1]) {
+
+                    games[g].keyRight();
+                    games[g].moves += 1;
+                    games[g].movesdisplay.innerHTML = games[g].moves;
+                } else if (e.keyCode === games[g].keycodes[0]) {
+                    games[g].keyLeft();
+                    games[g].moves += 1;
+                    games[g].movesdisplay.innerHTML = games[g].moves;
+                } else if (e.keyCode === games[g].keycodes[2]) {
+                    games[g].keyup();
+                    games[g].moves += 1;
+                    games[g].movesdisplay.innerHTML = games[g].moves;
+                } else if (e.keyCode === games[g].keycodes[3]) {
+                    games[g].keydown();
+                    games[g].moves += 1;
+                    games[g].movesdisplay.innerHTML = games[g].moves;
+                }
+                if (customThemeActive) {
+                    games[g].themeBoard(cus_theme);
+                } else {
+                    games[g].themeBoard(def_theme);
+                }
+
+                if (savemode)
+                    savegame(games[g]);
+            }
+
         }
-        if (customThemeActive) {
-            game1.themeBoard(cus_theme); //FIX LATER
-        } else {
-            game1.themeBoard(def_theme); //FIX LATER
-        }
-        game1.moves += 1;
-        game1.movesdisplay.innerHTML = game1.moves;
-        if (savemode)
-            savegame(game1);
     }
     document.addEventListener('keyup', control);
 
     function autoplay() {
         if (autoplayCheck.checked) {
-            setTimeout(function() {
-                document.removeEventListener('keyup', control);
-                let min = Math.ceil(1);
-                let max = Math.floor(5);
-                let rand = Math.floor(Math.random() * (max - min) + min); //The
-                if (rand == 1)
-                    keyLeft();
-                else if (rand == 2)
-                    keyRight();
-                else if (rand == 3)
-                    keyup();
-                else if (rand == 4)
-                    keydown();
-                if (customThemeActive) {
-                    game1.themeBoard(cus_theme); //FIX LATER
-                } else {
-                    game1.themeBoard(def_theme); //FIX LATER
-                }
-                game1.moves += 1;
-                game1.movesdisplay.innerHTML = game1.moves;
-                if (savemode)
-                    savegame(game1);
-                autoplay();
+            for (let g = 0; g < games.length; g++) {
+                setTimeout(function() {
+                    let min = Math.ceil(1);
+                    let max = Math.floor(5);
+                    let rand = Math.floor(Math.random() * (max - min) + min); //The
+                    if (rand == 1)
+                        games[g].keyLeft();
+                    else if (rand == 2)
+                        games[g].keyRight();
+                    else if (rand == 3)
+                        games[g].keyup();
+                    else if (rand == 4)
+                        games[g].keydown();
+                    if (customThemeActive) {
+                        games[g].themeBoard(cus_theme); //FIX LATER
+                    } else {
+                        games[g].themeBoard(def_theme); //FIX LATER
+                    }
+                    games[g].moves += 1;
+                    games[g].movesdisplay.innerHTML = games[g].moves;
+                    if (savemode)
+                        savegame(games[g]);
+                    autoplay();
 
-            }, 100);
+                }, 100);}
         } else {
             document.addEventListener('keyup', control);
         }
 
     }
 
-    function keyup() {
-        game1.moveUp();
-        game1.combineCol("up");
-        game1.moveUp();
-        game1.generate();
+    keyUpfunct = function keyup() {
+        this.moveUp();
+        this.combineCol("up");
+        this.moveUp();
+        this.generate();
     }
 
-    function keydown() {
-        game1.moveDown();
-        game1.combineCol("down");
-        game1.moveDown();
-        game1.generate();
+    keyDonwFunct = function keydown() {
+        this.moveDown();
+        this.combineCol("down");
+        this.moveDown();
+        this.generate();
     }
 
-    function keyRight() {
-        game1.moveRight();
-        game1.combineRow("right");
-        game1.moveRight();
-        game1.generate();
+    keyRightFunct = function keyRight() {
+
+        this.moveRight();
+        this.combineRow("right");
+        this.moveRight();
+        this.generate();
     }
 
-    function keyLeft() {
-        game1.moveLeft();
-        game1.combineRow("left");
-        game1.moveLeft();
-        game1.generate();
+    keyLeftFunct = function keyLeft() {
+        this.moveLeft();
+        this.combineRow("left");
+        this.moveLeft();
+        this.generate();
     }
 
     //--------------------------------------------------------------------------------------------------------------------//
@@ -2030,57 +2100,116 @@ function loaded() {
     //Load Theme
 
     //ThemeLoading
+    setSettings();
     setTHeming()
     loadallfromsave();
     tilenum = 2;
     loadtilefromsave();
     makeintotile();
     tilenum = 2;
-    //SetupFuncts
-    game1.moveLeft = moveLeftFunct;
-    game1.moveRight = moveRightFunct;
-    game1.moveDown = moveDownFunct;
-    game1.moveUp = moveUpFunct;
-    game1.combineCol = combineColFunct;
-    game1.combineRow = combineRowFunct;
-    game1.checkGameOver = checkGameOverFunc;
-    game1.checkWin = checkWinFunct;
-    game1.continueGame = continueGameFunct;
-    game1.checkhigh =  checkhighFunct;
-    game1.checkh_best = checkh_bestFunct;
-    game1.checkbest = checkbestFunct;
-    game1.themeBoard  = themeBoardFunct;
-    //Run Functs
-    //Settings
-    setSettings();
-    //Game
+    function SetUpGame(game,keys){
+        game.keycodes = keys;
+        game.moveLeft = moveLeftFunct;
+        game.moveRight = moveRightFunct;
+        game.moveDown = moveDownFunct;
+        game.moveUp = moveUpFunct;
+        game.combineCol = combineColFunct;
+        game.combineRow = combineRowFunct;
+        game.checkGameOver = checkGameOverFunc;
+        game.checkWin = checkWinFunct;
+        game.continueGame = continueGameFunct;
+        game.checkhigh =  checkhighFunct;
+        game.checkh_best = checkh_bestFunct;
+        game.checkbest = checkbestFunct;
+        game.themeBoard  = themeBoardFunct;
+        game.keyLeft = keyLeftFunct;
+        game.keydown = keyDonwFunct;
+        game.keyRight = keyRightFunct;
+        game.keyup = keyUpfunct;
+        game.squares = [];
+        game.allowInput = true;
+        //Run Functs
+        //Settings
 
-    game1.createBoard();
-    game1.generate();
-    game1.generate();
-    intialLoad(game1);
-    game1.checkbest();
-    game1.checkhigh();
-    //Theme it
-    if (customThemeActive) {
-        game1.themeBoard(cus_theme);
-    } else {
-        game1.themeBoard(def_theme);
+        //Game
+        game.createBoard();
+        game.generate();
+        game.generate();
+        intialLoad(game);
+        game.checkbest();
+        game.checkhigh();
+        //Theme it
+        if (customThemeActive) {
+            game.themeBoard(cus_theme);
+        } else {
+            game.themeBoard(def_theme);
+        }
+        return game;
     }
-    if(getCookie("reloadRequest") == "yes"){
-        setCookie("reloadRequest","no",1)
-        location.reload();
-        //STFU ik its a hack
+    for (let g = 0; g < games.length; g++) {
+        games[g] = SetUpGame(games[g]);
     }
+    function CreateNewGameData(id){
+        tempgame = Object.assign({}, GameClass);
+        tempgame.createboardhtml(id);
+        games.push(tempgame)
+    }
+    makeNewGame = function makeNewGameFunct(id,keys){
+        CreateNewGameData(id);
+        SetUpGame(games[id],keys);
+    }
+    makeNewGame(games.length,[37,39,38,40]);
+    function loadOtherGames(){
+        loadedGame = {};
+        let cookiedGame = getCookie("savedgames");
+        if(cookiedGame != ""){
+            loadedGame = JSON.parse(cookiedGame);
+            for (let x = 1; x < loadedGame.boards.length; x++) {
+                makeNewGame(games.length,loadedGame.boards[x].movekeys)
+            }
+        }
+    }
+    loadOtherGames()
+    newboardButton = document.querySelector(".newboard");
+    newboardButton.addEventListener("click", function(){
+        makenew()
+    });
+
+    function makenew(){
+        keydiv = document.querySelector(".newboarddiv");
+        keytext = document.querySelector(".newboardtect");
+        keydiv.style.display = "block"
+
+        document.addEventListener('keyup', inputmapping);
+        mappedkeys = [];
+        modekeys = ["Left","Right","Up","Down"];
+        mode  = 0;
+        keytext.innerHTML = 'Press key for "'+modekeys[mode]+'"';
+        function inputmapping(key){
+            mappedkeys.push(key.keyCode);
+            mode += 1;
+            if(mode == 4){
+                makeNewGame(games.length, mappedkeys);
+                document.removeEventListener('keyup', inputmapping);
+                keydiv.style.display = "none";
+            }
+            keytext.innerHTML = 'Press key for "'+modekeys[mode]+'"';
+        }
+
+    }
+
 
     ////////////////////////////////////////////////////////OTHER////////////////////////////////////////////////////////////
     //--------------------------------------------------------------------------------------------------------------------//
     //_________________________________________________OTHER-FUNCTIONS____________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
     function debug(text, bugfixingid) {
-        ////console.log(text);
     }
-
+    if(getCookie("reloadRequest") == "yes"){
+        setCookie("reloadRequest","no",1)
+        location.reload();
+        //STFU ik its a hack
+    }
     function getUrlVar(varible) {
         debug("funct_geturl", 2);
         vars = window.location.search.split("?");
