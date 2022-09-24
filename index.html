@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="eng">
 
@@ -27,66 +28,24 @@
                 <h2 id="tagline" style="font-size: 30px" class="nametext animate-down">WildCard</h1>
             </div>
         </div>
-        <div class="row">
-            <div class="column">
-                <div class="scoretab" id="sc">
-                    <div class="score-title"><strong>Score:</strong></div>
-                    <span id="score">0</span>
 
-                </div>
-                <span id="scoreadd">+2</span>
-            </div>
-            <div class="column">
-                <div class="scoretab">
-                    <div class="hscore-title">Highscore:</div>
-                    <span id="hscore">0</span>
-                </div>
-            </div>
-        </div>
         <p>Join the numbers and get to the <strong class="goaltext2">2048</strong> tile!</p>
 
     </div>
 </div>
 
-<div class="row">
-    <div id="result">
-        <h1>You Lose</h1>
-        <button>Replay</button>
-    </div>
-    <div class="gamecoantiner">
-        <div style="display: inline">
-            <div class="grid"></div>
-        </div>
-        <div class="side-tab">
-            <button style="font-size: 28px;" class="side-item" onclick="resetGame()"><span class=reload> &nbsp&#x21bb&nbsp;</span></button>
-            <button style="font-size: 28px;" class="side-item" id="goback"><span class=reload> &nbsp&#8592&nbsp;</span></button>
-            <div class="side-item">
-                <p id="moves">0</p>
-            </div>
+<div class="row"  id="boards">
+    <div  class="games" id="gamespace">
 
-        </div>
 
     </div>
 </div>
-</div>
+
 <br>
 
 <br>
 <div class="header">
-    <div class="row">
-        <div class="column">
-            <div class="scoretab" style="padding: 10px;">
-                <div class="score-title inline">Current Best: </div>
-                <span class="inline" id="best">0</span>
-            </div>
-        </div>
-        <div class="column">
-            <div class="scoretab" style="padding: 10px;">
-                <div class="hscore-title inline">Alltime Best:</div>
-                <span class="inline" id="hbest">0</span>
-            </div>
-        </div>
-    </div>
+
     <div class="row">
         <p>Use the customization settingns to recreate the game to your desire</p>
         <p>-----</p>
@@ -98,7 +57,7 @@
         <a href="javascript:void(0)" class="share_closebtn">×</a>
         <h1 id="sharetitle">Share Theme</h1>
         <ul id="presetlist">
-            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2Y5YTJiYyIsInRleHRjb2wiOiIjZjlhMmJjIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmOWEyYmMiLCJ0ZXh0Y29sIjoiI2Y5YTJiYyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmYwMDM3IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yLmpwZyJ9LHsiYmciOiIjNTRjMTU0IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy80LmpwZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy84LmpwZyJ9LHsiYmciOiIjMDA4NGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xNi5qcGcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvMzIuanBnIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzY0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMjguanBnIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzI1Ni5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvNTEyLmpwZyJ9LHsiYmciOiIjMzlmZjJiIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMDI0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yMDQ4LmpwZyJ9XSwibW9yZWVuYWJsZWQiOnRydWUsImVsZW1lbnRNb3JlIjpbWzEyXSxbeyJiZyI6IiNmZjAwMzciLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOmZhbHNlLCJpbWFnZXVybCI6Im5vbmUifV1dLCJnYW1ldGhlbSI6W3siYmciOiJyZ2IoMTI4LCAxOTAsIDEyOCkiLCJ0ZXh0Y29sIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwiYm94c2hhZG93IjoiIn0sIiNmNjcwOTgiLCIjZmZmNWY5IiwiIzc3NmU2NSJdLCJlbmNvZGVkcHJvcGVybHkiOiJpdF93b3Jrc19wbHNfZG9udF9tZXNzX3dpdGhfdGhpc19vdGhlcndpc2VfaXRfYnJlYWtzIn0=">Doughnuts</a></li>
+            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2Y5YTJiYyIsInRleHRjb2wiOiIjZjlhMmJjIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmOWEyYmMiLCJ0ZXh0Y29sIjoiI2Y5YTJiYyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmZmZmZmIiwidGV4dGNvbCI6IiMwMDAwMDAiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yLmpwZyJ9LHsiYmciOiIjNTRjMTU0IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy80LmpwZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy84LmpwZyJ9LHsiYmciOiIjMDA4NGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xNi5qcGcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvMzIuanBnIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzY0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMnB4IDJweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMjguanBnIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCA0cHggNHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzI1Ni5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDZweCA2cHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvNTEyLmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMDI0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yMDQ4LmpwZyJ9XSwibW9yZWVuYWJsZWQiOmZhbHNlLCJlbGVtZW50TW9yZSI6W1tdLFtdXSwiZ2FtZXRoZW0iOlt7ImJnIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwidGV4dGNvbCI6InJnYigxMjgsIDE5MCwgMTI4KSIsImJveHNoYWRvdyI6IiJ9LCIjZjY3MDk4IiwiI2ZiZjdmZiIsIiM2MzNmNGQiLCIjZjY3MDk4IiwiV2lsZENhcmQiXSwiZW5jb2RlZHByb3Blcmx5IjoiaXRfd29ya3NfcGxzX2RvbnRfbWVzc193aXRoX3RoaXNfb3RoZXJ3aXNlX2l0X2JyZWFrcyJ9=">Doughnuts</a></li>
         </ul>
         <input id="sharethemedata" type="textarea">
         <p id="sharetext">Copy this text and share it with whoever. (Click inside and press ctrl-a then copy)</p>

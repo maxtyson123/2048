@@ -2,13 +2,25 @@ document.addEventListener('DOMContentLoaded', loaded);
 if (!window.location.href.includes("index.html")) {
     window.location.href = "index.html";
 }
+openNav="";
+closeNav="";
 //FINAL
 //make ai, ai give hint or image
 
 //NEXT:
 
 //SplitScreen multiplayer
+//----Fix animation w binding
+//----Multiboard looping setup
+//---- INPUT
+//-- Settings Mirroring as option
+//Zoom
+//Preformace
 //Co-Op Multiplayer
+
+
+//Image past2048 auto theming
+
 //Upsidedown
 //tertirs
 
@@ -21,40 +33,218 @@ if (!window.location.href.includes("index.html")) {
 
 function loaded() {
 
-    let squares = [];
+
     //MUST BE HERE
 
     var Game =  {
         gridDisplay : "",
-        creategriddisp: function(gridselctor){
-            gridDisplay = document.querySelector('.'+gridselctor);
-            return gridDisplay;
+        gridDisplayId: "",
+        movesdisplay:"",
+        scoreDisplay:"",
+        hscoreDisplay:"",
+        scoreAddDisplay:"",
+        bestDisplay:"",
+        hbestDisplay:"",
+        gameId: "",
+        backdata : [],
+        createboardhtml: function(selector){
+            this.gameId = selector;
+            gamespace = document.getElementById("gamespace");
+            //Padding
+            paddingdiv  = document.createElement('div');
+            paddingdiv.classList.add("padding25px");
+            //Score Container
+            score_containerdiv  = document.createElement('div');
+            score_containerdiv.classList.add("scoreContainer");
+            //Row 1
+            row1div  = document.createElement('div');
+            row1div.classList.add("row")
+            //Col 1
+            col1div  = document.createElement('div');
+            col1div.classList.add("column")
+            //Tab 1
+            scoretabdiv1  = document.createElement('div');
+            scoretabdiv1.classList.add("scoretab");
+            //Title
+            scoretitlediv  = document.createElement('div');
+            scoretitlediv.classList.add("score-title");
+            scoretitlediv.innerHTML  = "<strong>Score:</strong>";
+            //Span  w data
+            scoreSpan = document.createElement('span');
+            scoreSpan.id = 'score-'+selector;
+            //Spawn w add
+            addScoreSpan = document.createElement('span');
+            addScoreSpan.id = 'scoreadd-'+selector
+            addScoreSpan.className = "class_scoreadd";
+            scoretabdiv1.appendChild(scoretitlediv);
+            scoretabdiv1.appendChild(scoreSpan);
+            scoretabdiv1.appendChild(addScoreSpan);
+            col1div.appendChild(scoretabdiv1);
+            //Col 2
+            col2div  = document.createElement('div');
+            col2div.classList.add("column")
+            //Tab 1
+            scoretabdiv2  = document.createElement('div');
+            scoretabdiv2.classList.add("scoretab");
+            //Title
+            hscoretitlediv  = document.createElement('div');
+            hscoretitlediv.classList.add("hscore-title");
+            hscoretitlediv.innerHTML  = "<strong>Highscore:</strong>";
+            //Span  w data
+            hscoreSpan = document.createElement('span');
+            hscoreSpan.id = 'hscore-'+selector;
+            //Spawn w add
+            scoretabdiv2.appendChild(hscoretitlediv);
+            scoretabdiv2.appendChild(hscoreSpan);
+            col2div.appendChild(scoretabdiv2);
+            row1div.appendChild(col1div);
+            row1div.appendChild(col2div);
+            score_containerdiv.appendChild(row1div);
+            //Game Container
+            game_containerdiv  = document.createElement('div');
+            game_containerdiv.classList.add("gamecoantiner");
+            //Result
+            resultdiv  = document.createElement('div');
+            resultdiv.classList.add("result");
+            resultdiv.id =  "result-"+selector;
+            //inline div
+            inlinediv = document.createElement('div');
+            inlinediv.style.display = "inline";
+            //Grid
+            griddiv = document.createElement('div');
+            griddiv.classList.add("grid");
+            griddiv.id =  "grid-"+selector;
+            this.gridDisplayId = 'grid-'+selector;
+            inlinediv.appendChild(griddiv);
+            //SideTab
+            sidediv  = document.createElement('div');
+            sidediv.classList.add("side-tab");
+            //Reset
+            resetbutton = document.createElement('button');
+            resetbutton.style.fontSize  =  "28px";
+            resetbutton.classList.add("side-item");
+            resetbutton.id = 'reset-'+selector;
+            resetbutton.innerHTML = "<span class=reload> &nbsp&#x21bb&nbsp;</span>"
+            //Back
+            backbutton = document.createElement('button');
+            backbutton.style.fontSize  =  "28px"
+            backbutton.classList.add("side-item")
+            backbutton.id = 'goback-'+selector;
+            backbutton.innerHTML = "<span class=reload> &nbsp&#8592&nbsp;</span>"
+            //Moves
+            movesdiv = document.createElement('div');
+            movesdiv.classList.add("side-item")
+            movestext = document.createElement('p');
+            movestext.id = 'moves-'+selector;
+            movesdiv.appendChild(movestext);
+            sidediv.appendChild(resetbutton);
+            sidediv.appendChild(backbutton);
+            sidediv.appendChild(movesdiv);
+
+            game_containerdiv.appendChild(resultdiv);
+            game_containerdiv.appendChild(inlinediv);
+            game_containerdiv.appendChild(sidediv);
+            //Score Container
+            tile_containerdiv  = document.createElement('div');
+            tile_containerdiv.classList.add("tileContainer");
+            //Row 2
+            row2div  = document.createElement('div');
+            row2div.classList.add("row")
+            //Col 4
+            col3div  = document.createElement('div');
+            col3div.classList.add("column")
+            //Tab 1
+            tiletabdiv1  = document.createElement('div');
+            tiletabdiv1.classList.add("scoretab");
+            //Title
+            tiletitlediv  = document.createElement('div');
+            tiletitlediv.classList.add("score-title");
+            tiletitlediv.innerHTML  = "<strong>Current Best:</strong>";
+            //Span  w data
+            scoreSpan = document.createElement('span');
+            scoreSpan.id = "best-"+selector;
+            scoreSpan.innerHTML="2";
+            tiletabdiv1.appendChild(tiletitlediv);
+            tiletabdiv1.appendChild(scoreSpan);
+            col3div.appendChild(tiletabdiv1);
+            //Col 2
+            col4div  = document.createElement('div');
+            col4div.classList.add("column")
+            //Tab 1
+            scoretabdiv4  = document.createElement('div');
+            scoretabdiv4.classList.add("scoretab");
+            //Title
+            htiletitlediv  = document.createElement('div');
+            htiletitlediv.classList.add("hscore-title");
+            htiletitlediv.innerHTML  = "<strong>Alltime Best:</strong>";
+            //Span  w data
+            hscoreSpan = document.createElement('span');
+            hscoreSpan.id = "hbest-"+selector;
+            //Spawn w add
+            scoretabdiv4.appendChild(htiletitlediv);
+            scoretabdiv4.appendChild(hscoreSpan);
+            col4div.appendChild(scoretabdiv4);
+            row2div.appendChild(col3div);
+            row2div.appendChild(col4div);
+            tile_containerdiv.appendChild(row2div);
+            paddingdiv.appendChild(score_containerdiv);
+            paddingdiv.appendChild(game_containerdiv);
+            paddingdiv.appendChild(tile_containerdiv);
+            gamespace.appendChild(paddingdiv);
+            document.getElementById('goback-'+selector).addEventListener('click', this.goback.bind(this), false);  ///BINDING
+            document.getElementById('reset-'+selector).addEventListener('click', this.reset2.bind(this), false);  ///BINDING
+            this.movesdisplay = document.querySelector('#moves-'+selector);
+            this.scoreDisplay = document.querySelector('#score-'+selector);
+            this.hscoreDisplay = document.querySelector('#hscore-'+selector);
+            this.scoreAddDisplay = document.querySelector('#scoreadd-'+selector);
+            this.bestDisplay = document.querySelector('#best-'+selector);
+            this.hbestDisplay = document.querySelector('#hbest-'+selector);
+            this.scoreResult = document.querySelector('#result-'+selector);
+
+
+        },
+        goback : function(){
+            loadgame(this.backdata[this.backdata.length - 2], this);
+        },
+        reset : function(){
+            resetGame(this,1);
+        },
+        reset2 : function(){
+            resetGame(this,2);
+        },
+
+        getgridDisplay: function(){
+            this.gridDisplay  = document.getElementById(this.gridDisplayId);
         },
         squares : [],
         moves : 0,
+
         score : 0,
+        ctile: 0,
+        hscore : 0,
+        btile : 0,
+        continueEnabled : false,
         createBoard: function(){
             debug("funct_createboard", 2);
-            gridDisplay.style.width = width * 100 + "px";
-            gridDisplay.style.height = width * 100 + "px";
+            this.gridDisplay.style.width = width * 100 + "px";
+            this.gridDisplay.style.height = width * 100 + "px";
             for (let x = 0; x < width * width; x++) {
                 square = document.createElement('div');
                 tile = document.createElement("div");
                 tile.className = "tile";
                 tile.innerHTML = 0;
                 square.appendChild(tile)
-                gridDisplay.appendChild(square);
-                squares.push(tile);
+                this.gridDisplay.appendChild(square);
+                this.squares.push(tile);
             }
         },
         generate: function() {
-            debug("genarate", 2);
-            let randNum = Math.floor(Math.random() * squares.length);
-            if (squares[randNum].innerHTML == 0) {
-                var newel = squares[randNum].cloneNode(true);
-                squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
-                squares[randNum] = newel;
-                squares[randNum].innerHTML = spwantile;
+            let randNum = Math.floor(Math.random() * this.squares.length);
+            if (this.squares[randNum].innerHTML == 0) {
+                var newel = this.squares[randNum].cloneNode(true);
+                this.squares[randNum].parentNode.replaceChild(newel, this.squares[randNum]);
+                this.squares[randNum] = newel;
+                this.squares[randNum].innerHTML = spwantile;
 
             } else {
                 this.generate();
@@ -64,10 +254,9 @@ function loaded() {
     }
 
     game1 = Object.assign({}, Game);
+    game1.createboardhtml("1");
+    game1.getgridDisplay();
 
-    gridDisplay = game1.creategriddisp("grid");
-    let score = game1.score;
-    let moves = game1.moves;
     const headertext = document.querySelector('.goaltext');
     const headertext2 = document.querySelector('.goaltext2');
 
@@ -77,104 +266,68 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
     //__________________________________________________Settings-Vars_____________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
+    //CLASS
+    let settingsData = {}
+    //If cookie then  load it
+    if(getCookie("settingsData") != ""){
+        settingsData  = JSON.parse(getCookie("settingsData"));
+
+    }else{
+        settingsData.goal = 2048;
+        settingsData.spwantile = 2;
+        settingsData.width = 4;
+        settingsData.reverse = false;
+        settingsData.savemode = true;
+        settingsData.opened = false;
+        settingsData.movecap = 0;
+        settingsData.realtime = false;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+
+    }
+    if (settingsData.reverse) {
+        settingsData.goal = 2;
+        settingsData.spwantile = 2048;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+    }
+
+    goal = settingsData.goal;
+    spwantile = settingsData.spwantile;
+    width = settingsData.width;
+    reverse = settingsData.reverse;
+    savemode = settingsData.savemode;
+    opened = settingsData.opened;
+    movecap = settingsData.movecap;
+    realtime = settingsData.realtime;
     //GOAL
     const goalDisplay = document.querySelector('#goal');
     const goalincrease = document.querySelector('#goalincrease');
     const goaldecrease = document.querySelector('#goaldecrease');
-    let goal = 2048;
+
     //SPAWN
     const spawnDisplay = document.querySelector('#spawn');
     const spawnincrease = document.querySelector('#spawnincrease');
     const spawndecrease = document.querySelector('#spawndecrease');
-    let spwantile = 2;
+
     //SIZE
     const sizeDisplay = document.querySelector('#size');
     const sizeincrease = document.querySelector('#sizeincrease');
     const sizedecrease = document.querySelector('#sizedecrease');
-    var width = 4;
-    let widthcookie = getCookie("width");
-    if (widthcookie != "") {
-
-        width = parseInt(widthcookie);
-    }
-    //GOAL
-    let savedgoal = getCookie("goal");
-    if (savedgoal != "") {
-        goal = savedgoal;
-
-    }
-    //Spawn tile
-    let spawntilecook = getCookie("spawn");
-    if (spawntilecook != "") {
-        spwantile = parseInt(spawntilecook);
-
-    }
     //REVERSED
     const reverseCheck = document.querySelector('#reverse');
-    let reverse = false;
-    let rvcook = getCookie("reverse");
-    if (rvcook != "") {
-
-        if (rvcook == "true")
-            reverse = true;
-        else
-            reverse = false;
-
-    }
-    if (reverse) {
-        goal = 2;
-        spwantile = 2048;
-
-    }
     //Allow SAVING
     const savemodeCheck = document.querySelector('#savemode');
-    let savemode = true;
-    let savemodecook = getCookie("savemode");
-    if (savemodecook != "") {
-
-        if (savemodecook == "true")
-            savemode = true;
-        else
-            savemode = false;
-
-    }
-
-    //OPENED
-    let opened = getCookie("open");
-    if (opened != "") {
-        if (opened == "yes")
-            openNav()
-        else
-            closeNav()
-
-    }
+    //false converter insert here
     //AUTOPLAY
     const autoplayCheck = document.querySelector('#auto');
     //Moves
-    const movesdisplay = document.querySelector('#moves');
+
     const movescapdisplay = document.querySelector('#movecap');
     const moveincrease = document.querySelector('#moveincrease');
     const movedecrease = document.querySelector('#movedecrease');
-    var movecap = 0;
-    let movecapcookie = getCookie("movecap");
-    if (movecapcookie != "") {
-
-        movecap = parseInt(movecapcookie);
-    }
 
     //REVERSED
     const realtimeCheck = document.querySelector('#realtime');
-    let realtime = false;
-    let realcook = getCookie("realtime");
-    if (realcook != "") {
 
-        if (realcook == "true")
-            realtime = true;
-        else
-            realtime = false;
-
-    }
-    let continueEnabled = false;
     //--------------------------------------------------------------------------------------------------------------------//
     //_______________________________________________Settings-Functions___________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
@@ -183,17 +336,18 @@ function loaded() {
         //////console.log("Clicked");
         if (mode == 1) {
             if (spwantile != 1)
-                spwantile -= 1;
+                settingsData.spwantile -= 1;
             else
-                spwantile = 1;
+                settingsData.spwantile = 1;
         }
         if (mode == 2) {
-            spwantile += 1;
+            settingsData.spwantile += 1;
         }
-        spawnDisplay.innerHTML = "<p>" + spwantile + "</p>";
-        setCookie("spawn", spwantile, 1);
+        spawnDisplay.innerHTML = "<p>" + settingsData.spwantile + "</p>";
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
         if (mode != 0) {
-            resetGame();
+
+            resetGame(game1,1); //INSET LOOP //INSET LOOP
         }
     }
     spawnincrease.addEventListener("click", function() {
@@ -202,7 +356,7 @@ function loaded() {
     spawndecrease.addEventListener("click", function() {
         setspawn(1);
     });
-    setspawn(0);
+
     //GOAL
     function setgoal(mode) {
         //////console.log("Clicked");
@@ -225,20 +379,22 @@ function loaded() {
 
         if (mode == 1) {
             if (goal != spwantile) {
-                goal = goal / 2;
+                settingsData.goal = goal / 2;
                 setCookie("steps", setps - 1, 1);
             } else
-                goal = 2;
+                settingsData.goal = 2;
         }
         if (mode == 2) {
-            goal = goal * 2;
+            settingsData.goal = goal * 2;
             setCookie("steps", setps + 1, 1);
         }
+        goal = settingsData.goal;
         headertext.innerHTML = goal;
         headertext2.innerHTML = goal;
         goalDisplay.innerHTML = "<p>" + goal + "</p>";
         document.title = goal + " | Max Tyson";
-        setCookie("goal", goal, 1);
+
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
     }
     goalincrease.addEventListener("click", function() {
         setgoal(2);
@@ -246,7 +402,7 @@ function loaded() {
     goaldecrease.addEventListener("click", function() {
         setgoal(1);
     });
-    setgoal(0);
+
 
     function setsize(mode) {
         //////console.log("Clicked");
@@ -259,8 +415,9 @@ function loaded() {
         if (mode == 2) {
             size = width + 2;
         }
-        setCookie("width", size, 1);
-        resetGame();
+        settingsData.width = size;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        resetGame(game1,1); //INSET LOOP
 
     }
     sizeincrease.addEventListener("click", function() {
@@ -269,7 +426,7 @@ function loaded() {
     sizedecrease.addEventListener("click", function() {
         setsize(1);
     });
-    sizeDisplay.innerHTML = "<p>" + width + "</p>";
+
 
     function setmovecap(mode) {
         //////console.log("Clicked");
@@ -282,7 +439,8 @@ function loaded() {
         if (mode == 2) {
             movecap += 100;
         }
-        setCookie("movecap", movecap, 1);
+        setSettings.movecap = movecap;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
         movescapdisplay.innerHTML = "<p>" + movecap + "</p>";
     }
     moveincrease.addEventListener("click", function() {
@@ -291,20 +449,23 @@ function loaded() {
     movedecrease.addEventListener("click", function() {
         setmovecap(1);
     });
-    movescapdisplay.innerHTML = "<p>" + movecap + "</p>";
+
 
 
 
     function setreverse() {
 
-        setCookie("reverse", reverseCheck.checked, 1);
+
         if (reverseCheck.checked) {
-            setCookie("goal", 2, 1);
+            settingsData.reverse  = true;
+            settingsData.goal = 2;
         } else {
-            setCookie("goal", 2048, 1);
-            setCookie("spawn", 2, 1);
+            settingsData.reverse  = false;
+            settingsData.goal = 2048;
+            settingsData.spwantile = 2;
         }
-        resetGame();
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        resetGame(game1,1); //INSET LOOP
     }
     if (reverse) {
         reverseCheck.checked = true
@@ -312,12 +473,14 @@ function loaded() {
         reverseCheck.checked = false
     }
     //	////console.log(reverseCheck.checked +"="+reverse);
-    reverseCheck.addEventListener("change", setreverse);
+
 
     function setsave() {
 
-        setCookie("savemode", savemodeCheck.checked, 1);
+
         savemode = savemodeCheck.checked;
+        settingsData.savemode = savemode;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
     }
     if (savemode) {
         savemodeCheck.checked = true
@@ -325,9 +488,33 @@ function loaded() {
         savemodeCheck.checked = false
     }
     //	////console.log(reverseCheck.checked +"="+reverse);
-    savemodeCheck.addEventListener("change", setsave);
-    autoplayCheck.addEventListener("change", autoplay);
 
+
+    openNav = function openNavFunct() {
+        settingsData.opened = true;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        document.getElementById("settingspannel").style.width = "250px";
+    }
+
+    closeNav =	function closeNavFunct() {
+        settingsData.opened = false;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        document.getElementById("settingspannel").style.width = "0";
+    }
+
+    if (settingsData.opened)
+        openNav()
+    else
+        closeNav();
+    function  setSettings(){
+        setspawn(0);
+        setgoal(0);
+        sizeDisplay.innerHTML = "<p>" + width + "</p>";
+        movescapdisplay.innerHTML = "<p>" + movecap + "</p>";
+        reverseCheck.addEventListener("change", setreverse);
+        savemodeCheck.addEventListener("change", setsave);
+        autoplayCheck.addEventListener("change", autoplay);
+    }
 
 
 
@@ -400,8 +587,7 @@ function loaded() {
     const themeMakerClose = document.querySelector('.theme_closebtn');
     const themeMakerOpen = document.querySelector('.theme_openbtn');
 
-    themeMakerOpen.addEventListener("click", openThemeMaker);
-    themeMakerClose.addEventListener("click", closeThemeMaker);
+
 
     //--------------------------------------------------------------------------------------------------------------------//
     //________________________________________________Theme-THememaker____________________________________________________//
@@ -437,7 +623,7 @@ function loaded() {
     var tempnum = spwantile;
     if (reverse)
         tempnum = goal
-    themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+
 
     function themeTileincrese() {
         debug("funct_increasetile", 2);
@@ -474,15 +660,16 @@ function loaded() {
 
     //Realtime
     function setreal() {
-        debug("funct_setreal", 2);
-        setCookie("realtime", realtimeCheck.checked, 1);
+
+        settingsData.realtime = realtimeCheck.checked;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
     }
     if (realtime) {
         realtimeCheck.checked = true
     } else if (!realtime) {
         realtimeCheck.checked = false
     }
-    realtimeCheck.addEventListener("change", setreal);
+
 
     ///////Theme Mode//////
     const themeModeDisplay = document.querySelector('#themeMode');
@@ -533,7 +720,7 @@ function loaded() {
         }
         updatemode();
     }
-    updatemode();
+
 
 
     //////Image
@@ -546,9 +733,10 @@ function loaded() {
         urldata = urlinput.value;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     }
-    urlinput.addEventListener("change", seturl);
+
     ///////Colour Pickers////////////
     //TextColour
     var textcolpciker = new iro.ColorPicker('#textcolpciker', {
@@ -560,6 +748,7 @@ function loaded() {
         textcol = textcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     //BackgroundCol
@@ -572,14 +761,13 @@ function loaded() {
         bgcol = bgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     //GlowAmount
     const themeglowAmtlDisplay = document.querySelector('#themeglowAmt');
     const themeglowAmtincrease = document.querySelector('#themeglowAmtincrese');
     const themeglowAmtdecrease = document.querySelector('#themeglowAmtdecrese');
-    themeglowAmtincrease.addEventListener("click", themeglowAmtincrese);
-    themeglowAmtdecrease.addEventListener("click", themeglowAmtdecrese);
     var glowAmtnum = default_glowamt;
 
     function themeglowAmtincrese() {
@@ -588,6 +776,7 @@ function loaded() {
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     }
 
@@ -600,6 +789,7 @@ function loaded() {
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     }
     //GlowCol
@@ -612,6 +802,7 @@ function loaded() {
         glowCol = glowcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
 
@@ -625,6 +816,7 @@ function loaded() {
         zerocol = zerocolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     var boardcolpciker = new iro.ColorPicker('#boardpicker', {
@@ -636,6 +828,7 @@ function loaded() {
         boardcol = boardcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     var bodybgcolpciker = new iro.ColorPicker('#worldbgpicker', {
@@ -647,6 +840,7 @@ function loaded() {
         bodybgcol = bodybgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     var bodytextcolpciker = new iro.ColorPicker('#worldtextpicker', {
@@ -658,6 +852,7 @@ function loaded() {
         bodytextcol = bodytextcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     var scorecolpciker = new iro.ColorPicker('#worldscore', {
@@ -669,6 +864,7 @@ function loaded() {
         scorecol = scorecolpciker.color.hexString;
         if (realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
         }
     });
     const taginput = document.querySelector('#taginput');
@@ -679,7 +875,7 @@ function loaded() {
         if (realtime)
             makeintotile()
     }
-    taginput.addEventListener("change", settag);
+
     const submitbutton = document.querySelector('.makeTile');
     if (!realtime) {
         submitbutton.innerHTML = "Set Tile"
@@ -689,6 +885,7 @@ function loaded() {
     submitbutton.addEventListener("click", function() {
         if (!realtime) {
             makeintotile();
+            game1.themeBoard(cus_theme); //INSET LOOP
             applytheme();
         } else {
             applytheme();
@@ -842,12 +1039,8 @@ function loaded() {
         }
 
     }
-    loadallfromsave();
-    tilenum = 2
-    loadtilefromsave();
-    makeintotile();
 
-    tilenum = 2;
+
     ///////////Theming tiles
     function makeintotile(save = true) {
         debug("funct_maketile", 2);
@@ -949,7 +1142,7 @@ function loaded() {
         debug("cus_theme", 1)
         themeData = JSON.stringify(cus_theme);
         setCookie("storedTheme", "cus_theme", 365);
-        themeBoard(cus_theme);
+
 
 
 
@@ -971,11 +1164,7 @@ function loaded() {
     const share_closebtn = document.querySelector('.share_closebtn');
     const sharetitle = document.querySelector('#sharetitle');
     const loadbutton = document.querySelector('#loadbutton');
-    share_closebtn.addEventListener("click", closeshare);
-    sharethemebutton.addEventListener("click", sharemytheme);
-    loadthemebutton.addEventListener("click", loadtheme);
-    presetthemebutton.addEventListener("click", presettheme);
-    loadbutton.addEventListener("click", loadthemedata);
+
     website = window.location.href.split(".html")
 
     function applytheme() {
@@ -1093,13 +1282,13 @@ function loaded() {
 
 
 
-    function themeBoard(Theme) {
+    themeBoardFunct = function themeBoard(Theme) {
         debug("funct_themetheboard", 2);
         debug(Theme, 1);
         debug("CHECK POINT", 1);
         gameTheme = Theme.gamethem;
-        for (let x = 0; x < squares.length; x++) {
-            tinum = parseInt(squares[x].innerHTML);
+        for (let x = 0; x < this.squares.length; x++) {
+            tinum = parseInt(this.squares[x].innerHTML);
             firnum = spwantile;
             stpnum = 0;
             if (tinum != 0) {
@@ -1127,17 +1316,17 @@ function loaded() {
                 if (stpnum == parseInt(Theme.number[y])) {
                     if (Theme.options[y].imagemode) {
 
-                        squares[x].style.fontSize = "0px";
-                        squares[x].style.background = "white"; //Fixed for transparancy
-                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
-                        squares[x].style.backgroundSize = "cover";
-                        squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
+                        this.squares[x].style.fontSize = "0px";
+                        this.squares[x].style.background = "white"; //Fixed for transparancy
+                        this.squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                        this.squares[x].style.backgroundSize = "cover";
+                        this.squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
                     } else {
 
-                        squares[x].style.fontSize = "40px";
-                        squares[x].style.color = Theme.options[y].textcol;
-                        squares[x].style.background = Theme.options[y].bg;
-                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                        this.squares[x].style.fontSize = "40px";
+                        this.squares[x].style.color = Theme.options[y].textcol;
+                        this.squares[x].style.background = Theme.options[y].bg;
+                        this.squares[x].style.boxShadow = Theme.options[y].boxshadow;
                     }
 
                 }
@@ -1150,19 +1339,19 @@ function loaded() {
                         if (stpnum == parseInt(Theme.elementMore[0][y])) {
                             if (Theme.elementMore[1][y].imagemode) {
 
-                                squares[x].style.fontSize = "0px";
-                                squares[x].style.background = Theme.elementMore[1][y].bg;
+                                this.squares[x].style.fontSize = "0px";
+                                this.squares[x].style.background = Theme.elementMore[1][y].bg;
 
-                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
-                                squares[x].style.backgroundSize = "cover";
-                                squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
+                                this.squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                                this.squares[x].style.backgroundSize = "cover";
+                                this.squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
                             } else {
 
-                                squares[x].style.fontSize = "40px";
-                                squares[x].style.color = Theme.elementMore[1][y].textcol;
-                                squares[x].style.background = Theme.elementMore[1][y].bg;
+                                this.squares[x].style.fontSize = "40px";
+                                this.squares[x].style.color = Theme.elementMore[1][y].textcol;
+                                this.squares[x].style.background = Theme.elementMore[1][y].bg;
 
-                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                                this.squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
                             }
                             themedtile = true;
                         }
@@ -1170,23 +1359,23 @@ function loaded() {
                     if (!themedtile) {
                         if (Theme.elementMore[1][y].imagemode) {
 
-                            squares[x].style.fontSize = "0px";
-                            squares[x].style.background = Theme.elementMore[1][y].bg;
-                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
-                            squares[x].style.backgroundSize = "cover";
-                            squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
+                            this.squares[x].style.fontSize = "0px";
+                            this.squares[x].style.background = Theme.elementMore[1][y].bg;
+                            this.squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            this.squares[x].style.backgroundSize = "cover";
+                            this.squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
                         } else {
 
-                            squares[x].style.fontSize = "40px";
-                            squares[x].style.color = Theme.elementMore[1][y].textcol;
-                            squares[x].style.background = Theme.elementMore[1][y].bg;
-                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            this.squares[x].style.fontSize = "40px";
+                            this.squares[x].style.color = Theme.elementMore[1][y].textcol;
+                            this.squares[x].style.background = Theme.elementMore[1][y].bg;
+                            this.squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
                         }
                     }
                 } else {
-                    squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
-                    squares[x].style.background = Theme.options[Theme.options.length - 1].bg;
-                    squares[x].style.boxShadow = Theme.options[Theme.options.length - 1].boxshadow;
+                    this.squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
+                    this.squares[x].style.background = Theme.options[Theme.options.length - 1].bg;
+                    this.squares[x].style.boxShadow = Theme.options[Theme.options.length - 1].boxshadow;
                 }
 
             }
@@ -1204,9 +1393,9 @@ function loaded() {
             for (let y = 0; y < sidecols.length; y++) {
                 sidecols[y].style.borderColor = gameTheme[1];
             }
-            gridDisplay.style.border = "5px solid " + gameTheme[1];
-            gridDisplay.style.backgroundColor = zerocol;
-            tilestotheme = gridDisplay.children;
+            this.gridDisplay.style.border = "5px solid " + gameTheme[1];
+            this.gridDisplay.style.backgroundColor = zerocol;
+            tilestotheme = this.gridDisplay.children;
             document.querySelector("#tagline").innerHTML = gameTheme[5];
             scoresclass = document.querySelectorAll(".scoretab, .side-item");
             for (let y = 0; y < scoresclass.length; y++) {
@@ -1219,39 +1408,255 @@ function loaded() {
             // document.getElementsByClassName("grid")
         }
     }
+
+    function  setTHeming(){
+        themeMakerOpen.addEventListener("click", openThemeMaker);
+        themeMakerClose.addEventListener("click", closeThemeMaker);
+        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+        realtimeCheck.addEventListener("change", setreal);
+        updatemode();
+        urlinput.addEventListener("change", seturl);
+        themeglowAmtincrease.addEventListener("click", themeglowAmtincrese);
+        themeglowAmtdecrease.addEventListener("click", themeglowAmtdecrese);
+        taginput.addEventListener("change", settag);
+        share_closebtn.addEventListener("click", closeshare);
+        sharethemebutton.addEventListener("click", sharemytheme);
+        loadthemebutton.addEventListener("click", loadtheme);
+        presetthemebutton.addEventListener("click", presettheme);
+        loadbutton.addEventListener("click", loadthemedata);
+    }
     ////////////////////////////////////////////////////////GAME////////////////////////////////////////////////////////////
     //--------------------------------------------------------------------------------------------------------------------//
     //____________________________________________________Game-Vars_______________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
-
-    //Scores
-    const scoreDisplay = document.querySelector('#score');
-    const hscoreDisplay = document.querySelector('#hscore');
-    const scoreAddDisplay = document.querySelector('#scoreadd');
     //best
-    const bestDisplay = document.querySelector('#best');
-    const hbestDisplay = document.querySelector('#hbest');
-    //end
-    const scoreResult = document.querySelector('#result');
-    //back
-    let backdata = [];
+
+
+
     //--------------------------------------------------------------------------------------------------------------------//
     //_______________________________________________Game-Functions_______________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
-    ///ENITITY
 
-    /////////////////////////BOARD/////////////////
-    game1.createBoard();
-    game1.checkGameOver = function checkGameOver() {
+    /////////////////////////MOVEMENT/////////////////
+    moveRightFunct = function moveRight() {
+        for (let x = 0; x < width * width; x++) {
+            if (x % width === 0) {
+                let row = [];
+                for (let y = 0; y < width; y++) {
+                    row.push(parseInt(this.squares[x + y].innerHTML));
+                }
+                let filteredRow = row.filter(num => num);
+                let missing = width - filteredRow.length;
+                let zeros = Array(missing).fill(0);
+                let newRow = zeros.concat(filteredRow);
+                for (let y = 0; y < width; y++) {
+                    let oldval = parseInt(this.squares[x + y].innerHTML);
+                    this.squares[x + y].innerHTML = newRow[0 + y];
+                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                        this.squares[x + y].parentNode.classList.add("animate-right");
+
+                        this.squares[x + y].parentNode.addEventListener('animationend', function() {
+                            game1.squares[x + y].parentNode.classList.remove('animate-right');
+                        })
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    moveLeftFunct = function moveLeft() {
+        for (let x = 0; x < width * width; x++) {
+            if (x % width === 0) {
+                let row = [];
+                for (let y = 0; y < width; y++) {
+                    row.push(parseInt(this.squares[x + y].innerHTML));
+                }
+                let filteredRow = row.filter(num => num);
+                let missing = width - filteredRow.length;
+                let zeros = Array(missing).fill(0);
+
+                let newRow = filteredRow.concat(zeros);
+
+                for (let y = 0; y < width; y++) {
+                    let oldval = parseInt(this.squares[x + y].innerHTML);
+                    this.squares[x + y].innerHTML = newRow[0 + y];
+                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                        this.squares[x + y].parentNode.classList.add("animate-left");
+                        this.squares[x + y].parentNode.addEventListener('animationend', function() {
+                            game1.squares[x + y].parentNode.classList.remove('animate-left');
+
+                        })
+                    }
+                }
+            }
+        }
+
+    }
+
+    moveDownFunct = function moveDown() {
+        for (let x = 0; x < width; x++) {
+            let collum = [];
+            for (let y = 0; y < width; y++) {
+                collum.push(parseInt(this.squares[x + y * width].innerHTML));
+            }
+            let filteredCol = collum.filter(num => num);
+            let missing = width - filteredCol.length;
+            let zeros = Array(missing).fill(0);
+
+            let newCol = zeros.concat(filteredCol);
+            for (let y = 0; y < width; y++) {
+                let oldval = parseInt(this.squares[x + y * width].innerHTML);
+                this.squares[x + y * width].innerHTML = newCol[0 + y];
+                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                    this.squares[x + y * width].parentNode.classList.add("animate-down");
+                    this.squares[x + y * width].parentNode.addEventListener('animationend', function() {
+                        game1.squares[x + y * width].parentNode.classList.remove('animate-down');
+                    })
+                }
+
+            }
+        }
+    }
+
+    moveUpFunct = function moveUp() {
+        for (let x = 0; x < width; x++) {
+            let collum = [];
+            for (let y = 0; y < width; y++) {
+                collum.push(parseInt(this.squares[x + y * width].innerHTML));
+            }
+            let filteredCol = collum.filter(num => num);
+            let missing = width - filteredCol.length;
+            let zeros = Array(missing).fill(0);
+
+            let newCol = filteredCol.concat(zeros);
+            for (let y = 0; y < width; y++) {
+                let oldval = parseInt(this.squares[x + y * width].innerHTML);
+                this.squares[x + y * width].innerHTML = newCol[0 + y];
+                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                    this.squares[x + y * width].parentNode.classList.add("animate-up");
+                    this.squares[x + y * width].parentNode.addEventListener('animationend', function() {
+                        game1.squares[x + y * width].parentNode.classList.remove('animate-up');
+                    })
+                }
+            }
+        }
+    }
+    /////////////////////////COMBINE/////////////////
+    combineRowFunct = function combineRow(mode) {
+        for (let x = 0; x < (width * width) - 1; x++) {
+            if (this.squares[x].innerHTML === this.squares[x + 1].innerHTML) {
+                let combinedTotal = 0;
+                if (reverse)
+                    combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
+                else
+                    combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + 1].innerHTML);
+                if (mode != "nocheck") {
+                    if (combinedTotal != 0) {
+                        this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                        this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
+                        setTimeout(function() {
+                            this.scoreAddDisplay.className = "class_scoreadd";
+                        }.bind(this), 1000);
+
+                    }
+
+                    this.score += combinedTotal;
+                }
+
+                this.scoreDisplay.innerHTML = this.score;
+                this.checkhigh();
+                this.squares[x].innerHTML = combinedTotal;
+                if (mode != "nocheck")
+                    this.checkbest();
+                this.squares[x + 1].innerHTML = 0;
+                if (mode == "left") {
+                    //////console.log("Left: "+x)
+                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                        this.squares[x].parentNode.classList.add("animate-pop");
+                        this.squares[x].parentNode.addEventListener('animationend', function() {
+                            game1.squares[x].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                } else {
+
+                    if (parseInt(this.squares[x].innerHTML) != 0) {
+
+                        this.squares[x + 1].parentNode.classList.add("animate-pop");
+                        this.squares[x + 1].parentNode.addEventListener('animationend', function() {
+                            game1.squares[x + 1].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                }
+
+
+            }
+
+        }
+        if (mode != "nocheck")
+            this.checkWin();
+    }
+
+    combineColFunct = function combineCol(mode) {
+        for (let x = 0; x < (width * width) - width; x++) {
+            if (this.squares[x].innerHTML === this.squares[x + width].innerHTML) {
+                let combinedTotal = 0;
+                if (reverse)
+                    combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
+                else
+                    combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + width].innerHTML);
+                if (mode != "nocheck") {
+                    if (combinedTotal != 0) {
+                        this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                        this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
+                        setTimeout(function() {
+                            this.scoreAddDisplay.className = "class_scoreadd";
+                        }.bind(this), 1000);
+
+                    }
+
+                    this.score += combinedTotal;
+                }
+                this.scoreDisplay.innerHTML = this.score;
+                this.checkhigh();
+                this.squares[x].innerHTML = combinedTotal;
+                if (mode == "up") {
+                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                        this.squares[x].parentNode.classList.add("animate-pop");
+                        this.squares[x].parentNode.addEventListener('animationend', function() {
+                            game1.squares[x].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                } else {
+                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                        this.squares[x + width].parentNode.classList.add("animate-pop");
+                        this.squares[x + width].parentNode.addEventListener('animationend', function() {
+                            game1.squares[x + width].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                }
+                if (mode != "nocheck")
+                    this.checkbest();
+
+                this.squares[x + width].innerHTML = 0;
+            }
+
+        }
+        if (mode != "nocheck")
+            this.checkWin();
+    }
+    /////////////////////////GAME STATES/////////////////
+    checkGameOverFunc =  function checkGameOver() {
         let zeros = 0;
 
         let tmpsquares = [];
-        for (let x = 0; x < squares.length; x++) {
-            if (squares[x].innerHTML == 0) {
+        for (let x = 0; x < this.squares.length; x++) {
+            if (this.squares[x].innerHTML == 0) {
                 zeros++;
 
             }
-            tmpsquares.push(squares[x])
+            tmpsquares.push(this.squares[x])
         }
         if (zeros === 0) {
             let possible = false;
@@ -1261,272 +1666,57 @@ function loaded() {
                 }
             }
             for (let x = 0; x < (width * width) - width; x++) {
-                if (squares[x].innerHTML === squares[x + width].innerHTML) {
+                if (this.squares[x].innerHTML === this.squares[x + width].innerHTML) {
                     possible = true;
                 }
             }
             if (!possible) {
-                scoreResult.style.display = "block";
-                scoreResult.style.width = width * 100 + "px";
-                scoreResult.style.height = width * 100 + "px";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='resetGame()'>Replay</button>";
-                autoplayCheck.enabled = false;
+                this.scoreResult.style.display = "block";
+                this.scoreResult.style.width = width * 100 + "px";
+                this.scoreResult.style.height = width * 100 + "px";
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-"+this.gameId+"'>Replay</button>";
+                document.getElementById('replay-'+this.gameId).addEventListener('click', this.reset.bind(this), false);  ///BINDING
+                autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
             }
 
 
         }
-        if (moves != 0)
-            if (moves == movecap) {
-                scoreResult.style.display = "block";
-                scoreResult.style.width = width * 100 + "px";
-                scoreResult.style.height = width * 100 + "px";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button onclick='resetGame()'>Replay</button>";
-                autoplayCheck.enabled = false;
+        if (movecap != 0)
+            if (this.moves >= movecap) {
+                this.scoreResult.style.display = "block";
+                this.scoreResult.style.width = width * 100 + "px";
+                this.scoreResult.style.height = width * 100 + "px";
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><<button id='replay-"+this.gameId+"'>Replay</button>";
+                document.getElementById('replay-'+this.gameId).addEventListener('click', this.reset.bind(this), false);  ///BINDING
+                autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
             }
 
 
     }
-    game1.generate();
-    game1.generate();
-    var testfunct  =  {hello: function(){console.log("Hello")}}
-    game1.hello = function(){console.log("Hello")};
-    game1.hello();
-    if (customThemeActive) {
-        themeBoard(cus_theme);
-    } else {
-        themeBoard(def_theme);
-    }
 
-
-
-    /////////////////////////MOVEMENT/////////////////
-    game1.moveRight = function moveRight() {
-        for (let x = 0; x < width * width; x++) {
-            if (x % width === 0) {
-                let row = [];
-                for (let y = 0; y < width; y++) {
-                    row.push(parseInt(squares[x + y].innerHTML));
-                }
-                let filteredRow = row.filter(num => num);
-                let missing = width - filteredRow.length;
-                let zeros = Array(missing).fill(0);
-                let newRow = zeros.concat(filteredRow);
-                for (let y = 0; y < width; y++) {
-                    let oldval = parseInt(squares[x + y].innerHTML);
-                    squares[x + y].innerHTML = newRow[0 + y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
-                        squares[x + y].parentNode.classList.add("animate-right");
-
-                        squares[x + y].parentNode.addEventListener('animationend', function() {
-                            squares[x + y].parentNode.classList.remove('animate-right');
-                        })
-                    }
-                }
-            }
-        }
-
-    }
-
-    game1.moveLeft = function moveLeft() {
-        for (let x = 0; x < width * width; x++) {
-            if (x % width === 0) {
-                let row = [];
-                for (let y = 0; y < width; y++) {
-                    row.push(parseInt(squares[x + y].innerHTML));
-                }
-                let filteredRow = row.filter(num => num);
-                let missing = width - filteredRow.length;
-                let zeros = Array(missing).fill(0);
-
-                let newRow = filteredRow.concat(zeros);
-
-                for (let y = 0; y < width; y++) {
-                    let oldval = parseInt(squares[x + y].innerHTML);
-                    squares[x + y].innerHTML = newRow[0 + y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
-                        squares[x + y].parentNode.classList.add("animate-left");
-                        squares[x + y].parentNode.addEventListener('animationend', function() {
-                            squares[x + y].parentNode.classList.remove('animate-left');
-                        })
-                    }
-                }
-            }
-        }
-
-    }
-
-    game1.moveDown = function moveDown() {
-        for (let x = 0; x < width; x++) {
-            let collum = [];
-            for (let y = 0; y < width; y++) {
-                collum.push(parseInt(squares[x + y * width].innerHTML));
-            }
-            let filteredCol = collum.filter(num => num);
-            let missing = width - filteredCol.length;
-            let zeros = Array(missing).fill(0);
-
-            let newCol = zeros.concat(filteredCol);
-            for (let y = 0; y < width; y++) {
-                let oldval = parseInt(squares[x + y * width].innerHTML);
-                squares[x + y * width].innerHTML = newCol[0 + y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
-                    squares[x + y * width].parentNode.classList.add("animate-down");
-                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
-                        squares[x + y * width].parentNode.classList.remove('animate-down');
-                    })
-                }
-
-            }
-        }
-    }
-
-    game1.moveUp = function moveUp() {
-        for (let x = 0; x < width; x++) {
-            let collum = [];
-            for (let y = 0; y < width; y++) {
-                collum.push(parseInt(squares[x + y * width].innerHTML));
-            }
-            let filteredCol = collum.filter(num => num);
-            let missing = width - filteredCol.length;
-            let zeros = Array(missing).fill(0);
-
-            let newCol = filteredCol.concat(zeros);
-            for (let y = 0; y < width; y++) {
-                let oldval = parseInt(squares[x + y * width].innerHTML);
-                squares[x + y * width].innerHTML = newCol[0 + y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
-                    squares[x + y * width].parentNode.classList.add("animate-up");
-                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
-                        squares[x + y * width].parentNode.classList.remove('animate-up');
-                    })
-                }
-            }
-        }
-    }
-    /////////////////////////COMBINE/////////////////
-    game1.combineRow = function combineRow(mode) {
-        for (let x = 0; x < (width * width) - 1; x++) {
-            if (squares[x].innerHTML === squares[x + 1].innerHTML) {
-                let combinedTotal = 0;
-                if (reverse)
-                    combinedTotal = parseInt(squares[x].innerHTML) / 2;
-                else
-                    combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + 1].innerHTML);
-                if (mode != "nocheck") {
-                    if (combinedTotal != 0) {
-                        scoreAddDisplay.innerHTML = "+" + combinedTotal;
-                        scoreAddDisplay.className = "scoreanimate";
-                        setTimeout(function() {
-                            scoreAddDisplay.className = "";
-                        }, 1000);
-
-                    }
-
-                    score += combinedTotal;
-                }
-
-                scoreDisplay.innerHTML = score;
-                game1.checkhigh();
-                squares[x].innerHTML = combinedTotal;
-                if (mode != "nocheck")
-                    game1.checkbest();
-                squares[x + 1].innerHTML = 0;
-                if (mode == "left") {
-                    //////console.log("Left: "+x)
-                    if (parseInt(squares[x].innerHTML) != 0) {
-                        squares[x].parentNode.classList.add("animate-pop");
-                        squares[x].parentNode.addEventListener('animationend', function() {
-                            squares[x].parentNode.classList.remove('animate-pop');
-                        })
-                    }
-                } else {
-
-                    if (parseInt(squares[x].innerHTML) != 0) {
-
-                        squares[x + 1].parentNode.classList.add("animate-pop");
-                        squares[x + 1].parentNode.addEventListener('animationend', function() {
-                            squares[x + 1].parentNode.classList.remove('animate-pop');
-                        })
-                    }
-                }
-
-
-            }
-
-        }
-        if (mode != "nocheck")
-            game1.checkWin();
-    }
-
-    game1.combineCol = function combineCol(mode) {
-        for (let x = 0; x < (width * width) - width; x++) {
-            if (squares[x].innerHTML === squares[x + width].innerHTML) {
-                let combinedTotal = 0;
-                if (reverse)
-                    combinedTotal = parseInt(squares[x].innerHTML) / 2;
-                else
-                    combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + width].innerHTML);
-                if (mode != "nocheck") {
-                    if (combinedTotal != 0) {
-                        scoreAddDisplay.innerHTML = "+" + combinedTotal;
-                        scoreAddDisplay.className = "scoreanimate";
-                        setTimeout(function() {
-                            scoreAddDisplay.className = "";
-                        }, 1000);
-
-                    }
-
-                    score += combinedTotal;
-                }
-                scoreDisplay.innerHTML = score;
-                game1.checkhigh();
-                squares[x].innerHTML = combinedTotal;
-                if (mode == "up") {
-                    if (parseInt(squares[x].innerHTML) != 0) {
-                        squares[x].parentNode.classList.add("animate-pop");
-                        squares[x].parentNode.addEventListener('animationend', function() {
-                            squares[x].parentNode.classList.remove('animate-pop');
-                        })
-                    }
-                } else {
-                    if (parseInt(squares[x].innerHTML) != 0) {
-                        squares[x + width].parentNode.classList.add("animate-pop");
-                        squares[x + width].parentNode.addEventListener('animationend', function() {
-                            squares[x + width].parentNode.classList.remove('animate-pop');
-                        })
-                    }
-                }
-                if (mode != "nocheck")
-                    game1.checkbest();
-
-                squares[x + width].innerHTML = 0;
-            }
-
-        }
-        if (mode != "nocheck")
-            game1.checkWin();
-    }
-    /////////////////////////GAME STATES/////////////////
-    game1.continueGame = function continueGame() {
-        scoreResult.style.display = "none";
-        continueEnabled = true;
+    continueGameFunct = function continueGame(game) {
+        game.scoreResult.style.display = "none";
+        game.continueEnabled = true;
         autoplayCheck.addEventListener("change", autoplay);
         document.addEventListener('keyup', control);
     }
 
-    game1.checkWin = function checkWin() {
-        for (let x = 0; x < squares.length; x++) {
-            if (squares[x].innerHTML == goal && !continueEnabled) {
-                scoreResult.style.display = "block";
-                scoreResult.style.width = (width * 100) + "px";
-                scoreResult.style.height = width * 100 + "px";
-                scoreResult.style.background = "lightgreen";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1><button onclick='resetGame()'>Replay</button><button id='cont'>Continue</button>"
-                document.getElementById("cont").addEventListener("click", continueGame);
+    checkWinFunct = function checkWin() {
+        for (let x = 0; x < this.squares.length; x++) {
+            if (this.squares[x].innerHTML == goal && !this.continueEnabled) {
+                this.scoreResult.style.display = "block";
+                this.scoreResult.style.width = (width * 100) + "px";
+                this.scoreResult.style.height = width * 100 + "px";
+                this.scoreResult.style.background = "lightgreen";
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-"+this.gameId+"'>Replay</button><button id='cont'>Continue</button>"
+                document.getElementById('replay-'+this.gameId).addEventListener('click', this.reset.bind(this), false);  ///BINDING
+                document.getElementById("cont").addEventListener("click", function(){
+                    this.continueGame(this);
+                }.bind(this));
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 document.removeEventListener('keyup', control);
@@ -1537,71 +1727,219 @@ function loaded() {
 
 
     /////////////////////////SCORES/////////////////
-    game1.checkhigh = function checkhigh() {
+    checkhighFunct = function checkhigh() {
         if (!reverse) {
-            let current = parseInt(scoreDisplay.innerHTML);
-            let high = getCookie("highscore");
+            let current = parseInt(this.scoreDisplay.innerHTML);
+            let high = this.hscore;
             if (high != "") {
                 if (current >= high) {
-                    setCookie("highscore", current, 365);
+                    this.hscore = current;
                 }
             } else {
-                setCookie("highscore", current, 365);
+                this.hscore = current;
             }
-            hscoreDisplay.innerHTML = high;
+            this.hscoreDisplay.innerHTML = high;
         } else {
-            hscoreDisplay.innerHTML = "Unavalible in reverse mode.";
+            this.hscoreDisplay.innerHTML = "Unavalible in reverse mode.";
         }
     }
 
-    game1.checkh_best = function checkh_best() {
+    checkh_bestFunct = function checkh_best() {
         if (!reverse) {
 
-            let current = parseInt(bestDisplay.innerHTML);
-            let high = getCookie("bestscore");
+            let current = parseInt(this.bestDisplay.innerHTML);
+            let high = this.btile
             if (high != "") {
                 if (current >= high) {
-                    setCookie("bestscore", current, 365);
+                    this.btile = current;
                 }
             } else {
-                setCookie("bestscore", current, 365);
+                this.btile = current;
             }
-            hbestDisplay.innerHTML = high;
+            this.hbestDisplay.innerHTML = high;
         } else {
-            hbestDisplay.innerHTML = "Unavalible in reverse mode.";
+            this.hbestDisplay.innerHTML = "Unavalible in reverse mode.";
         }
 
 
     }
 
-    game1.checkbest = function checkbest() {
-        let current = parseInt(bestDisplay.innerHTML);
+    checkbestFunct = function checkbest() {
+        let current = parseInt(this.bestDisplay.innerHTML);
         let best = current;
-        for (let x = 0; x < squares.length; x++) {
+        for (let x = 0; x < this.squares.length; x++) {
             if (reverse) {
                 best = 2048;
-                if (parseInt(squares[x].innerHTML) <= best) {
-                    if (parseInt(squares[x].innerHTML) == 0) {
+                if (parseInt(this.squares[x].innerHTML) <= best) {
+                    if (parseInt(this.squares[x].innerHTML) == 0) {
 
                     } else {
-                        best = parseInt(squares[x].innerHTML);
+                        best = parseInt(this.squares[x].innerHTML);
                     }
 
                 }
             } else {
-                if (parseInt(squares[x].innerHTML) >= best) {
-                    best = parseInt(squares[x].innerHTML);
+                if (parseInt(this.squares[x].innerHTML) >= best) {
+                    best = parseInt(this.squares[x].innerHTML);
                 }
             }
 
         }
-        game1.checkh_best();
-        bestDisplay.innerHTML = best;
+        this.checkh_best();
+        this.bestDisplay.innerHTML = best;
 
 
     }
-    game1.checkbest();
-    game1.checkhigh()
+
+    /////////////////////////LOAD/SAVE/RESET/////////////////
+    function savegame(game) {
+        let loadedGame = {"boards":[]};
+        let cookiedGame = getCookie("savedgames");
+        if(cookiedGame != ""){
+            loadedGame = JSON.parse(cookiedGame);
+        }
+        function SaveData(gameId,saveData,hscore,besttile){
+            this.id = gameId;
+            this.data = saveData;
+            this.hscore = hscore;
+            this.btile = besttile;
+        }
+        exists = false;
+        for (let x = 0; x < loadedGame.boards.length; x++) {
+            if(loadedGame.boards[x].id = game.gameId){
+                scoredata = loadedGame.boards[x].data;
+                scoredata.length = 0;
+                for (let x = 0; x < game.squares.length; x++) {
+
+                    scoredata.push(game.squares[x].innerHTML);
+                }
+
+                scoredata.push(game.moves);
+                scoredata.push(game.score);
+                loadedGame.boards[x].hscore = game.hscore;
+                loadedGame.boards[x].btile = game.btile;
+                game.backdata.push(scoredata);
+                if (game.backdata.length >= 3) {
+                    game.backdata.shift();
+                }
+                exists = true;
+            }
+        }
+        if(!exists){
+            scoredata = [];
+            for (let x = 0; x < game.squares.length; x++) {
+                scoredata.push(game.squares[x].innerHTML);
+            }
+            scoredata.push(game.moves);
+            scoredata.push(game.score);
+            loadedGame.boards.push(new SaveData(game.gameId,  scoredata,game.hscore,game.btile))
+            game.backdata.push(scoredata);
+            if (game.backdata.length >= 3) {
+                game.backdata.shift();
+            }
+        }
+        setCookie("savedgames",JSON.stringify(loadedGame), 31)
+
+    }
+
+
+
+    function loadgame(gamedata,game) {
+
+        if (gamedata != "") {
+
+            scoredata = gamedata.data;
+            game.btile = gamedata.btile;
+            game.hscore = gamedata.hscore;
+            undefinedinc = false;
+            for (let x = 0; x < scoredata.length; x++) {
+
+                if(scoredata[x] == "undefined"){
+                    console.log(scoredata[x] +" : "+x)
+                    undefinedinc = true}
+            }
+
+            if(!undefinedinc){
+                for (let x = 0; x < game.squares.length; x++) {
+                    game.squares[x].innerHTML = scoredata[x];
+                }
+            }
+
+            game.moves = parseInt(scoredata[scoredata.length - 2])
+            game.score = parseInt(scoredata[scoredata.length - 1])
+            game.movesdisplay.innerHTML = game.moves;
+            game.scoreDisplay.innerHTML = game.score;
+            game.hbestDisplay.innerHTML = game.btile;
+            game.hscoreDisplay.innerHTML = game.hscore;
+            game.checkGameOver();
+
+        }
+
+
+
+        if (customThemeActive) {
+            game.themeBoard(cus_theme);
+        } else {
+            game.themeBoard(def_theme);
+        }
+        savegame(game);
+
+    }
+    function intialLoad(game){
+        loadedGame = {};
+        let cookiedGame = getCookie("savedgames");
+        if(cookiedGame != ""){
+            loadedGame = JSON.parse(cookiedGame);
+            for (let x = 0; x < loadedGame.boards.length; x++) {
+                if(loadedGame.boards[x].id = game.gameId){
+
+                    if (savemode)
+                        loadgame(loadedGame.boards[x], game)
+                }
+            }
+
+        }
+
+    }
+    function resetGame(game,mode) {
+        loadedGame = {};
+        let cookiedGame = getCookie("savedgames");
+        if(cookiedGame != ""){
+            loadedGame = JSON.parse(cookiedGame);
+            for (let x = 0; x < loadedGame.boards.length; x++) {
+                if(loadedGame.boards[x].id = game.gameId){
+                    loadedGame.boards.splice(x);
+                }
+            }
+        }
+        game.squares.length = 0;
+        game.moves=0;
+        game.score=0;
+        game.bestDisplay.innerHTML = "2";
+        game.movesdisplay.innerHTML = game.moves;
+        game.scoreDisplay.innerHTML = game.score;
+        game.gridDisplay.innerHTML="";
+        if(mode == 1){
+
+            savegame(game);
+            location.reload();
+            setCookie("reloadRequest","yes",1)
+
+        }else{
+            game.createBoard();
+            game.generate();
+            game.generate();
+            if (customThemeActive) {
+                game.themeBoard(cus_theme);
+            } else {
+                game.themeBoard(def_theme);
+            }
+            savegame(game);
+        }
+
+
+    }
+
     /////////////////////////INPUT/////////////////
     function control(e) {
         if (e.keyCode === 39) {
@@ -1614,14 +1952,14 @@ function loaded() {
             keydown();
         }
         if (customThemeActive) {
-            themeBoard(cus_theme);
+            game1.themeBoard(cus_theme); //FIX LATER
         } else {
-            themeBoard(def_theme);
+            game1.themeBoard(def_theme); //FIX LATER
         }
-        moves += 1;
-        movesdisplay.innerHTML = moves;
+        game1.moves += 1;
+        game1.movesdisplay.innerHTML = game1.moves;
         if (savemode)
-            savegame();
+            savegame(game1);
     }
     document.addEventListener('keyup', control);
 
@@ -1641,13 +1979,16 @@ function loaded() {
                 else if (rand == 4)
                     keydown();
                 if (customThemeActive) {
-                    themeBoard(cus_theme);
+                    game1.themeBoard(cus_theme); //FIX LATER
                 } else {
-                    themeBoard(def_theme);
+                    game1.themeBoard(def_theme); //FIX LATER
                 }
-                moves += 1;
-                movesdisplay.innerHTML = moves;
+                game1.moves += 1;
+                game1.movesdisplay.innerHTML = game1.moves;
+                if (savemode)
+                    savegame(game1);
                 autoplay();
+
             }, 100);
         } else {
             document.addEventListener('keyup', control);
@@ -1682,52 +2023,55 @@ function loaded() {
         game1.moveLeft();
         game1.generate();
     }
-    /////////////////////////LOAD/SAVE/////////////////
-    function savegame() {
-        let scoredata = [];
-        for (let x = 0; x < squares.length; x++) {
-            scoredata.push(squares[x].innerHTML);
-        }
-        scoredata.push(moves);
-        scoredata.push(score);
 
-        backdata.push(scoredata);
+    //--------------------------------------------------------------------------------------------------------------------//
+    //_________________________________________________Game-Setup_________________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    //Load Theme
 
-        if (backdata.length >= 3) {
-            backdata.shift();
-        }
-        setCookie("savegame", scoredata, 31)
+    //ThemeLoading
+    setTHeming()
+    loadallfromsave();
+    tilenum = 2;
+    loadtilefromsave();
+    makeintotile();
+    tilenum = 2;
+    //SetupFuncts
+    game1.moveLeft = moveLeftFunct;
+    game1.moveRight = moveRightFunct;
+    game1.moveDown = moveDownFunct;
+    game1.moveUp = moveUpFunct;
+    game1.combineCol = combineColFunct;
+    game1.combineRow = combineRowFunct;
+    game1.checkGameOver = checkGameOverFunc;
+    game1.checkWin = checkWinFunct;
+    game1.continueGame = continueGameFunct;
+    game1.checkhigh =  checkhighFunct;
+    game1.checkh_best = checkh_bestFunct;
+    game1.checkbest = checkbestFunct;
+    game1.themeBoard  = themeBoardFunct;
+    //Run Functs
+    //Settings
+    setSettings();
+    //Game
 
+    game1.createBoard();
+    game1.generate();
+    game1.generate();
+    intialLoad(game1);
+    game1.checkbest();
+    game1.checkhigh();
+    //Theme it
+    if (customThemeActive) {
+        game1.themeBoard(cus_theme);
+    } else {
+        game1.themeBoard(def_theme);
     }
-
-    document.getElementById("goback").addEventListener("click", function() {
-        loadgame(backdata[backdata.length - 2]);
-    });
-
-    function loadgame(scoredata) {
-
-        if (scoredata != "") {
-            for (let x = 0; x < squares.length; x++) {
-                squares[x].innerHTML = scoredata[x];
-                moves = parseInt(scoredata[scoredata.length - 2])
-                score = parseInt(scoredata[scoredata.length - 1])
-                movesdisplay.innerHTML = moves;
-                scoreDisplay.innerHTML = score;
-            }
-        }
-
-
-
-        if (customThemeActive) {
-            themeBoard(cus_theme);
-        } else {
-            themeBoard(def_theme);
-        }
-        savegame();
+    if(getCookie("reloadRequest") == "yes"){
+        setCookie("reloadRequest","no",1)
+        location.reload();
+        //STFU ik its a hack
     }
-    if (savemode)
-        loadgame(getCookie("savegame").split(","))
-
 
     ////////////////////////////////////////////////////////OTHER////////////////////////////////////////////////////////////
     //--------------------------------------------------------------------------------------------------------------------//
@@ -1781,22 +2125,10 @@ function getCookie(cname) {
     return "";
 }
 
-function openNav() {
-    setCookie("open", "yes", 1);
-    document.getElementById("settingspannel").style.width = "250px";
-}
-
-function closeNav() {
-    setCookie("open", "no", 1);
-    document.getElementById("settingspannel").style.width = "0";
-}
 
 function resetTheme() {
     setCookie("customTheme", "", 365);
     location.reload();
 }
 
-function resetGame() {
-    setCookie("savegame", "", 31);
-    location.reload();
-}
+//2000+ lines with  a messed  up spacekey

@@ -1,4 +1,4 @@
-@import url(fonts/clear-sans.css);
+
 html,
 body {
     background: #ffffffab;
@@ -15,7 +15,7 @@ body {
 .themepannel {
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     height: 100%;
     top: 0;
     right: 0;
@@ -52,7 +52,7 @@ body {
     border-radius: 10px;
     width: 30%;
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     height: auto;
     background-color: #111;
     transition: 0.5s;
@@ -69,7 +69,7 @@ body {
 .sidepanel {
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     height: 100%;
     top: 0;
     left: 0;
@@ -171,8 +171,19 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+
 }
 
+.padding25px{
+    padding: 25px;
+}
+
+.games {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
 .grid {
     float: left;
     display: flex;
@@ -245,29 +256,32 @@ h2 {
     --anim-move: -100px;
 }
 
-#scoreadd{
+.class_scoreadd{
     position: relative;
-
     left: 65%;
     opacity: 0;
 }
 
 .scoreanimate{
+    padding-left: 8px;
     animation:  socreanim 1s;
+
 }
 
 @keyframes socreanim {
     0% {
-        top: -75px;
+        left: -2.5%;
+        top: -50px;
         opacity: 1;
     }
-    30% {
-        top: -30px;
+    20% {
+        top: 0px;
         opacity: 1;
     }
     100% {
-        top: -30px;
+        top: 0px;
         opacity: 0;
+        left: -2.5%;
     }
 
 }
@@ -365,7 +379,7 @@ h2 {
     border-radius: 5px;
     color: white;
     text-align: center;
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.603);
+    box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.5);
     padding: 5px;
     padding-bottom: 10px;
     margin-bottom: 0;
@@ -391,11 +405,11 @@ h2 {
     display: inline;
 }
 
-#result {
+.result {
     position: absolute;
     display: none;
     left: 0;
-    right: 0;
+    right: 50px;
     margin-left: auto;
     margin-right: auto;
     width: 400px;
@@ -404,12 +418,12 @@ h2 {
     background-color: red;
 }
 
-#result h1 {
+.result h1 {
     margin-left: 20%;
     font-size: 30px;
 }
 
-#result button {
+.result button {
     margin-left: 20%;
     border-radius: 10px;
     text-decoration: none;
@@ -418,4 +432,20 @@ h2 {
     background-color: rgb(43, 41, 41);
     display: block;
     transition: 0.3s;
+}
+
+.tileContainer{
+    padding-top: 2%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.scoreContainer{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2%;
+
+
+
 }
