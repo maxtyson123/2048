@@ -9,11 +9,6 @@ closeNav = "";
 
 //NEXT:
 
-//SplitScreen multiplayer
-
-//redesign loose
-
-//Zoom
 //Preformace
 //Can combine thru walls
 //Co-Op Multiplayer/ turnbased
@@ -38,241 +33,6 @@ function loaded() {
 
     //MUST BE HERE
 
-    var GameClass = {
-        gridDisplay: "",
-        gridDisplayId: "",
-        movesdisplay: "",
-        scoreDisplay: "",
-        hscoreDisplay: "",
-        scoreAddDisplay: "",
-        bestDisplay: "",
-        hbestDisplay: "",
-        gameId: "",
-        backdata: [],
-        createboardhtml: function(selector) {
-            this.gameId = selector;
-            gamespace = document.getElementById("gamespace");
-            //Padding
-            paddingdiv = document.createElement('div');
-            paddingdiv.classList.add("padding25px");
-            paddingdiv.id = "**_"+selector+"_**";
-            //Score Container
-            score_containerdiv = document.createElement('div');
-            score_containerdiv.classList.add("scoreContainer");
-            //Row 1
-            row1div = document.createElement('div');
-            row1div.classList.add("row")
-            //Col 1
-            col1div = document.createElement('div');
-            col1div.classList.add("column")
-            //Tab 1
-            scoretabdiv1 = document.createElement('div');
-            scoretabdiv1.classList.add("scoretab");
-            //Title
-            scoretitlediv = document.createElement('div');
-            scoretitlediv.classList.add("score-title");
-            scoretitlediv.innerHTML = "<strong>Score:</strong>";
-            //Span  w data
-            scoreSpan = document.createElement('span');
-            scoreSpan.id = 'score-' + selector;
-            //Spawn w add
-            addScoreSpan = document.createElement('span');
-            addScoreSpan.id = 'scoreadd-' + selector
-            addScoreSpan.className = "class_scoreadd";
-            scoretabdiv1.appendChild(scoretitlediv);
-            scoretabdiv1.appendChild(scoreSpan);
-            scoretabdiv1.appendChild(addScoreSpan);
-            col1div.appendChild(scoretabdiv1);
-            //Col 2
-            col2div = document.createElement('div');
-            col2div.classList.add("column")
-            //Tab 1
-            scoretabdiv2 = document.createElement('div');
-            scoretabdiv2.classList.add("scoretab");
-            //Title
-            hscoretitlediv = document.createElement('div');
-            hscoretitlediv.classList.add("hscore-title");
-            hscoretitlediv.innerHTML = "<strong>Highscore:</strong>";
-            //Span  w data
-            hscoreSpan = document.createElement('span');
-            hscoreSpan.id = 'hscore-' + selector;
-            //Spawn w add
-            scoretabdiv2.appendChild(hscoretitlediv);
-            scoretabdiv2.appendChild(hscoreSpan);
-            col2div.appendChild(scoretabdiv2);
-            row1div.appendChild(col1div);
-            row1div.appendChild(col2div);
-            score_containerdiv.appendChild(row1div);
-            //Game Container
-            game_containerdiv = document.createElement('div');
-            game_containerdiv.classList.add("gamecoantiner");
-            //Result
-            resultdiv = document.createElement('div');
-            resultdiv.classList.add("result");
-            resultdiv.id = "result-" + selector;
-            //inline div
-            inlinediv = document.createElement('div');
-            inlinediv.style.display = "inline";
-            //Grid
-            griddiv = document.createElement('div');
-            griddiv.classList.add("grid");
-            griddiv.id = "grid-" + selector;
-            this.gridDisplayId = 'grid-' + selector;
-            inlinediv.appendChild(griddiv);
-            //SideTab
-            sidediv = document.createElement('div');
-            sidediv.classList.add("side-tab");
-            //Reset
-            resetbutton = document.createElement('button');
-            resetbutton.style.fontSize = "28px";
-            resetbutton.classList.add("side-item");
-            resetbutton.id = 'reset-' + selector;
-            resetbutton.innerHTML = "<span class=reload> &nbsp&#x21bb&nbsp;</span>"
-            //Back
-            backbutton = document.createElement('button');
-            backbutton.style.fontSize = "28px"
-            backbutton.classList.add("side-item")
-            backbutton.id = 'goback-' + selector;
-            backbutton.innerHTML = "<span class=reload> &nbsp&#8592&nbsp;</span>"
-            //Moves
-            movesdiv = document.createElement('div');
-            movesdiv.classList.add("side-item")
-            movestext = document.createElement('p');
-            movestext.id = 'moves-' + selector;
-            movesdiv.appendChild(movestext);
-            //Remove
-            removebutton = document.createElement('button');
-            removebutton.style.fontSize = "28px"
-            removebutton.classList.add("side-item")
-            removebutton.id = 'remove-' + selector;
-            removebutton.innerHTML = "<span>x</span>"
-
-            sidediv.appendChild(resetbutton);
-            sidediv.appendChild(backbutton);
-            sidediv.appendChild(movesdiv);
-            sidediv.appendChild(removebutton);
-
-            game_containerdiv.appendChild(resultdiv);
-            game_containerdiv.appendChild(inlinediv);
-            game_containerdiv.appendChild(sidediv);
-            //Score Container
-            tile_containerdiv = document.createElement('div');
-            tile_containerdiv.classList.add("tileContainer");
-            //Row 2
-            row2div = document.createElement('div');
-            row2div.classList.add("row")
-            //Col 4
-            col3div = document.createElement('div');
-            col3div.classList.add("column")
-            //Tab 1
-            tiletabdiv1 = document.createElement('div');
-            tiletabdiv1.classList.add("scoretab");
-            //Title
-            tiletitlediv = document.createElement('div');
-            tiletitlediv.classList.add("score-title");
-            tiletitlediv.innerHTML = "<strong>Current Best:</strong>";
-            //Span  w data
-            scoreSpan = document.createElement('span');
-            scoreSpan.id = "best-" + selector;
-            scoreSpan.innerHTML = "2";
-            tiletabdiv1.appendChild(tiletitlediv);
-            tiletabdiv1.appendChild(scoreSpan);
-            col3div.appendChild(tiletabdiv1);
-            //Col 2
-            col4div = document.createElement('div');
-            col4div.classList.add("column")
-            //Tab 1
-            scoretabdiv4 = document.createElement('div');
-            scoretabdiv4.classList.add("scoretab");
-            //Title
-            htiletitlediv = document.createElement('div');
-            htiletitlediv.classList.add("hscore-title");
-            htiletitlediv.innerHTML = "<strong>Alltime Best:</strong>";
-            //Span  w data
-            hscoreSpan = document.createElement('span');
-            hscoreSpan.id = "hbest-" + selector;
-            //Spawn w add
-            scoretabdiv4.appendChild(htiletitlediv);
-            scoretabdiv4.appendChild(hscoreSpan);
-            col4div.appendChild(scoretabdiv4);
-            row2div.appendChild(col3div);
-            row2div.appendChild(col4div);
-            tile_containerdiv.appendChild(row2div);
-            paddingdiv.appendChild(score_containerdiv);
-            paddingdiv.appendChild(game_containerdiv);
-            paddingdiv.appendChild(tile_containerdiv);
-            gamespace.appendChild(paddingdiv);
-            document.getElementById('goback-' + selector).addEventListener('click', this.goback.bind(this), false); ///BINDING
-            document.getElementById('reset-' + selector).addEventListener('click', this.reset2.bind(this), false); ///BINDING
-            document.getElementById('remove-' + selector).addEventListener('click', this.remove.bind(this), false); ///BINDING
-            this.movesdisplay = document.querySelector('#moves-' + selector);
-            this.scoreDisplay = document.querySelector('#score-' + selector);
-            this.hscoreDisplay = document.querySelector('#hscore-' + selector);
-            this.scoreAddDisplay = document.querySelector('#scoreadd-' + selector);
-            this.bestDisplay = document.querySelector('#best-' + selector);
-            this.hbestDisplay = document.querySelector('#hbest-' + selector);
-            this.scoreResult = document.querySelector('#result-' + selector);
-            this.gridDisplay = document.getElementById(this.gridDisplayId);
-
-        },
-        remove: function(){
-            this.reset();
-            document.getElementById("**_"+this.gameId+"_**").remove();
-
-        },
-        goback: function() {
-            if(this.backdata.length >= 2){
-                this.backdata.pop();
-                loadgame(this.backdata[this.backdata.length - 1], this);
-                this.backdata.splice(this.backdata.length - 1)
-            }
-
-
-        },
-        reset: function() {
-            resetGame(this, 1);
-        },
-        reset2: function() {
-            resetGame(this, 2);
-            this.allowInput = true;
-        },
-        squares: [],
-        moves: 0,
-
-        score: 0,
-        ctile: 0,
-        hscore: 0,
-        btile: 0,
-        continueEnabled: false,
-        createBoard: function() {
-            debug("funct_createboard", 2);
-            this.gridDisplay.style.width = width * 100 + "px";
-            this.gridDisplay.style.height = width * 100 + "px";
-            for (let x = 0; x < width * width; x++) {
-                square = document.createElement('div');
-                tile = document.createElement("div");
-                tile.className = "tile";
-                tile.innerHTML = 0;
-                square.appendChild(tile)
-                this.gridDisplay.appendChild(square);
-                this.squares.push(tile);
-            }
-        },
-        generate: function() {
-            let randNum = Math.floor(Math.random() * this.squares.length);
-            if (this.squares[randNum].innerHTML == 0) {
-                var newel = this.squares[randNum].cloneNode(true);
-                this.squares[randNum].parentNode.replaceChild(newel, this.squares[randNum]);
-                this.squares[randNum] = newel;
-                this.squares[randNum].innerHTML = spwantile;
-
-            } else {
-                this.generate();
-            }
-            this.checkGameOver()
-        }
-    }
-    games = [];
 
 
     //for (let g = 0; g < games.length; g++) {
@@ -287,6 +47,8 @@ function loaded() {
     //__________________________________________________Settings-Vars_____________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
     //CLASS
+    zoom = 100;
+
     let settingsData = {}
     //If cookie then  load it
     if (getCookie("settingsData") != "") {
@@ -301,6 +63,7 @@ function loaded() {
         settingsData.opened = false;
         settingsData.movecap = 0;
         settingsData.realtime = false;
+        settingsData.zoom = 100;
         setCookie("settingsData", JSON.stringify(settingsData), 1);
 
     }
@@ -313,13 +76,36 @@ function loaded() {
         opened = settingsData.opened;
         movecap = settingsData.movecap;
         realtime = settingsData.realtime;
+        zoom = settingsData.zoom;
     }
+    function updatezoom(){
+        root =  document.documentElement;
+        root.style.setProperty('--anim-move', "-"+zoom + "px");
+        root.style.setProperty('--full-zoom', zoom + "px");
+        root.style.setProperty('--tile-zoom', zoom-(zoom/10) + "px");
+        root.style.setProperty('--border-zoom', (zoom/10)/2 + "px");
+        for (let g = 0; g < games.length; g++) {
+            games[g].gridDisplay.style.width = width * zoom + "px";
+            games[g].gridDisplay.style.height = width * zoom + "px";
+            if (customThemeActive) {
+                games[g].themeBoard(cus_theme);
+            } else {
+                games[g].themeBoard(def_theme);
+            }
+        }
+
+    }
+
     loadsettingstovar();
 
     //GOAL
     const goalDisplay = document.querySelector('#goal');
     const goalincrease = document.querySelector('#goalincrease');
     const goaldecrease = document.querySelector('#goaldecrease');
+    //zoom
+    const zoomDisplay = document.querySelector('#zoom');
+    const zoomincrease = document.querySelector('#zoomincrease');
+    const zoomdecrease = document.querySelector('#zoomdecrease');
 
     //SPAWN
     const spawnDisplay = document.querySelector('#spawn');
@@ -377,7 +163,36 @@ function loaded() {
     spawndecrease.addEventListener("click", function() {
         setspawn(1);
     });
+    //ZOOM
+    function setzoom(mode) {
 
+        if (mode == 1) {
+            if (zoom != 50)
+                settingsData.zoom -= 5;
+            else
+                settingsData.zoom = 50;
+        }
+        if (mode == 2) {
+            if (zoom != 200)
+                settingsData.zoom += 5;
+            else
+                settingsData.zoom = 200;
+        }
+        zoomDisplay.innerHTML = "<p>" + settingsData.zoom + "%</p>";
+        if(mode != 0){
+            loadsettingstovar();
+            updatezoom();
+        }
+
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+    }
+    zoomincrease.addEventListener("click", function() {
+        setzoom(2);
+    });
+    zoomdecrease.addEventListener("click", function() {
+        setzoom(1);
+    });
+    setzoom(0);
     //GOAL
     function setgoal(mode) {
 
@@ -1375,7 +1190,7 @@ function loaded() {
                         this.squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
                     } else {
 
-                        this.squares[x].style.fontSize = "40px";
+                        this.squares[x].style.fontSize = 4*(zoom/10)+"px";
                         this.squares[x].style.color = Theme.options[y].textcol;
                         this.squares[x].style.background = Theme.options[y].bg;
                         this.squares[x].style.boxShadow = Theme.options[y].boxshadow;
@@ -1399,7 +1214,7 @@ function loaded() {
                                 this.squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
                             } else {
 
-                                this.squares[x].style.fontSize = "40px";
+                                this.squares[x].style.fontSize = 4*(zoom/10)+"px";
                                 this.squares[x].style.color = Theme.elementMore[1][y].textcol;
                                 this.squares[x].style.background = Theme.elementMore[1][y].bg;
 
@@ -1418,7 +1233,7 @@ function loaded() {
                             this.squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
                         } else {
 
-                            this.squares[x].style.fontSize = "40px";
+                            this.squares[x].style.fontSize = 4*(zoom/10)+"px";
                             this.squares[x].style.color = Theme.elementMore[1][y].textcol;
                             this.squares[x].style.background = Theme.elementMore[1][y].bg;
                             this.squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
@@ -1483,7 +1298,243 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
     //best
 
+    var GameClass = {
+        gridDisplay: "",
+        gridDisplayId: "",
+        movesdisplay: "",
+        scoreDisplay: "",
+        hscoreDisplay: "",
+        scoreAddDisplay: "",
+        bestDisplay: "",
+        hbestDisplay: "",
+        gameId: "",
+        backdata: [],
+        createboardhtml: function(selector) {
+            this.gameId = selector;
+            gamespace = document.getElementById("gamespace");
+            //Padding
+            paddingdiv = document.createElement('div');
+            paddingdiv.classList.add("padding25px");
+            paddingdiv.id = "**_"+selector+"_**";
+            //Score Container
+            score_containerdiv = document.createElement('div');
+            score_containerdiv.classList.add("scoreContainer");
+            //Row 1
+            row1div = document.createElement('div');
+            row1div.classList.add("row")
+            //Col 1
+            col1div = document.createElement('div');
+            col1div.classList.add("column")
+            //Tab 1
+            scoretabdiv1 = document.createElement('div');
+            scoretabdiv1.classList.add("scoretab");
+            //Title
+            scoretitlediv = document.createElement('div');
+            scoretitlediv.classList.add("score-title");
+            scoretitlediv.innerHTML = "<strong>Score:</strong>";
+            //Span  w data
+            scoreSpan = document.createElement('span');
+            scoreSpan.id = 'score-' + selector;
+            //Spawn w add
+            addScoreSpan = document.createElement('span');
+            addScoreSpan.id = 'scoreadd-' + selector
+            addScoreSpan.className = "class_scoreadd";
+            scoretabdiv1.appendChild(scoretitlediv);
+            scoretabdiv1.appendChild(scoreSpan);
+            scoretabdiv1.appendChild(addScoreSpan);
+            col1div.appendChild(scoretabdiv1);
+            //Col 2
+            col2div = document.createElement('div');
+            col2div.classList.add("column")
+            //Tab 1
+            scoretabdiv2 = document.createElement('div');
+            scoretabdiv2.classList.add("scoretab");
+            //Title
+            hscoretitlediv = document.createElement('div');
+            hscoretitlediv.classList.add("hscore-title");
+            hscoretitlediv.innerHTML = "<strong>Highscore:</strong>";
+            //Span  w data
+            hscoreSpan = document.createElement('span');
+            hscoreSpan.id = 'hscore-' + selector;
+            //Spawn w add
+            scoretabdiv2.appendChild(hscoretitlediv);
+            scoretabdiv2.appendChild(hscoreSpan);
+            col2div.appendChild(scoretabdiv2);
+            row1div.appendChild(col1div);
+            row1div.appendChild(col2div);
+            score_containerdiv.appendChild(row1div);
+            //Game Container
+            game_containerdiv = document.createElement('div');
+            game_containerdiv.classList.add("gamecoantiner");
+            //Result
+            resultdiv = document.createElement('div');
+            resultdiv.classList.add("result");
+            resultdiv.id = "result-" + selector;
+            //inline div
+            inlinediv = document.createElement('div');
+            inlinediv.style.display = "inline";
+            //Grid
+            griddiv = document.createElement('div');
+            griddiv.classList.add("grid");
+            griddiv.id = "grid-" + selector;
+            this.gridDisplayId = 'grid-' + selector;
+            inlinediv.appendChild(griddiv);
+            //SideTab
+            sidediv = document.createElement('div');
+            sidediv.classList.add("side-tab");
+            //Reset
+            resetbutton = document.createElement('button');
+            resetbutton.style.fontSize = "28px";
+            resetbutton.classList.add("side-item");
+            resetbutton.id = 'reset-' + selector;
+            resetbutton.innerHTML = "<span class=reload> &nbsp&#x21bb&nbsp;</span>"
+            //Back
+            backbutton = document.createElement('button');
+            backbutton.style.fontSize = "28px"
+            backbutton.classList.add("side-item")
+            backbutton.id = 'goback-' + selector;
+            backbutton.innerHTML = "<span class=reload> &nbsp&#8592&nbsp;</span>"
+            //Moves
+            movesdiv = document.createElement('div');
+            movesdiv.classList.add("side-item")
+            movestext = document.createElement('p');
+            movestext.id = 'moves-' + selector;
+            movesdiv.appendChild(movestext);
+            //Remove
+            removebutton = document.createElement('button');
+            removebutton.style.fontSize = "28px"
+            removebutton.classList.add("side-item")
+            removebutton.id = 'remove-' + selector;
+            removebutton.innerHTML = "<span>x</span>"
 
+            sidediv.appendChild(resetbutton);
+            sidediv.appendChild(backbutton);
+            sidediv.appendChild(movesdiv);
+            sidediv.appendChild(removebutton);
+
+            game_containerdiv.appendChild(resultdiv);
+            game_containerdiv.appendChild(inlinediv);
+            game_containerdiv.appendChild(sidediv);
+            //Score Container
+            tile_containerdiv = document.createElement('div');
+            tile_containerdiv.classList.add("tileContainer");
+            //Row 2
+            row2div = document.createElement('div');
+            row2div.classList.add("row")
+            //Col 4
+            col3div = document.createElement('div');
+            col3div.classList.add("column")
+            //Tab 1
+            tiletabdiv1 = document.createElement('div');
+            tiletabdiv1.classList.add("scoretab");
+            //Title
+            tiletitlediv = document.createElement('div');
+            tiletitlediv.classList.add("score-title");
+            tiletitlediv.innerHTML = "<strong>Current Best:</strong>";
+            //Span  w data
+            scoreSpan = document.createElement('span');
+            scoreSpan.id = "best-" + selector;
+            scoreSpan.innerHTML = "2";
+            tiletabdiv1.appendChild(tiletitlediv);
+            tiletabdiv1.appendChild(scoreSpan);
+            col3div.appendChild(tiletabdiv1);
+            //Col 2
+            col4div = document.createElement('div');
+            col4div.classList.add("column")
+            //Tab 1
+            scoretabdiv4 = document.createElement('div');
+            scoretabdiv4.classList.add("scoretab");
+            //Title
+            htiletitlediv = document.createElement('div');
+            htiletitlediv.classList.add("hscore-title");
+            htiletitlediv.innerHTML = "<strong>Alltime Best:</strong>";
+            //Span  w data
+            hscoreSpan = document.createElement('span');
+            hscoreSpan.id = "hbest-" + selector;
+            //Spawn w add
+            scoretabdiv4.appendChild(htiletitlediv);
+            scoretabdiv4.appendChild(hscoreSpan);
+            col4div.appendChild(scoretabdiv4);
+            row2div.appendChild(col3div);
+            row2div.appendChild(col4div);
+            tile_containerdiv.appendChild(row2div);
+            paddingdiv.appendChild(score_containerdiv);
+            paddingdiv.appendChild(game_containerdiv);
+            paddingdiv.appendChild(tile_containerdiv);
+            gamespace.appendChild(paddingdiv);
+            document.getElementById('goback-' + selector).addEventListener('click', this.goback.bind(this), false); ///BINDING
+            document.getElementById('reset-' + selector).addEventListener('click', this.reset2.bind(this), false); ///BINDING
+            document.getElementById('remove-' + selector).addEventListener('click', this.remove.bind(this), false); ///BINDING
+            this.movesdisplay = document.querySelector('#moves-' + selector);
+            this.scoreDisplay = document.querySelector('#score-' + selector);
+            this.hscoreDisplay = document.querySelector('#hscore-' + selector);
+            this.scoreAddDisplay = document.querySelector('#scoreadd-' + selector);
+            this.bestDisplay = document.querySelector('#best-' + selector);
+            this.hbestDisplay = document.querySelector('#hbest-' + selector);
+            this.scoreResult = document.querySelector('#result-' + selector);
+            this.gridDisplay = document.getElementById(this.gridDisplayId);
+
+        },
+        remove: function(){
+            this.reset();
+            document.getElementById("**_"+this.gameId+"_**").remove();
+            rezizegameovers();
+
+        },
+        goback: function() {
+            if(this.backdata.length >= 2){
+                this.backdata.pop();
+                loadgame(this.backdata[this.backdata.length - 1], this);
+                this.backdata.splice(this.backdata.length - 1)
+            }
+
+
+        },
+        reset: function() {
+            resetGame(this, 1);
+        },
+        reset2: function() {
+            resetGame(this, 2);
+            this.allowInput = true;
+        },
+        squares: [],
+        moves: 0,
+
+        score: 0,
+        ctile: 0,
+        hscore: 0,
+        btile: 0,
+        continueEnabled: false,
+        createBoard: function() {
+            debug("funct_createboard", 2);
+            this.gridDisplay.style.width = width * zoom + "px";
+            this.gridDisplay.style.height = width * zoom + "px";
+            for (let x = 0; x < width * width; x++) {
+                square = document.createElement('div');
+                square.className = "squareItem";
+                tile = document.createElement("div");
+                tile.className = "tile";
+                tile.innerHTML = 0;
+                square.appendChild(tile)
+                this.gridDisplay.appendChild(square);
+                this.squares.push(tile);
+            }
+        },
+        generate: function() {
+            let randNum = Math.floor(Math.random() * this.squares.length);
+            if (this.squares[randNum].innerHTML == 0) {
+                var newel = this.squares[randNum].cloneNode(true);
+                this.squares[randNum].parentNode.replaceChild(newel, this.squares[randNum]);
+                this.squares[randNum] = newel;
+                this.squares[randNum].innerHTML = spwantile;
+
+            } else {
+                this.generate();
+            }
+            this.checkGameOver()
+        }
+    }
+    games = [];
 
     //--------------------------------------------------------------------------------------------------------------------//
     //_______________________________________________Game-Functions_______________________________________________________//
@@ -1727,9 +1778,9 @@ function loaded() {
             if (!possible) {
                 this.scoreResult.style.display = "block";
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
-                this.scoreResult.style.width = width * 100 + "px";
-                this.scoreResult.style.height = width * 100 + "px";
-                this.scoreResult.style.backgroundColor = "rgba(255, 0, 0, 0.4)"
+                this.scoreResult.style.width = (width * zoom)+8 + "px";
+                this.scoreResult.style.height = (width * zoom)+8 + "px";
+                this.scoreResult.classList.add("gameoverbg");
                 this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Replay</button>";
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
                     this.reset2();
@@ -1747,9 +1798,9 @@ function loaded() {
             if (this.moves >= movecap) {
                 this.scoreResult.style.display = "block";
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
-                this.scoreResult.style.width = width * 100 + "px";
-                this.scoreResult.style.height = width * 100 + "px";
-                this.scoreResult.style.backgroundColor = "rgba(255, 0, 0, 0.4)"
+                this.scoreResult.style.width = (width * zoom)+8 + "px";
+                this.scoreResult.style.height = (width * zoom)+8 + "px";
+                this.scoreResult.classList.add("gameoverbg");
                 this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Replay</button>";
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
                     this.reset2();
@@ -1773,12 +1824,13 @@ function loaded() {
     checkWinFunct = function checkWin() {
         for (let x = 0; x < this.squares.length; x++) {
             if (this.squares[x].innerHTML == goal && !this.continueEnabled) {
+
                 this.scoreResult.style.display = "block";
                 this.allowInput = false;
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
-                this.scoreResult.style.width = (width * 100) + "px";
-                this.scoreResult.style.height = width * 100 + "px";
-                this.scoreResult.style.background = "rgba(0, 255, 0, 0.4)";
+                this.scoreResult.style.width = (width * zoom)+8 + "px";
+                this.scoreResult.style.height = (width * zoom)+8 + "px";
+                this.scoreResult.classList.add("gamewinbg");
                 this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Replay</button><button id='cont'>Continue</button>"
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
                     this.reset2();
@@ -2208,12 +2260,18 @@ function loaded() {
         }
     }
     loadOtherGames()
-    games[0].checkGameOver();
-    games[0].checkWin();
 
+    function rezizegameovers(){
+        games[0].checkGameOver();
+        games[0].checkWin();
+    }
+    rezizegameovers();
+    window.onresize = rezizegameovers;
+    updatezoom();
     newboardButton = document.querySelector(".newboard");
     newboardButton.addEventListener("click", function() {
-        makenew()
+        makenew();
+        rezizegameovers();
     });
 
     function makenew() {

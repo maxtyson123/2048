@@ -1,4 +1,5 @@
 
+
 html,
 body {
     background: #ffffffab;
@@ -241,8 +242,8 @@ h2 {
 }
 
 .grid div {
-    width: 100px;
-    height: 100px;
+    width: var(--full-zoom);
+    height: var(--full-zoom);
     background-color: #cacece;
 }
 
@@ -250,19 +251,21 @@ h2 {
     color: rgb(255, 0, 0);
 }
 
+
+
 .grid .tile {
-    top: 5px;
-    border-radius: 5px;
+    top: var(--border-zoom);
+    border-radius: var(--border-zoom);
     animation: spawning 0.2s;
-    left: 5px;
+    left: var(--border-zoom);
     position: relative;
-    width: 90px;
-    height: 90px;
+    width: var(--tile-zoom);
+    height: var(--tile-zoom);
     background-color: lightgreen;
-    font-size: 40px;
+    font-size: 20px;
     text-align: center;
     font-weight: bold;
-    line-height: 80px;
+    line-height: var(--full-zoom);
 }
 
 .animate-down {
@@ -272,6 +275,7 @@ h2 {
 
 :root {
     --anim-move: -100px;
+    --full-zoom: 100px;
 }
 
 #scoreadd{
@@ -291,6 +295,7 @@ h2 {
     opacity: 0;
     position: relative;
 }
+
 
 @keyframes socreanim {
     0% {
@@ -432,12 +437,12 @@ h2 {
 .result {
     position: absolute;
     display: none;
-    left: 0;
+    left: 45%;
     right: 1;
     margin-left: auto;
     margin-right: auto;
-    width: 400px;
-    height: 400px;
+    width: 0px;
+    height: 0px;
     z-index: 2;
     background-color: rgba(0, 255, 0, 0.2);
 }
@@ -470,6 +475,19 @@ h2 {
     justify-content: center;
     padding-bottom: 2%;
 
+}
 
-
+.gameoverbg{
+    background-color: rgba(255, 0, 0, 0.8);
+    transition: 0.2s;
+}
+.gameoverbg:hover{
+    background-color: rgba(255, 0, 0, 0.4);
+}
+.gamewinbg{
+    background-color: rgba(0, 255, 0, 0.8);
+    transition: 0.8s;
+}
+.gamewinbg:hover{
+    background-color: rgba(0, 255, 0, 0.4);
 }
