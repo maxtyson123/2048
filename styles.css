@@ -140,6 +140,7 @@ body {
     font-size: 36px;
 }
 
+
 .openbtn {
     font-size: 20px;
     cursor: pointer;
@@ -240,9 +241,40 @@ h2 {
     animation: animatetop 0.2s;
 }
 
+:root {
+    --anim-move: -100px;
+}
+
+#scoreadd{
+    position: relative;
+
+    left: 65%;
+    opacity: 0;
+}
+
+.scoreanimate{
+    animation:  socreanim 1s;
+}
+
+@keyframes socreanim {
+    0% {
+        top: -75px;
+        opacity: 1;
+    }
+    30% {
+        top: -30px;
+        opacity: 1;
+    }
+    100% {
+        top: -30px;
+        opacity: 0;
+    }
+
+}
+
 @keyframes animatetop {
     from {
-        top: -100px;
+        top: var(--anim-move);
     }
     to {
         top: 0;
@@ -256,7 +288,7 @@ h2 {
 
 @keyframes animatebottom {
     from {
-        bottom: -100px;
+        bottom: var(--anim-move);
     }
     to {
         bottom: 0;
@@ -270,7 +302,7 @@ h2 {
 
 @keyframes animateright {
     from {
-        right: -100px;
+        right: var(--anim-move);
     }
     to {
         right: 0;
@@ -284,7 +316,7 @@ h2 {
 
 @keyframes animateleft {
     from {
-        left: -100px;
+        left: var(--anim-move);
     }
     to {
         left: 0;

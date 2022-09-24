@@ -6,16 +6,15 @@ if (!window.location.href.includes("index.html")) {
 //make ai, ai give hint or image
 
 //NEXT:
-//Savin and loading via setting
-//Cookie-ify backbutton
-//Other customizations: addition or combine mode,game saving and loading, undo,
-//May have  to remake tiles  and animations before gamemodes, scoreincrease
+
+//May have  to remake tiles  and animations before gamemodes
 //modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
 //Gamemode exporting
 
 //BUGS mostly theming ofc
 //tile 2 not loading
-//FUCK THEMING nvm its done
+//Body text no work for default
+//FUCK THEMING i aint fix till later
 
 
 //ORGANISE CODE b4 GAMEMODES
@@ -45,6 +44,7 @@ function loaded() {
     //Scores
     const scoreDisplay = document.querySelector('#score');
     const hscoreDisplay = document.querySelector('#hscore');
+    const scoreAddDisplay = document.querySelector('#scoreadd');
     //best
     const bestDisplay = document.querySelector('#best');
     const hbestDisplay = document.querySelector('#hbest');
@@ -52,6 +52,7 @@ function loaded() {
     const scoreResult = document.querySelector('#result');
     //back
     let backdata = [];
+
     /////////////SETTINGS/////////////////
     //GOAL
     const goalDisplay = document.querySelector('#goal');
@@ -100,6 +101,18 @@ function loaded() {
     if (reverse) {
         goal = 2;
         spwantile = 2048;
+
+    }
+    //AlloW SAVING
+    const savemodeCheck = document.querySelector('#savemode');
+    let savemode = true;
+    let savemodecook = getCookie("savemode");
+    if (savemodecook != "") {
+
+        if (savemodecook == "true")
+            savemode = true;
+        else
+            savemode = false;
 
     }
 
@@ -1180,6 +1193,19 @@ function loaded() {
     }
     //	//console.log(reverseCheck.checked +"="+reverse);
     reverseCheck.addEventListener("change", setreverse);
+
+    function setsave() {
+
+        setCookie("savemode", savemodeCheck.checked, 1);
+        savemode = savemodeCheck.checked;
+    }
+    if (savemode) {
+        savemodeCheck.checked = true
+    } else if (!savemode) {
+        savemodeCheck.checked = false
+    }
+    //	//console.log(reverseCheck.checked +"="+reverse);
+    savemodeCheck.addEventListener("change", setsave);
     autoplayCheck.addEventListener("change", autoplay);
 
 
@@ -1209,13 +1235,13 @@ function loaded() {
                 let filteredRow = row.filter(num => num);
                 let missing = width - filteredRow.length;
                 let zeros = Array(missing).fill(0);
-
                 let newRow = zeros.concat(filteredRow);
                 for (let y = 0; y < width; y++) {
                     let oldval = parseInt(squares[x + y].innerHTML);
                     squares[x + y].innerHTML = newRow[0 + y];
                     if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
                         squares[x + y].parentNode.classList.add("animate-right");
+
                         squares[x + y].parentNode.addEventListener('animationend', function() {
                             squares[x + y].parentNode.classList.remove('animate-right');
                         })
@@ -1311,8 +1337,19 @@ function loaded() {
                     combinedTotal = parseInt(squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + 1].innerHTML);
-                if (mode != "nocheck")
+                if (mode != "nocheck"){
+                    if(combinedTotal != 0){
+                        scoreAddDisplay.innerHTML = "+"+combinedTotal;
+                        scoreAddDisplay.className = "scoreanimate";
+                        setTimeout(function () {
+                            scoreAddDisplay.className = "";
+                        }, 1000);
+
+                    }
+
                     score += combinedTotal;
+                }
+
                 scoreDisplay.innerHTML = score;
                 checkhigh();
                 squares[x].innerHTML = combinedTotal;
@@ -1354,8 +1391,18 @@ function loaded() {
                     combinedTotal = parseInt(squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + width].innerHTML);
-                if (mode != "nocheck")
+                if (mode != "nocheck"){
+                    if(combinedTotal != 0){
+                        scoreAddDisplay.innerHTML = "+"+combinedTotal;
+                        scoreAddDisplay.className = "scoreanimate";
+                        setTimeout(function () {
+                            scoreAddDisplay.className = "";
+                        }, 1000);
+
+                    }
+
                     score += combinedTotal;
+                }
                 scoreDisplay.innerHTML = score;
                 checkhigh();
                 squares[x].innerHTML = combinedTotal;
@@ -1544,7 +1591,8 @@ function loaded() {
         }
         moves += 1;
         movesdisplay.innerHTML = moves;
-        savegame();
+        if (savemode)
+            savegame();
     }
 
     function savegame() {
@@ -1553,12 +1601,15 @@ function loaded() {
             scoredata.push(squares[x].innerHTML);
         }
         scoredata.push(moves);
+        scoredata.push(score);
+
         backdata.push(scoredata);
+
         if (backdata.length >= 3) {
             backdata.shift();
         }
-        console.log(backdata)
         setCookie("savegame", scoredata, 31)
+
     }
 
     document.getElementById("goback").addEventListener("click", function() {
@@ -1571,8 +1622,10 @@ function loaded() {
             console.log(scoredata)
             for (let x = 0; x < squares.length; x++) {
                 squares[x].innerHTML = scoredata[x];
-                moves = parseInt(scoredata[scoredata.length - 1])
+                moves = parseInt(scoredata[scoredata.length - 2])
+                score = parseInt(scoredata[scoredata.length - 1])
                 movesdisplay.innerHTML = moves;
+                scoreDisplay.innerHTML = score;
             }
         }
 
@@ -1585,7 +1638,8 @@ function loaded() {
         }
         savegame();
     }
-    loadgame(getCookie("savegame").split(","))
+    if(savemode)
+        loadgame(getCookie("savegame").split(","))
 
     function keyup() {
         moveUp();
