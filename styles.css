@@ -27,6 +27,10 @@ body {
     align-items: center;
 }
 
+#remove-0{
+    display: none;
+}
+
 .themepannel p,
 .themepannel a {
     text-decoration: none;
@@ -271,7 +275,7 @@ h2 {
 }
 
 #scoreadd{
-    position: relative;
+
 
     left: 65%;
     opacity: 0;
@@ -281,6 +285,11 @@ h2 {
     padding-left: 8px;
     animation:  socreanim 1s;
 
+}
+
+.class_scoreadd{
+    opacity: 0;
+    position: relative;
 }
 
 @keyframes socreanim {
@@ -430,7 +439,7 @@ h2 {
     width: 400px;
     height: 400px;
     z-index: 2;
-    background-color: rgba(144, 238, 144, 0.2);
+    background-color: rgba(0, 255, 0, 0.2);
 }
 
 .result h1 {
