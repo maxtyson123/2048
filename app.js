@@ -8,21 +8,22 @@ closeNav = "";
 //make ai, ai give hint or image
 //NEXT:
 
+//Link theme  not auto  opening
 //Cookies into misc
-//Preformace
+
 //Can combine thru walls
-//Co-Op Multiplayer/ turnbased
-
-
+//Co-Op Multiplayer / turnbased
 //Image past2048 auto theming
+//Replay, sharing
 
 //Upsidedown
 //tertirs
-
 //cnsl ver
+
 //Remake Tiles b4:
 //flappy
 //racing
+//Animate Back
 
 //Gamemode exporting
 
@@ -31,9 +32,10 @@ closeNav = "";
 function loaded() {
 
     vecookie = getCookie("version");
-    if(vecookie != "17"){
-        setCookie("version","17",356);
+    if(vecookie != "18"){
+        setCookie("version","18",356);
         setCookie("settingsData","",356);
+        setCookie("savedgames","",356);
 
     }
 
@@ -770,8 +772,8 @@ function loaded() {
 
 
         if (storedtheme != "") {
+            jsonedTheme = JSON.parse(storedtheme);
             customThemeLoaded = true;
-
             tinum = tilenum;
             firnum = 2;
             stpnum = 1;
@@ -787,7 +789,6 @@ function loaded() {
                     }
                 }
             }
-
             if (tilenum >= 4096) {
                 if (jsonedTheme.elementMore[0].length != 0) {
                     cus_morele = jsonedTheme.elementMore;
@@ -1009,7 +1010,6 @@ function loaded() {
         debug(cus_theme, 1)
         debug("cus_theme", 1)
         themeData = JSON.stringify(cus_theme);
-        setCookie("storedTheme", "cus_theme", 365);
 
 
 
@@ -1400,6 +1400,13 @@ function loaded() {
             movestext = document.createElement('p');
             movestext.id = 'moves-' + selector;
             movesdiv.appendChild(movestext);
+            //Time
+            timediv = document.createElement('div');
+            timediv.classList.add("side-item")
+            timetext = document.createElement('p');
+            timetext.id = 'time-' + selector;
+            timetext.innerHTML = "0:0"
+            timediv.appendChild(timetext);
             //Remove
             removebutton = document.createElement('button');
             removebutton.style.fontSize = "28px"
@@ -1410,6 +1417,7 @@ function loaded() {
             sidediv.appendChild(resetbutton);
             sidediv.appendChild(backbutton);
             sidediv.appendChild(movesdiv);
+            sidediv.appendChild(timediv);
             sidediv.appendChild(removebutton);
 
             game_containerdiv.appendChild(resultdiv);
@@ -1499,11 +1507,28 @@ function loaded() {
         },
         squares: [],
         moves: 0,
-
         score: 0,
         ctile: 0,
         hscore: 0,
         btile: 0,
+        time:{
+            min:0,
+            sec:0,
+        },
+        paused: false,
+        timing: function(){
+            setTimeout(function() {
+                this.time.sec += 1;
+                if(this.time.sec == 60){
+                    this.time.sec = 0;
+                    this.time.min += 1;
+                }
+                timedisplay = document.getElementById('time-' + this.gameId);
+                timedisplay.innerHTML = this.time.min +":" + this.time.sec;
+                if(!this.paused)
+                    this.timing();
+            }.bind(this), 1000);
+        },
         continueEnabled: false,
         createBoard: function() {
             debug("funct_createboard", 2);
@@ -1776,6 +1801,7 @@ function loaded() {
                 }
             }
             if (!possible) {
+                this.paused = true;
                 this.scoreResult.style.display = "block";
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = (width * zoom)+8 + "px";
@@ -1796,6 +1822,7 @@ function loaded() {
         }
         if (movecap != 0)
             if (this.moves >= movecap) {
+                this.paused = true;
                 this.scoreResult.style.display = "block";
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = (width * zoom)+8 + "px";
@@ -1818,13 +1845,15 @@ function loaded() {
         game.scoreResult.style.display = "none";
         game.continueEnabled = true;
         game.allowInput = true;
+        game.paused = false;
+        game.timing();
         autoplayCheck.addEventListener("change", autoplay);
     }
 
     checkWinFunct = function checkWin() {
         for (let x = 0; x < this.squares.length; x++) {
             if (this.squares[x].innerHTML == goal && !this.continueEnabled) {
-
+                this.paused = true;
                 this.scoreResult.style.display = "block";
                 this.allowInput = false;
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
@@ -1932,12 +1961,13 @@ function loaded() {
             loadedGame = JSON.parse(cookiedGame);
         }
 
-        function SaveData(gameId, saveData, hscore, besttile, movekeys) {
+        function SaveData(gameId, saveData, hscore, besttile, movekeys,time) {
             this.id = gameId;
             this.data = saveData;
             this.hscore = hscore;
             this.btile = besttile;
             this.movekeys = movekeys;
+            this.time = time;
         }
         exists = false;
         for (let x = 0; x < loadedGame.boards.length; x++) {
@@ -1953,6 +1983,7 @@ function loaded() {
                 scoredata.push(game.score);
                 loadedGame.boards[x].hscore = game.hscore;
                 loadedGame.boards[x].btile = game.btile;
+                loadedGame.boards[x].time = game.time;
                 if(!dontback)
                     game.backdata.push(loadedGame.boards[x]);
                 exists = true;
@@ -1967,13 +1998,10 @@ function loaded() {
             }
             scoredata.push(game.moves);
             scoredata.push(game.score);
-            savedData = new SaveData(game.gameId, scoredata, game.hscore, game.btile, game.keycodes);
+            savedData = new SaveData(game.gameId, scoredata, game.hscore, game.btile, game.keycodes,game.time);
             if(!dontback)
                 game.backdata.push(savedData);
             loadedGame.boards.push(savedData)
-        }
-        if (game.backdata.length >= 150) {
-            game.backdata.shift();
         }
         setCookie("savedgames", JSON.stringify(loadedGame), 31)
 
@@ -1988,6 +2016,7 @@ function loaded() {
             scoredata = gamedata.data;
             game.btile = gamedata.btile;
             game.hscore = gamedata.hscore;
+            game.time = gamedata.time;
             game.keycodes = gamedata.movekeys;
             undefinedinc = false;
             for (let x = 0; x < scoredata.length; x++) {
@@ -2009,6 +2038,8 @@ function loaded() {
             game.scoreDisplay.innerHTML = game.score;
             game.hbestDisplay.innerHTML = game.btile;
             game.hscoreDisplay.innerHTML = game.hscore;
+            timedisplay = document.getElementById('time-' + game.gameId);
+            timedisplay.innerHTML = game.time.min +":" + game.time.sec;
             game.checkGameOver();
             game.checkWin();
 
@@ -2059,6 +2090,10 @@ function loaded() {
         game.squares.length = 0;
         game.moves = 0;
         game.score = 0;
+        game.time = {
+            min:0,
+            sec:0,
+        }
         game.bestDisplay.innerHTML = "2";
         game.movesdisplay.innerHTML = game.moves;
         game.scoreDisplay.innerHTML = game.score;
@@ -2226,6 +2261,7 @@ function loaded() {
         intialLoad(game);
         game.checkbest();
         game.checkhigh();
+        game.timing();
         //Theme it
         if (customThemeActive) {
             game.themeBoard(cus_theme);
