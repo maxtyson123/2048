@@ -7,54 +7,76 @@ if (!window.location.href.includes("index.html")) {
 
 //NEXT:
 
-//May have  to remake tiles  and animations before gamemodes
-//modes: splitscreen multiplayer, upsidedown flappy, tertirs,racing, 3d maybe,
+//SplitScreen multiplayer
+//Co-Op Multiplayer
+//Upsidedown
+//tertirs
+
+//Remake Tiles b4:
+//flappy
+//racing
+
 //Gamemode exporting
-
-//BUGS mostly theming ofc
-//tile 2 not loading
-
-//Body text no work for default
-//FUCK THEMING i aint fix till later
-
-
-//ORGANISE CODE b4 GAMEMODES
 
 
 function loaded() {
-    function debug(text, bugfixingid) {
-        ////console.log(text);
-    }
 
-    function getUrlVar(varible) {
-        debug("funct_geturl", 2);
-        vars = window.location.search.split("?");
-        for (let x = 0; x < vars.length; x++) {
-            varibleData = vars[x].split("=");
-            if (varibleData[0] == varible) {
-                return varibleData[1];
+    let squares = [];
+    //MUST BE HERE
+
+    var Game =  {
+        gridDisplay : "",
+        creategriddisp: function(gridselctor){
+            gridDisplay = document.querySelector('.'+gridselctor);
+            return gridDisplay;
+        },
+        squares : [],
+        moves : 0,
+        score : 0,
+        createBoard: function(){
+            debug("funct_createboard", 2);
+            gridDisplay.style.width = width * 100 + "px";
+            gridDisplay.style.height = width * 100 + "px";
+            for (let x = 0; x < width * width; x++) {
+                square = document.createElement('div');
+                tile = document.createElement("div");
+                tile.className = "tile";
+                tile.innerHTML = 0;
+                square.appendChild(tile)
+                gridDisplay.appendChild(square);
+                squares.push(tile);
             }
-        }
+        },
+        generate: function() {
+            debug("genarate", 2);
+            let randNum = Math.floor(Math.random() * squares.length);
+            if (squares[randNum].innerHTML == 0) {
+                var newel = squares[randNum].cloneNode(true);
+                squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
+                squares[randNum] = newel;
+                squares[randNum].innerHTML = spwantile;
 
+            } else {
+                this.generate();
+            }
+            this.checkGameOver()
+        }
     }
-    document.addEventListener('keyup', control);
-    //////////////////GAME////////////
-    const gridDisplay = document.querySelector('.grid');
+
+    game1 = Object.assign({}, Game);
+
+    gridDisplay = game1.creategriddisp("grid");
+    let score = game1.score;
+    let moves = game1.moves;
     const headertext = document.querySelector('.goaltext');
     const headertext2 = document.querySelector('.goaltext2');
-    //Scores
-    const scoreDisplay = document.querySelector('#score');
-    const hscoreDisplay = document.querySelector('#hscore');
-    const scoreAddDisplay = document.querySelector('#scoreadd');
-    //best
-    const bestDisplay = document.querySelector('#best');
-    const hbestDisplay = document.querySelector('#hbest');
-    //end
-    const scoreResult = document.querySelector('#result');
-    //back
-    let backdata = [];
 
-    /////////////SETTINGS/////////////////
+
+
+    ////////////////////////////////////////////////////////SETTINGS////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------------------------------------------------//
+    //__________________________________________________Settings-Vars_____________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
     //GOAL
     const goalDisplay = document.querySelector('#goal');
     const goalincrease = document.querySelector('#goalincrease');
@@ -104,7 +126,7 @@ function loaded() {
         spwantile = 2048;
 
     }
-    //AlloW SAVING
+    //Allow SAVING
     const savemodeCheck = document.querySelector('#savemode');
     let savemode = true;
     let savemodecook = getCookie("savemode");
@@ -126,7 +148,6 @@ function loaded() {
             closeNav()
 
     }
-
     //AUTOPLAY
     const autoplayCheck = document.querySelector('#auto');
     //Moves
@@ -140,7 +161,6 @@ function loaded() {
 
         movecap = parseInt(movecapcookie);
     }
-    let moves = 0;
 
     //REVERSED
     const realtimeCheck = document.querySelector('#realtime');
@@ -154,915 +174,10 @@ function loaded() {
             realtime = false;
 
     }
-
-
     let continueEnabled = false;
-
-
-    //	////console.log(reverse)
-    let container = [];
-    let squares = [];
-    let score = 0;
-
-    /////////DEFAULT THEME//////
-    def_temp = new BoardElement("", "", "");
-    def_0 = new BoardElement("rgb(128, 190, 128)", "rgb(128, 190, 128)", "");
-    def_2 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
-    def_4 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
-    def_8 = new BoardElement("rgb(66, 255, 224)", "#776e65", "");
-    def_16 = new BoardElement("rgb(0, 132, 255)", "white", "");
-    def_32 = new BoardElement("rgb(0, 81, 255)", "white", "");
-    def_64 = new BoardElement("rgb(25, 0, 255)", "white", "");
-    def_128 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 2px red");
-    def_256 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 4px red");
-    def_512 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 6px red");
-    def_1024 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 8px red");
-    def_2048 = new BoardElement("black", "white", "0 0 5px 8px white");
-    der_morethen2048 = true;
-    def_4096 = new BoardElement("red", "white", "0 0 5px 8px white");
-    def_morele = [
-        ["4096"],
-        [def_4096]
-    ];
-    ////Example game Empty    Board     Background    Body     Score     tagline
-    def_gametheme = [def_0, "#cacece", "#72b182ab", "#fffff", "#808080", "WildCard"];
-    def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele, def_gametheme);
-    //////////////////////////////////THEME GENARATOR//////////////////
-    var customThemeActive = false;
-    /////DEFAULT ELEMENTS
-    cus_temp = new BoardElement("", "", "");
-    cus_0 = new BoardElement("rgb(128, 190, 128)", "rgb(128, 190, 128)", "");
-    cus_2 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
-    cus_4 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
-    cus_8 = new BoardElement("rgb(66, 255, 224)", "#776e65", "");
-    cus_16 = new BoardElement("rgb(0, 132, 255)", "white", "");
-    cus_32 = new BoardElement("rgb(0, 81, 255)", "white", "");
-    cus_64 = new BoardElement("rgb(25, 0, 255)", "white", "");
-    cus_128 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 2px red");
-    cus_256 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 4px red");
-    cus_512 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 6px red");
-    cus_1024 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 8px red");
-    cus_2048 = new BoardElement("black", "white", "0 0 5px 8px white");
-    der_morethen2048 = false;
-    cus_gametheme = [cus_0, "#cacece", "#72b182ab", "#776e65", "#808080", "WildCard"];
-    cus_morele = [
-        [],
-        []
-    ];
-    cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
-    ///////////UI
-    customThemeLoaded = false;
-    default_glowamt = 0;
-    default_textcol = "#000000";
-    default_bgcol = "#FFFFFF";
-    default_glowCol = "#FFFFFF";
-    zerocol = "rgb(128, 190, 128)"
-    boardcol = "#cacece"
-    bodytextcol = "#776e65"
-    bodybgcol = "#72b182ab"
-    scorecol = "#808080";
-    tagline = "WildCard";
-    //OpenClose
-    const themeMakerDisplay = document.querySelector('.themepannel');
-    const themeMakerClose = document.querySelector('.theme_closebtn');
-    const themeMakerOpen = document.querySelector('.theme_openbtn');
-
-    themeMakerOpen.addEventListener("click", openThemeMaker);
-    themeMakerClose.addEventListener("click", closeThemeMaker);
-
-    function openThemeMaker() {
-        debug("funct_openthememaker", 2);
-        themeMakerDisplay.style.width = "250px";
-        setCookie("theme-open", "yes", 1);
-    }
-
-    function closeThemeMaker() {
-        debug("funct_closethememaker", 2);
-        themeMakerDisplay.style.width = "0";
-        setCookie("theme-open", "no", 1);
-    }
-    let thememakerOpened = getCookie("theme-open");
-    if (thememakerOpened != "") {
-        if (thememakerOpened == "yes")
-            openThemeMaker()
-        else
-            closeThemeMaker()
-
-    }
-
-    //TileSelector
-    const themeTilelDisplay = document.querySelector('#themeTile');
-    const themeTileincrease = document.querySelector('#themeTileincrese');
-    const themeTiledecrease = document.querySelector('#themeTiledecrese');
-    themeTileincrease.addEventListener("click", themeTileincrese);
-    themeTiledecrease.addEventListener("click", themeTiledecrese);
-    var tilenum = 2;
-    var tempnum = spwantile;
-    if (reverse)
-        tempnum = goal
-    themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
-
-    function themeTileincrese() {
-        debug("funct_increasetile", 2);
-        tilenum = tilenum * 2;
-        tempnum = tempnum * 2;
-
-        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
-        loadtilefromsave()
-    }
-
-    function themeTiledecrese() {
-        debug("funct_decreasetile", 2);
-        tilenum = tilenum / 2;
-        if (tilenum == 1) {
-            themeTileincrese();
-        }
-        if (reverse) {
-            if (tempnum / 2 <= goal) {
-                tempnum = goal;
-            } else {
-                tempnum = tempnum / 2;
-            }
-        } else {
-            if (tempnum / 2 <= spwantile) {
-                tempnum = spwantile;
-            } else {
-                tempnum = tempnum / 2;
-            }
-        }
-
-        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
-        loadtilefromsave()
-    }
-
-    //Realtime
-
-    function setreal() {
-        debug("funct_setreal", 2);
-        setCookie("realtime", realtimeCheck.checked, 1);
-    }
-    if (realtime) {
-        realtimeCheck.checked = true
-    } else if (!realtime) {
-        realtimeCheck.checked = false
-    }
-    realtimeCheck.addEventListener("change", setreal);
-
-    ///////Theme Mode//////
-    const themeModeDisplay = document.querySelector('#themeMode');
-    const colurmode = document.querySelector('.colourmode');
-    const imagemode = document.querySelector('.imagemode');
-    modes = [colurmode, imagemode]
-    modename = ["Colour", "Image"]
-    const themeModeincrease = document.querySelector('#themeModeincrese');
-    const themeModedecrease = document.querySelector('#themeModedecrese');
-    themeModeincrease.addEventListener("click", themeModeincrese);
-    themeModedecrease.addEventListener("click", themeModedecrese);
-    var currentmode = 0;
-
-    function updatemode() {
-        for (let y = 0; y < modes.length; y++) {
-
-            if (y == currentmode) {
-                modes[y].style.display = "block";
-
-
-            } else {
-                modes[y].style.display = "none";
-
-            }
-        }
-        themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
-    }
-
-    function themeModeincrese() {
-        //("Increase");
-
-
-        if (currentmode + 1 == modes.length) {
-            currentmode = 0;
-        } else {
-            currentmode += 1;
-        }
-        updatemode() //put this bellow increeser later
-    }
-
-    function themeModedecrese() {
-        //("Decrease");
-
-        if (currentmode - 1 == -1) {
-            currentmode = modes.length - 1;
-        } else {
-            currentmode -= 1;
-        }
-        updatemode();
-    }
-    updatemode();
-
-
-    //////Image
-    //Image Source
-    const urlinput = document.querySelector('#imgurl');
-
-    var urldata = "";
-
-    function seturl() {
-        urldata = urlinput.value;
-        if (realtime) {
-            makeintotile();
-        }
-    }
-    urlinput.addEventListener("change", seturl);
-
-    //Image Positioning on  tile
-    ///////Colours
-    //TextColour
-    var textcolpciker = new iro.ColorPicker('#textcolpciker', {
-        width: 150,
-        color: default_textcol
-    });
-    textcol = textcolpciker.color.hexString;
-    textcolpciker.on('color:change', function() {
-        textcol = textcolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    //BackgroundCol
-    var bgcolpciker = new iro.ColorPicker('#bgcolpciker', {
-        width: 150,
-        color: default_bgcol
-    });
-    bgcol = bgcolpciker.color.hexString;
-    bgcolpciker.on('color:change', function() {
-        bgcol = bgcolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    //GlowAmount
-    const themeglowAmtlDisplay = document.querySelector('#themeglowAmt');
-    const themeglowAmtincrease = document.querySelector('#themeglowAmtincrese');
-    const themeglowAmtdecrease = document.querySelector('#themeglowAmtdecrese');
-    themeglowAmtincrease.addEventListener("click", themeglowAmtincrese);
-    themeglowAmtdecrease.addEventListener("click", themeglowAmtdecrese);
-    var glowAmtnum = default_glowamt;
-
-    function themeglowAmtincrese() {
-        debug("funct_glowincraese", 2);
-        glowAmtnum += 2;
-        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
-        if (realtime) {
-            makeintotile();
-        }
-    }
-
-    function themeglowAmtdecrese() {
-        debug("funct_glowdecrease", 2);
-        glowAmtnum -= 2;
-        if (glowAmtnum == 0) {
-            glowAmtnum = 2;
-        }
-        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
-        if (realtime) {
-            makeintotile();
-        }
-    }
-    //GlowCol
-    var glowcolpciker = new iro.ColorPicker('#glowcolpciker', {
-        width: 150,
-        color: default_glowCol
-    });
-    glowCol = glowcolpciker.color.hexString;
-    glowcolpciker.on('color:change', function() {
-        glowCol = glowcolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-
-    function loadtilefromsave(initial = false) {
-        debug("loadfromsave", 1);
-        storedtheme = getCookie("customTheme");
-
-
-        if (storedtheme != "") {
-            customThemeLoaded = true;
-
-            tinum = tilenum;
-            firnum = 2;
-            stpnum = 1;
-            if (tinum != 0) {
-                for (let y = 1; y < 12 + jsonedTheme.elementMore[0].length; y++) {
-                    if (firnum == tinum) {
-                        stpnum = y;
-
-
-                        break
-                    } else {
-                        firnum = firnum * 2;
-                    }
-                }
-            }
-
-            if (tilenum >= 4096) {
-                if (jsonedTheme.elementMore[0].length != 0) {
-                    cus_morele = jsonedTheme.elementMore;
-
-                }
-
-                for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
-                    if (stpnum == parseInt(jsonedTheme.elementMore[0][y])) {
-
-                        boxshadow = jsonedTheme.elementMore[1][y].boxshadow;
-                        if (boxshadow != "") {
-                            glowData = boxshadow.split(" ");
-                            default_glowCol = glowData[4]
-                            glowAmtnum = parseInt(glowData[3].replace('px', ''));
-
-
-                        }
-                        default_textcol = jsonedTheme.elementMore[1][y].textcol;
-                        default_bgcol = jsonedTheme.elementMore[1][y].bg;
-                        bgcolpciker.color.set(default_bgcol);
-                        textcolpciker.color.set(default_textcol);
-                        glowcolpciker.color.set(default_glowCol);
-                        if (jsonedTheme.elementMore[1][y].imagemode) {
-                            currentmode = 0;
-                            updatemode();
-                            urldata = jsonedTheme.elementMore[1][y].imageurl;
-                            urlinput.value = urldata;
-                            makeintotile()
-                        } else {
-                            currentmode = 1;
-                            updatemode()
-                            urlinput.value = "";
-
-
-                        }
-
-                    }
-                }
-            } else {
-
-                for (let y = 0; y < jsonedTheme.options.length; y++) {
-                    if (stpnum == parseInt(jsonedTheme.number[y])) {
-
-                        boxshadow = jsonedTheme.options[y].boxshadow;
-                        if (boxshadow != "") {
-                            glowData = boxshadow.split(" ");
-                            default_glowCol = glowData[4]
-                            glowAmtnum = parseInt(glowData[3].replace('px', ''));
-
-                        }
-                        ////console.log(jsonedTheme.options[y].textcol)
-                        default_textcol = jsonedTheme.options[y].textcol;
-                        default_bgcol = jsonedTheme.options[y].bg;
-                        bgcolpciker.color.set(default_bgcol);
-                        textcolpciker.color.set(default_textcol);
-                        glowcolpciker.color.set(default_glowCol);
-                        if (jsonedTheme.options[y].imagemode) {
-                            currentmode = 1;
-                            updatemode();
-                            urldata = jsonedTheme.options[y].imageurl;
-                            urlinput.value = urldata;
-                            makeintotile() //single  line fixed the theming problemds, once again
-                        } else {
-                            currentmode = 0;
-                            updatemode()
-                            urlinput.value = "";
-
-                        }
-
-
-                    }
-                }
-            }
-        }
-        ////console.log("LOADEE")
-    }
-
-    //ZeroCol
-    var zerocolpciker = new iro.ColorPicker('#zeropicker', {
-        width: 150,
-        color: zerocol
-    });
-    zerocol = zerocolpciker.color.hexString;
-    zerocolpciker.on('color:change', function() {
-        zerocol = zerocolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    var boardcolpciker = new iro.ColorPicker('#boardpicker', {
-        width: 150,
-        color: boardcol
-    });
-    boardcol = boardcolpciker.color.hexString;
-    boardcolpciker.on('color:change', function() {
-        boardcol = boardcolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    var bodybgcolpciker = new iro.ColorPicker('#worldbgpicker', {
-        width: 150,
-        color: bodybgcol
-    });
-    bodybgcol = bodybgcolpciker.color.hexString;
-    bodybgcolpciker.on('color:change', function() {
-        bodybgcol = bodybgcolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    var bodytextcolpciker = new iro.ColorPicker('#worldtextpicker', {
-        width: 150,
-        color: bodytextcol
-    });
-    bodytextcol = bodytextcolpciker.color.hexString;
-    bodytextcolpciker.on('color:change', function() {
-        bodytextcol = bodytextcolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    var scorecolpciker = new iro.ColorPicker('#worldscore', {
-        width: 150,
-        color: scorecol
-    });
-    scorecol = scorecolpciker.color.hexString;
-    scorecolpciker.on('color:change', function() {
-        scorecol = scorecolpciker.color.hexString;
-        if (realtime) {
-            makeintotile();
-        }
-    });
-    const taginput = document.querySelector('#taginput');
-
-    function settag() {
-        tagline = taginput.value;
-        ////console.log(tagline)
-        if (realtime)
-            makeintotile()
-    }
-    taginput.addEventListener("change", settag);
-    const submitbutton = document.querySelector('.makeTile');
-    if (!realtime) {
-        submitbutton.innerHTML = "Set Tile"
-    } else {
-        submitbutton.innerHTML = "Apply Theme"
-    }
-    submitbutton.addEventListener("click", function() {
-        if (!realtime) {
-            makeintotile();
-            applytheme();
-        } else {
-            applytheme();
-        }
-
-    });
-    if (customThemeLoaded) {
-        makeintotile();
-    }
-
-    function loadallfromsave() {
-        debug("funct_loadall", 2);
-        cache_tilenum = tilenum;
-        storedtheme = getCookie("customTheme");
-
-        if (storedtheme != "") {
-            customThemeLoaded = true;
-            jsonedTheme = JSON.parse(storedtheme);
-            while (tilenum != 2048) {
-
-                loadtilefromsave(true);
-                makeintotile(false);
-                //console.log(tilenum+": _loaded_ "+glowAmtnum);
-                tilenum = tilenum + tilenum;
-            }
-            loadtilefromsave(true);
-            makeintotile(false);
-            for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
-
-                tilenum = tilenum * 2;
-                loadtilefromsave();
-                makeintotile(false);
-            }
-            tilenum = cache_tilenum;
-            zerocol = jsonedTheme.zero.bg;
-            zerocolpciker.color.set(zerocol);
-            boardcol = jsonedTheme.gamethem[1];
-            boardcolpciker.color.set(boardcol);
-            bodybgcol = jsonedTheme.gamethem[2];
-            bodybgcolpciker.color.set(bodybgcol);
-            bodytextcol = jsonedTheme.gamethem[3];
-            bodytextcolpciker.color.set(bodytextcol);
-            scorecol = jsonedTheme.gamethem[4];
-            scorecolpciker.color.set(scorecol);
-            tagline = jsonedTheme.gamethem[5];
-            taginput.value = tagline;
-
-
-            // makeintotile(); THIS LINE  WAS CAUSING THE MF 2 not beign coloure corclty BUG, I  STG 2 HRS WASTED UGHHHHHHHHHHH
-        }
-
-    }
-    loadallfromsave();
-    tilenum = 2
-    loadtilefromsave();
-    makeintotile();
-
-    tilenum = 2;
-
-    function makeintotile(save = true) {
-        debug("funct_maketile", 2);
-        customThemeActive = true;
-        cus_0 = new BoardElement(zerocol, zerocol, "");
-        if (tilenum == 2) {
-            cus_2 = newBoardElemet();
-        }
-        if (tilenum == 4) {
-
-            cus_4 = newBoardElemet();
-        }
-        if (tilenum == 8) {
-            cus_8 = newBoardElemet();
-
-        }
-        if (tilenum == 16) {
-            cus_16 = newBoardElemet();
-        }
-        if (tilenum == 32) {
-            cus_32 = newBoardElemet();
-        }
-        if (tilenum == 64) {
-            cus_64 = newBoardElemet();
-        }
-        if (tilenum == 128) {
-            cus_128 = newBoardElemet();
-        }
-        if (tilenum == 256) {
-            cus_256 = newBoardElemet();
-        }
-        if (tilenum == 512) {
-            cus_512 = newBoardElemet();
-        }
-        if (tilenum == 1024) {
-
-            cus_1024 = newBoardElemet();
-
-        }
-        if (tilenum == 2048) {
-            cus_2048 = newBoardElemet();
-        }
-        if (tilenum >= 4096) {
-            firnum = 2;
-            stpnum = 1;
-
-            for (let y = 1; y < tilenum; y++) {
-                if (firnum == tilenum) {
-                    stpnum = y;
-                    break
-                } else {
-                    firnum = firnum * 2;
-                }
-            }
-
-
-            der_morethen2048 = true;
-            if (cus_morele.length != 0) {
-                replaced = false;
-                for (let y = 0; y < cus_morele[0].length; y++) {
-                    if (stpnum == parseInt(cus_morele[0][y])) {
-                        cus_morele[0][y] = stpnum;
-                        cus_morele[1][y] = newBoardElemet();
-
-                        replaced = true;
-                    }
-
-                }
-                if (!replaced) {
-                    cus_morele[0].push(stpnum);
-                    cus_morele[1].push(newBoardElemet());
-                }
-            } else {
-
-                cus_morele[0].push(stpnum);
-                cus_morele[1].push(newBoardElemet());
-            }
-
-        }
-
-        function newBoardElemet() {
-
-            element = "";
-            //console.log(tilenum+": _boaring_ "+glowAmtnum);
-            if (modename[currentmode] == "Image") {
-
-                element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
-            } else
-                element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, false, "none")
-            return element;
-        }
-        cus_gametheme[1] = boardcol;
-        cus_gametheme[2] = bodybgcol;
-        cus_gametheme[3] = bodytextcol;
-        cus_gametheme[4] = scorecol;
-        cus_gametheme[5] = tagline;
-        cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
-        debug(cus_theme, 1)
-        debug("cus_theme", 1)
-        themeData = JSON.stringify(cus_theme);
-        setCookie("storedTheme", "cus_theme", 365);
-        themeBoard(cus_theme);
-
-
-
-
-    }
-
-    //Theme externally loading and sharing
-    //Make shareable
-    const sharethemebutton = document.querySelector('#sharethemebutton');
-    const loadthemebutton = document.querySelector('#loadthemebutton');
-    const presetthemebutton = document.querySelector('#presetthemebutton');
-
-    const sharetext = document.querySelector('#sharetext');
-    const presets = document.querySelector('#presetlist');
-    const sharethemediv = document.querySelector('.sharethemediv');
-    const sharethemeinputbox = document.querySelector('#sharethemedata');
-    const share_closebtn = document.querySelector('.share_closebtn');
-    const sharetitle = document.querySelector('#sharetitle');
-    const loadbutton = document.querySelector('#loadbutton');
-    share_closebtn.addEventListener("click", closeshare);
-    sharethemebutton.addEventListener("click", sharemytheme);
-    loadthemebutton.addEventListener("click", loadtheme);
-    presetthemebutton.addEventListener("click", presettheme);
-    loadbutton.addEventListener("click", loadthemedata);
-    website = window.location.href.split(".html")
-
-    function applytheme() {
-        sharemytheme();
-        loadthemedata()
-    }
-
-    function sharemytheme() {
-        debug("sharetheme_loadtheme", 2);
-        debug(cus_theme, 2);
-        sharethemediv.style.display = "block";
-        loadbutton.style.display = "none";
-        sharetitle.innerHTML = "Share Theme";
-        storedtheme = JSON.stringify(cus_theme);
-        if (storedtheme != "") {
-            debug("Unparsed cokie", 1)
-            debug(storedtheme, 1)
-            jsonedTheme = JSON.parse(storedtheme);
-            presets.style.display = "none";
-            debug("Parsed JSON", 1);
-            debug(jsonedTheme, 1);
-            var encoded = btoa(JSON.stringify(jsonedTheme));
-            sharethemeinputbox.value = encoded;
-            sharethemeinputbox.style.display = "block";
-            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
-        } else {
-            sharetext.innerHTML = "Please note you need a theme to use this tool."
-        }
-    }
-
-    function closeshare() {
-        sharethemediv.style.display = "none";
-    }
-
-    function presettheme() {
-        debug("funct_loadtheme", 2);
-        makeintotile();
-        sharethemediv.style.display = "block";
-        loadbutton.style.display = "none";
-        sharethemeinputbox.style.display = "none";
-
-        presets.style.display = "block";
-        sharetitle.innerHTML = "Preset Themes";
-        sharetext.innerHTML = "Share your theme with me for the chance of it beign added here";
-    }
-
-    function loadtheme() {
-        debug("funct_loadtheme", 2);
-        makeintotile();
-        sharethemediv.style.display = "block";
-        sharethemeinputbox.style.display = "block";
-        loadbutton.style.display = "block";
-        presets.style.display = "none";
-        sharetitle.innerHTML = "Load Theme";
-        sharetext.innerHTML = "Paste your text and press the buton below";
-
-
-    }
-
-    function loadthemedata() {
-        debug("funct_loadthemedata", 2);
-        let shareddata = sharethemeinputbox.value;
-        try {
-            var decoded = atob(shareddata);
-        } catch (err) {
-            sharethemeinputbox.value = "ERROR LOADING";
-        }
-        try {
-            var jsondata = JSON.parse(decoded)
-        } catch (err) {
-            sharethemeinputbox.value = "ERROR LOADING";
-        }
-
-        if (jsondata == "") {
-            sharethemeinputbox.value = "ERROR LOADING";
-        }
-        if (jsondata.encodedproperly == "") {
-            sharethemeinputbox.value = "ERROR LOADING";
-        }
-        if (jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
-
-
-            setCookie("customTheme", decoded, 365);
-            tilenum = 0;
-            loadtilefromsave();
-            closeshare();
-            window.location = website[0] + ".html";
-        } else {
-            sharethemeinputbox.value = "ERROR LOADING";
-        }
-    }
-
-    function createBoard() {
-        debug("funct_createboard", 2);
-        gridDisplay.style.width = width * 100 + "px";
-        gridDisplay.style.height = width * 100 + "px";
-        for (let x = 0; x < width * width; x++) {
-            square = document.createElement('div');
-            tile = document.createElement("div");
-            tile.className = "tile";
-            tile.innerHTML = 0;
-            square.appendChild(tile)
-            gridDisplay.appendChild(square);
-            squares.push(tile);
-        }
-        generate();
-        generate();
-    }
-
-    function BoardElement(bg, textcol, boxshadow, imagemode, imageurl) {
-        this.bg = bg;
-        this.textcol = textcol;
-        this.boxshadow = boxshadow;
-        this.imagemode = imagemode;
-        this.imageurl = imageurl;
-    }
-
-    function Theme(zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight, more2048, elemore, gameThemeData) {
-        this.zero = zero;
-
-        this.number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-        this.options = [zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight];
-        this.moreenabled = more2048;
-        this.elementMore = elemore;
-        this.gamethem = gameThemeData;
-        this.encodedproperly = "it_works_pls_dont_mess_with_this_otherwise_it_breaks";
-    }
-
-    function themeBoard(Theme) {
-        debug("funct_themetheboard", 2);
-        debug(Theme, 1);
-        debug("CHECK POINT", 1);
-        gameTheme = Theme.gamethem;
-        for (let x = 0; x < squares.length; x++) {
-            tinum = parseInt(squares[x].innerHTML);
-            firnum = spwantile;
-            stpnum = 0;
-            if (tinum != 0) {
-                if (reverse)
-                    for (let y = 1; y < 12; y++) {
-                        if (firnum == tinum) {
-                            stpnum = 12 - y;
-                            break
-                        } else {
-                            firnum = firnum / 2;
-                        }
-                    }
-                else
-                    for (let y = 1; y < 12 + Theme.elementMore[0].length; y++) {
-                        if (firnum == tinum) {
-                            stpnum = y;
-                            break
-                        } else {
-                            firnum = firnum * 2;
-                        }
-                    }
-            }
-
-            for (let y = 0; y < Theme.options.length; y++) {
-                if (stpnum == parseInt(Theme.number[y])) {
-                    if (Theme.options[y].imagemode) {
-
-                        squares[x].style.fontSize = "0px";
-                        squares[x].style.background = "white"; //Fixed for transparancy
-                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
-                        squares[x].style.backgroundSize = "cover";
-                        squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
-                    } else {
-
-                        squares[x].style.fontSize = "40px";
-                        squares[x].style.color = Theme.options[y].textcol;
-                        squares[x].style.background = Theme.options[y].bg;
-                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
-                    }
-
-                }
-
-            }
-            if (stpnum > 11) {
-                if (Theme.moreenabled) {
-                    themedtile = false;
-                    for (let y = 0; y < Theme.elementMore[0].length; y++) {
-                        if (stpnum == parseInt(Theme.elementMore[0][y])) {
-                            if (Theme.elementMore[1][y].imagemode) {
-
-                                squares[x].style.fontSize = "0px";
-                                squares[x].style.background = Theme.elementMore[1][y].bg;
-
-                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
-                                squares[x].style.backgroundSize = "cover";
-                                squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
-                            } else {
-
-                                squares[x].style.fontSize = "40px";
-                                squares[x].style.color = Theme.elementMore[1][y].textcol;
-                                squares[x].style.background = Theme.elementMore[1][y].bg;
-
-                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
-                            }
-                            themedtile = true;
-                        }
-                    }
-                    if (!themedtile) {
-                        if (Theme.elementMore[1][y].imagemode) {
-
-                            squares[x].style.fontSize = "0px";
-                            squares[x].style.background = Theme.elementMore[1][y].bg;
-                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
-                            squares[x].style.backgroundSize = "cover";
-                            squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
-                        } else {
-
-                            squares[x].style.fontSize = "40px";
-                            squares[x].style.color = Theme.elementMore[1][y].textcol;
-                            squares[x].style.background = Theme.elementMore[1][y].bg;
-                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
-                        }
-                    }
-                } else {
-                    squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
-                    squares[x].style.background = Theme.options[Theme.options.length - 1].bg;
-                    squares[x].style.boxShadow = Theme.options[Theme.options.length - 1].boxshadow;
-                }
-
-            }
-        }
-
-        if (gameTheme != undefined) {
-
-            document.body.style.background = gameTheme[2];
-            document.body.style.color = gameTheme[3];
-            textclasses = document.querySelectorAll("p, .scoretab, .side-item");
-            for (let y = 0; y < textclasses.length; y++) {
-                textclasses[y].style.color = gameTheme[3];
-            }
-            sidecols = document.querySelectorAll(" .side-item");
-            for (let y = 0; y < sidecols.length; y++) {
-                sidecols[y].style.borderColor = gameTheme[1];
-            }
-            gridDisplay.style.border = "5px solid " + gameTheme[1];
-            gridDisplay.style.backgroundColor = zerocol;
-            tilestotheme = gridDisplay.children;
-            document.querySelector("#tagline").innerHTML = gameTheme[5];
-            scoresclass = document.querySelectorAll(".scoretab, .side-item");
-            for (let y = 0; y < scoresclass.length; y++) {
-                scoresclass[y].style.backgroundColor = gameTheme[4];
-            }
-
-            for (let y = 0; y < tilestotheme.length; y++) {
-                tilestotheme[y].style.backgroundColor = gameTheme[1];
-            }
-            // document.getElementsByClassName("grid")
-        }
-    }
-
-    createBoard();
-    if (customThemeActive) {
-        themeBoard(cus_theme);
-    } else {
-        themeBoard(def_theme);
-    }
-
-
+    //--------------------------------------------------------------------------------------------------------------------//
+    //_______________________________________________Settings-Functions___________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
     //SPAWN
     function setspawn(mode) {
         //////console.log("Clicked");
@@ -1214,255 +329,920 @@ function loaded() {
     autoplayCheck.addEventListener("change", autoplay);
 
 
-    function generate() {
-        debug("genarate", 2);
-        let randNum = Math.floor(Math.random() * squares.length);
-        if (squares[randNum].innerHTML == 0) {
-            var newel = squares[randNum].cloneNode(true);
-            squares[randNum].parentNode.replaceChild(newel, squares[randNum]);
-            squares[randNum] = newel;
-            squares[randNum].innerHTML = spwantile;
 
+
+    ////////////////////////////////////////////////////////THEME////////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------------------------------------------------//
+    //__________________________________________________Theme-THemes______________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    /////////DEFAULT THEME//////
+    def_temp = new BoardElement("", "", "");
+    def_0 = new BoardElement("rgb(128, 190, 128)", "rgb(128, 190, 128)", "");
+    def_2 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
+    def_4 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
+    def_8 = new BoardElement("rgb(66, 255, 224)", "#776e65", "");
+    def_16 = new BoardElement("rgb(0, 132, 255)", "white", "");
+    def_32 = new BoardElement("rgb(0, 81, 255)", "white", "");
+    def_64 = new BoardElement("rgb(25, 0, 255)", "white", "");
+    def_128 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 2px red");
+    def_256 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 4px red");
+    def_512 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 6px red");
+    def_1024 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 8px red");
+    def_2048 = new BoardElement("black", "white", "0 0 5px 8px white");
+    der_morethen2048 = true;
+    def_4096 = new BoardElement("red", "white", "0 0 5px 8px white");
+    def_morele = [
+        ["4096"],
+        [def_4096]
+    ];
+    ////Example game Empty    Board     Background    Body     Score     tagline
+    def_gametheme = [def_0, "#cacece", "#72b182ab", "#fffff", "#808080", "WildCard"];
+    def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele, def_gametheme);
+    var customThemeActive = false;
+    /////DEFAULT ELEMENTS
+    cus_temp = new BoardElement("", "", "");
+    cus_0 = new BoardElement("rgb(128, 190, 128)", "rgb(128, 190, 128)", "");
+    cus_2 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
+    cus_4 = new BoardElement("rgb(84, 193, 84)", "#776e65", "");
+    cus_8 = new BoardElement("rgb(66, 255, 224)", "#776e65", "");
+    cus_16 = new BoardElement("rgb(0, 132, 255)", "white", "");
+    cus_32 = new BoardElement("rgb(0, 81, 255)", "white", "");
+    cus_64 = new BoardElement("rgb(25, 0, 255)", "white", "");
+    cus_128 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 2px red");
+    cus_256 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 4px red");
+    cus_512 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 6px red");
+    cus_1024 = new BoardElement("rgb(98, 0, 255)", "white", "0 0 5px 8px red");
+    cus_2048 = new BoardElement("black", "white", "0 0 5px 8px white");
+    der_morethen2048 = false;
+    cus_gametheme = [cus_0, "#cacece", "#72b182ab", "#776e65", "#808080", "WildCard"];
+    cus_morele = [
+        [],
+        []
+    ];
+    cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
+    //--------------------------------------------------------------------------------------------------------------------//
+    //__________________________________________________Theme-Vars________________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    ///////////UI
+    customThemeLoaded = false;
+    default_glowamt = 0;
+    default_textcol = "#000000";
+    default_bgcol = "#FFFFFF";
+    default_glowCol = "#FFFFFF";
+    zerocol = "rgb(128, 190, 128)"
+    boardcol = "#cacece"
+    bodytextcol = "#776e65"
+    bodybgcol = "#72b182ab"
+    scorecol = "#808080";
+    tagline = "WildCard";
+    //OpenClose
+    const themeMakerDisplay = document.querySelector('.themepannel');
+    const themeMakerClose = document.querySelector('.theme_closebtn');
+    const themeMakerOpen = document.querySelector('.theme_openbtn');
+
+    themeMakerOpen.addEventListener("click", openThemeMaker);
+    themeMakerClose.addEventListener("click", closeThemeMaker);
+
+    //--------------------------------------------------------------------------------------------------------------------//
+    //________________________________________________Theme-THememaker____________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    ///////////UI//////////////
+    function openThemeMaker() {
+        debug("funct_openthememaker", 2);
+        themeMakerDisplay.style.width = "250px";
+        setCookie("theme-open", "yes", 1);
+    }
+
+    function closeThemeMaker() {
+        debug("funct_closethememaker", 2);
+        themeMakerDisplay.style.width = "0";
+        setCookie("theme-open", "no", 1);
+    }
+    let thememakerOpened = getCookie("theme-open");
+    if (thememakerOpened != "") {
+        if (thememakerOpened == "yes")
+            openThemeMaker()
+        else
+            closeThemeMaker()
+
+    }
+
+    //TileSelector
+    const themeTilelDisplay = document.querySelector('#themeTile');
+    const themeTileincrease = document.querySelector('#themeTileincrese');
+    const themeTiledecrease = document.querySelector('#themeTiledecrese');
+    themeTileincrease.addEventListener("click", themeTileincrese);
+    themeTiledecrease.addEventListener("click", themeTiledecrese);
+    var tilenum = 2;
+    var tempnum = spwantile;
+    if (reverse)
+        tempnum = goal
+    themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+
+    function themeTileincrese() {
+        debug("funct_increasetile", 2);
+        tilenum = tilenum * 2;
+        tempnum = tempnum * 2;
+
+        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+        loadtilefromsave()
+    }
+
+    function themeTiledecrese() {
+        debug("funct_decreasetile", 2);
+        tilenum = tilenum / 2;
+        if (tilenum == 1) {
+            themeTileincrese();
+        }
+        if (reverse) {
+            if (tempnum / 2 <= goal) {
+                tempnum = goal;
+            } else {
+                tempnum = tempnum / 2;
+            }
         } else {
-            generate();
+            if (tempnum / 2 <= spwantile) {
+                tempnum = spwantile;
+            } else {
+                tempnum = tempnum / 2;
+            }
         }
 
-        checkGameOver()
+        themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
+        loadtilefromsave()
     }
 
-    function moveRight() {
-        for (let x = 0; x < width * width; x++) {
-            if (x % width === 0) {
-                let row = [];
-                for (let y = 0; y < width; y++) {
-                    row.push(parseInt(squares[x + y].innerHTML));
-                }
-                let filteredRow = row.filter(num => num);
-                let missing = width - filteredRow.length;
-                let zeros = Array(missing).fill(0);
-                let newRow = zeros.concat(filteredRow);
-                for (let y = 0; y < width; y++) {
-                    let oldval = parseInt(squares[x + y].innerHTML);
-                    squares[x + y].innerHTML = newRow[0 + y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
-                        squares[x + y].parentNode.classList.add("animate-right");
+    //Realtime
+    function setreal() {
+        debug("funct_setreal", 2);
+        setCookie("realtime", realtimeCheck.checked, 1);
+    }
+    if (realtime) {
+        realtimeCheck.checked = true
+    } else if (!realtime) {
+        realtimeCheck.checked = false
+    }
+    realtimeCheck.addEventListener("change", setreal);
 
-                        squares[x + y].parentNode.addEventListener('animationend', function() {
-                            squares[x + y].parentNode.classList.remove('animate-right');
-                        })
+    ///////Theme Mode//////
+    const themeModeDisplay = document.querySelector('#themeMode');
+    const colurmode = document.querySelector('.colourmode');
+    const imagemode = document.querySelector('.imagemode');
+    modes = [colurmode, imagemode]
+    modename = ["Colour", "Image"]
+    const themeModeincrease = document.querySelector('#themeModeincrese');
+    const themeModedecrease = document.querySelector('#themeModedecrese');
+    themeModeincrease.addEventListener("click", themeModeincrese);
+    themeModedecrease.addEventListener("click", themeModedecrese);
+    var currentmode = 0;
+
+    function updatemode() {
+        for (let y = 0; y < modes.length; y++) {
+
+            if (y == currentmode) {
+                modes[y].style.display = "block";
+
+
+            } else {
+                modes[y].style.display = "none";
+
+            }
+        }
+        themeModeDisplay.innerHTML = "<p>" + modename[currentmode] + "</p>";
+    }
+
+    function themeModeincrese() {
+        //("Increase");
+
+
+        if (currentmode + 1 == modes.length) {
+            currentmode = 0;
+        } else {
+            currentmode += 1;
+        }
+        updatemode() //put this bellow increeser later
+    }
+
+    function themeModedecrese() {
+        //("Decrease");
+
+        if (currentmode - 1 == -1) {
+            currentmode = modes.length - 1;
+        } else {
+            currentmode -= 1;
+        }
+        updatemode();
+    }
+    updatemode();
+
+
+    //////Image
+    //Image Source
+    const urlinput = document.querySelector('#imgurl');
+
+    var urldata = "";
+
+    function seturl() {
+        urldata = urlinput.value;
+        if (realtime) {
+            makeintotile();
+        }
+    }
+    urlinput.addEventListener("change", seturl);
+    ///////Colour Pickers////////////
+    //TextColour
+    var textcolpciker = new iro.ColorPicker('#textcolpciker', {
+        width: 150,
+        color: default_textcol
+    });
+    textcol = textcolpciker.color.hexString;
+    textcolpciker.on('color:change', function() {
+        textcol = textcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    //BackgroundCol
+    var bgcolpciker = new iro.ColorPicker('#bgcolpciker', {
+        width: 150,
+        color: default_bgcol
+    });
+    bgcol = bgcolpciker.color.hexString;
+    bgcolpciker.on('color:change', function() {
+        bgcol = bgcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    //GlowAmount
+    const themeglowAmtlDisplay = document.querySelector('#themeglowAmt');
+    const themeglowAmtincrease = document.querySelector('#themeglowAmtincrese');
+    const themeglowAmtdecrease = document.querySelector('#themeglowAmtdecrese');
+    themeglowAmtincrease.addEventListener("click", themeglowAmtincrese);
+    themeglowAmtdecrease.addEventListener("click", themeglowAmtdecrese);
+    var glowAmtnum = default_glowamt;
+
+    function themeglowAmtincrese() {
+        debug("funct_glowincraese", 2);
+        glowAmtnum += 2;
+        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
+        if (realtime) {
+            makeintotile();
+        }
+    }
+
+    function themeglowAmtdecrese() {
+        debug("funct_glowdecrease", 2);
+        glowAmtnum -= 2;
+        if (glowAmtnum == 0) {
+            glowAmtnum = 2;
+        }
+        themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
+        if (realtime) {
+            makeintotile();
+        }
+    }
+    //GlowCol
+    var glowcolpciker = new iro.ColorPicker('#glowcolpciker', {
+        width: 150,
+        color: default_glowCol
+    });
+    glowCol = glowcolpciker.color.hexString;
+    glowcolpciker.on('color:change', function() {
+        glowCol = glowcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+
+    //ZeroCol
+    var zerocolpciker = new iro.ColorPicker('#zeropicker', {
+        width: 150,
+        color: zerocol
+    });
+    zerocol = zerocolpciker.color.hexString;
+    zerocolpciker.on('color:change', function() {
+        zerocol = zerocolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var boardcolpciker = new iro.ColorPicker('#boardpicker', {
+        width: 150,
+        color: boardcol
+    });
+    boardcol = boardcolpciker.color.hexString;
+    boardcolpciker.on('color:change', function() {
+        boardcol = boardcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var bodybgcolpciker = new iro.ColorPicker('#worldbgpicker', {
+        width: 150,
+        color: bodybgcol
+    });
+    bodybgcol = bodybgcolpciker.color.hexString;
+    bodybgcolpciker.on('color:change', function() {
+        bodybgcol = bodybgcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var bodytextcolpciker = new iro.ColorPicker('#worldtextpicker', {
+        width: 150,
+        color: bodytextcol
+    });
+    bodytextcol = bodytextcolpciker.color.hexString;
+    bodytextcolpciker.on('color:change', function() {
+        bodytextcol = bodytextcolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    var scorecolpciker = new iro.ColorPicker('#worldscore', {
+        width: 150,
+        color: scorecol
+    });
+    scorecol = scorecolpciker.color.hexString;
+    scorecolpciker.on('color:change', function() {
+        scorecol = scorecolpciker.color.hexString;
+        if (realtime) {
+            makeintotile();
+        }
+    });
+    const taginput = document.querySelector('#taginput');
+
+    function settag() {
+        tagline = taginput.value;
+        ////console.log(tagline)
+        if (realtime)
+            makeintotile()
+    }
+    taginput.addEventListener("change", settag);
+    const submitbutton = document.querySelector('.makeTile');
+    if (!realtime) {
+        submitbutton.innerHTML = "Set Tile"
+    } else {
+        submitbutton.innerHTML = "Apply Theme"
+    }
+    submitbutton.addEventListener("click", function() {
+        if (!realtime) {
+            makeintotile();
+            applytheme();
+        } else {
+            applytheme();
+        }
+
+    });
+    if (customThemeLoaded) {
+        makeintotile();
+    }
+    ///////////Loading
+    function loadtilefromsave(initial = false) {
+        debug("loadfromsave", 1);
+        storedtheme = getCookie("customTheme");
+
+
+        if (storedtheme != "") {
+            customThemeLoaded = true;
+
+            tinum = tilenum;
+            firnum = 2;
+            stpnum = 1;
+            if (tinum != 0) {
+                for (let y = 1; y < 12 + jsonedTheme.elementMore[0].length; y++) {
+                    if (firnum == tinum) {
+                        stpnum = y;
+
+
+                        break
+                    } else {
+                        firnum = firnum * 2;
+                    }
+                }
+            }
+
+            if (tilenum >= 4096) {
+                if (jsonedTheme.elementMore[0].length != 0) {
+                    cus_morele = jsonedTheme.elementMore;
+
+                }
+
+                for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
+                    if (stpnum == parseInt(jsonedTheme.elementMore[0][y])) {
+
+                        boxshadow = jsonedTheme.elementMore[1][y].boxshadow;
+                        if (boxshadow != "") {
+                            glowData = boxshadow.split(" ");
+                            default_glowCol = glowData[4]
+                            glowAmtnum = parseInt(glowData[3].replace('px', ''));
+
+
+                        }
+                        default_textcol = jsonedTheme.elementMore[1][y].textcol;
+                        default_bgcol = jsonedTheme.elementMore[1][y].bg;
+                        bgcolpciker.color.set(default_bgcol);
+                        textcolpciker.color.set(default_textcol);
+                        glowcolpciker.color.set(default_glowCol);
+                        if (jsonedTheme.elementMore[1][y].imagemode) {
+                            currentmode = 0;
+                            updatemode();
+                            urldata = jsonedTheme.elementMore[1][y].imageurl;
+                            urlinput.value = urldata;
+                            makeintotile()
+                        } else {
+                            currentmode = 1;
+                            updatemode()
+                            urlinput.value = "";
+
+
+                        }
+
+                    }
+                }
+            } else {
+
+                for (let y = 0; y < jsonedTheme.options.length; y++) {
+                    if (stpnum == parseInt(jsonedTheme.number[y])) {
+
+                        boxshadow = jsonedTheme.options[y].boxshadow;
+                        if (boxshadow != "") {
+                            glowData = boxshadow.split(" ");
+                            default_glowCol = glowData[4]
+                            glowAmtnum = parseInt(glowData[3].replace('px', ''));
+
+                        }
+                        ////console.log(jsonedTheme.options[y].textcol)
+                        default_textcol = jsonedTheme.options[y].textcol;
+                        default_bgcol = jsonedTheme.options[y].bg;
+                        bgcolpciker.color.set(default_bgcol);
+                        textcolpciker.color.set(default_textcol);
+                        glowcolpciker.color.set(default_glowCol);
+                        if (jsonedTheme.options[y].imagemode) {
+                            currentmode = 1;
+                            updatemode();
+                            urldata = jsonedTheme.options[y].imageurl;
+                            urlinput.value = urldata;
+                            makeintotile() //single  line fixed the theming problemds, once again
+                        } else {
+                            currentmode = 0;
+                            updatemode()
+                            urlinput.value = "";
+
+                        }
+
+
                     }
                 }
             }
         }
-
+        ////console.log("LOADEE")
     }
 
-    function moveLeft() {
-        for (let x = 0; x < width * width; x++) {
-            if (x % width === 0) {
-                let row = [];
-                for (let y = 0; y < width; y++) {
-                    row.push(parseInt(squares[x + y].innerHTML));
-                }
-                let filteredRow = row.filter(num => num);
-                let missing = width - filteredRow.length;
-                let zeros = Array(missing).fill(0);
+    function loadallfromsave() {
+        debug("funct_loadall", 2);
+        cache_tilenum = tilenum;
+        storedtheme = getCookie("customTheme");
 
-                let newRow = filteredRow.concat(zeros);
+        if (storedtheme != "") {
+            customThemeLoaded = true;
+            jsonedTheme = JSON.parse(storedtheme);
+            while (tilenum != 2048) {
 
-                for (let y = 0; y < width; y++) {
-                    let oldval = parseInt(squares[x + y].innerHTML);
-                    squares[x + y].innerHTML = newRow[0 + y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
-                        squares[x + y].parentNode.classList.add("animate-left");
-                        squares[x + y].parentNode.addEventListener('animationend', function() {
-                            squares[x + y].parentNode.classList.remove('animate-left');
-                        })
-                    }
-                }
+                loadtilefromsave(true);
+                makeintotile(false);
+                //console.log(tilenum+": _loaded_ "+glowAmtnum);
+                tilenum = tilenum + tilenum;
             }
+            loadtilefromsave(true);
+            makeintotile(false);
+            for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
+
+                tilenum = tilenum * 2;
+                loadtilefromsave();
+                makeintotile(false);
+            }
+            tilenum = cache_tilenum;
+            zerocol = jsonedTheme.zero.bg;
+            zerocolpciker.color.set(zerocol);
+            boardcol = jsonedTheme.gamethem[1];
+            boardcolpciker.color.set(boardcol);
+            bodybgcol = jsonedTheme.gamethem[2];
+            bodybgcolpciker.color.set(bodybgcol);
+            bodytextcol = jsonedTheme.gamethem[3];
+            bodytextcolpciker.color.set(bodytextcol);
+            scorecol = jsonedTheme.gamethem[4];
+            scorecolpciker.color.set(scorecol);
+            tagline = jsonedTheme.gamethem[5];
+            taginput.value = tagline;
+
+
+            // makeintotile(); THIS LINE  WAS CAUSING THE MF 2 not beign coloure corclty BUG, I  STG 2 HRS WASTED UGHHHHHHHHHHH
         }
 
     }
+    loadallfromsave();
+    tilenum = 2
+    loadtilefromsave();
+    makeintotile();
 
-    function moveDown() {
-        for (let x = 0; x < width; x++) {
-            let collum = [];
-            for (let y = 0; y < width; y++) {
-                collum.push(parseInt(squares[x + y * width].innerHTML));
-            }
-            let filteredCol = collum.filter(num => num);
-            let missing = width - filteredCol.length;
-            let zeros = Array(missing).fill(0);
-
-            let newCol = zeros.concat(filteredCol);
-            for (let y = 0; y < width; y++) {
-                let oldval = parseInt(squares[x + y * width].innerHTML);
-                squares[x + y * width].innerHTML = newCol[0 + y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
-                    squares[x + y * width].parentNode.classList.add("animate-down");
-                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
-                        squares[x + y * width].parentNode.classList.remove('animate-down');
-                    })
-                }
-
-            }
+    tilenum = 2;
+    ///////////Theming tiles
+    function makeintotile(save = true) {
+        debug("funct_maketile", 2);
+        customThemeActive = true;
+        cus_0 = new BoardElement(zerocol, zerocol, "");
+        if (tilenum == 2) {
+            cus_2 = newBoardElemet();
         }
-    }
+        if (tilenum == 4) {
 
-    function moveUp() {
-        for (let x = 0; x < width; x++) {
-            let collum = [];
-            for (let y = 0; y < width; y++) {
-                collum.push(parseInt(squares[x + y * width].innerHTML));
-            }
-            let filteredCol = collum.filter(num => num);
-            let missing = width - filteredCol.length;
-            let zeros = Array(missing).fill(0);
-
-            let newCol = filteredCol.concat(zeros);
-            for (let y = 0; y < width; y++) {
-                let oldval = parseInt(squares[x + y * width].innerHTML);
-                squares[x + y * width].innerHTML = newCol[0 + y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
-                    squares[x + y * width].parentNode.classList.add("animate-up");
-                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
-                        squares[x + y * width].parentNode.classList.remove('animate-up');
-                    })
-                }
-            }
+            cus_4 = newBoardElemet();
         }
-    }
+        if (tilenum == 8) {
+            cus_8 = newBoardElemet();
 
-    function combineRow(mode) {
-        for (let x = 0; x < (width * width) - 1; x++) {
-            if (squares[x].innerHTML === squares[x + 1].innerHTML) {
-                let combinedTotal = 0;
-                if (reverse)
-                    combinedTotal = parseInt(squares[x].innerHTML) / 2;
-                else
-                    combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + 1].innerHTML);
-                if (mode != "nocheck"){
-                    if(combinedTotal != 0){
-                        scoreAddDisplay.innerHTML = "+"+combinedTotal;
-                        scoreAddDisplay.className = "scoreanimate";
-                        setTimeout(function () {
-                            scoreAddDisplay.className = "";
-                        }, 1000);
+        }
+        if (tilenum == 16) {
+            cus_16 = newBoardElemet();
+        }
+        if (tilenum == 32) {
+            cus_32 = newBoardElemet();
+        }
+        if (tilenum == 64) {
+            cus_64 = newBoardElemet();
+        }
+        if (tilenum == 128) {
+            cus_128 = newBoardElemet();
+        }
+        if (tilenum == 256) {
+            cus_256 = newBoardElemet();
+        }
+        if (tilenum == 512) {
+            cus_512 = newBoardElemet();
+        }
+        if (tilenum == 1024) {
 
-                    }
+            cus_1024 = newBoardElemet();
 
-                    score += combinedTotal;
-                }
+        }
+        if (tilenum == 2048) {
+            cus_2048 = newBoardElemet();
+        }
+        if (tilenum >= 4096) {
+            firnum = 2;
+            stpnum = 1;
 
-                scoreDisplay.innerHTML = score;
-                checkhigh();
-                squares[x].innerHTML = combinedTotal;
-                if (mode != "nocheck")
-                    checkbest();
-                squares[x + 1].innerHTML = 0;
-                if (mode == "left") {
-                    //////console.log("Left: "+x)
-                    if (parseInt(squares[x].innerHTML) != 0) {
-                        squares[x].parentNode.classList.add("animate-pop");
-                        squares[x].parentNode.addEventListener('animationend', function() {
-                            squares[x].parentNode.classList.remove('animate-pop');
-                        })
-                    }
+            for (let y = 1; y < tilenum; y++) {
+                if (firnum == tilenum) {
+                    stpnum = y;
+                    break
                 } else {
-
-                    if (parseInt(squares[x].innerHTML) != 0) {
-
-                        squares[x + 1].parentNode.classList.add("animate-pop");
-                        squares[x + 1].parentNode.addEventListener('animationend', function() {
-                            squares[x + 1].parentNode.classList.remove('animate-pop');
-                        })
-                    }
+                    firnum = firnum * 2;
                 }
+            }
 
 
+            der_morethen2048 = true;
+            if (cus_morele.length != 0) {
+                replaced = false;
+                for (let y = 0; y < cus_morele[0].length; y++) {
+                    if (stpnum == parseInt(cus_morele[0][y])) {
+                        cus_morele[0][y] = stpnum;
+                        cus_morele[1][y] = newBoardElemet();
+
+                        replaced = true;
+                    }
+
+                }
+                if (!replaced) {
+                    cus_morele[0].push(stpnum);
+                    cus_morele[1].push(newBoardElemet());
+                }
+            } else {
+
+                cus_morele[0].push(stpnum);
+                cus_morele[1].push(newBoardElemet());
             }
 
         }
-        if (mode != "nocheck")
-            checkWin();
-    }
 
-    function combineCol(mode) {
-        for (let x = 0; x < (width * width) - width; x++) {
-            if (squares[x].innerHTML === squares[x + width].innerHTML) {
-                let combinedTotal = 0;
-                if (reverse)
-                    combinedTotal = parseInt(squares[x].innerHTML) / 2;
-                else
-                    combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + width].innerHTML);
-                if (mode != "nocheck"){
-                    if(combinedTotal != 0){
-                        scoreAddDisplay.innerHTML = "+"+combinedTotal;
-                        scoreAddDisplay.className = "scoreanimate";
-                        setTimeout(function () {
-                            scoreAddDisplay.className = "";
-                        }, 1000);
+        function newBoardElemet() {
 
-                    }
+            element = "";
+            //console.log(tilenum+": _boaring_ "+glowAmtnum);
+            if (modename[currentmode] == "Image") {
 
-                    score += combinedTotal;
-                }
-                scoreDisplay.innerHTML = score;
-                checkhigh();
-                squares[x].innerHTML = combinedTotal;
-                if (mode == "up") {
-                    if (parseInt(squares[x].innerHTML) != 0) {
-                        squares[x].parentNode.classList.add("animate-pop");
-                        squares[x].parentNode.addEventListener('animationend', function() {
-                            squares[x].parentNode.classList.remove('animate-pop');
-                        })
-                    }
-                } else {
-                    if (parseInt(squares[x].innerHTML) != 0) {
-                        squares[x + width].parentNode.classList.add("animate-pop");
-                        squares[x + width].parentNode.addEventListener('animationend', function() {
-                            squares[x + width].parentNode.classList.remove('animate-pop');
-                        })
-                    }
-                }
-                if (mode != "nocheck")
-                    checkbest();
-
-                squares[x + width].innerHTML = 0;
-            }
-
+                element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
+            } else
+                element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, false, "none")
+            return element;
         }
-        if (mode != "nocheck")
-            checkWin();
+        cus_gametheme[1] = boardcol;
+        cus_gametheme[2] = bodybgcol;
+        cus_gametheme[3] = bodytextcol;
+        cus_gametheme[4] = scorecol;
+        cus_gametheme[5] = tagline;
+        cus_theme = new Theme(cus_0, cus_2, cus_4, cus_8, cus_16, cus_32, cus_64, cus_128, cus_256, cus_512, cus_1024, cus_2048, der_morethen2048, cus_morele, cus_gametheme);
+        debug(cus_theme, 1)
+        debug("cus_theme", 1)
+        themeData = JSON.stringify(cus_theme);
+        setCookie("storedTheme", "cus_theme", 365);
+        themeBoard(cus_theme);
+
+
+
+
+    }
+    //--------------------------------------------------------------------------------------------------------------------//
+    //________________________________________________Theme-Sharing/Loading____________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    //Theme externally loading and sharing
+    //Make shareable
+    const sharethemebutton = document.querySelector('#sharethemebutton');
+    const loadthemebutton = document.querySelector('#loadthemebutton');
+    const presetthemebutton = document.querySelector('#presetthemebutton');
+
+    const sharetext = document.querySelector('#sharetext');
+    const presets = document.querySelector('#presetlist');
+    const sharethemediv = document.querySelector('.sharethemediv');
+    const sharethemeinputbox = document.querySelector('#sharethemedata');
+    const share_closebtn = document.querySelector('.share_closebtn');
+    const sharetitle = document.querySelector('#sharetitle');
+    const loadbutton = document.querySelector('#loadbutton');
+    share_closebtn.addEventListener("click", closeshare);
+    sharethemebutton.addEventListener("click", sharemytheme);
+    loadthemebutton.addEventListener("click", loadtheme);
+    presetthemebutton.addEventListener("click", presettheme);
+    loadbutton.addEventListener("click", loadthemedata);
+    website = window.location.href.split(".html")
+
+    function applytheme() {
+        sharemytheme();
+        loadthemedata()
     }
 
-    function continueGame() {
-        scoreResult.style.display = "none";
-        continueEnabled = true;
-        autoplayCheck.addEventListener("change", autoplay);
-        document.addEventListener('keyup', control);
+    function sharemytheme() {
+        debug("sharetheme_loadtheme", 2);
+        debug(cus_theme, 2);
+        sharethemediv.style.display = "block";
+        loadbutton.style.display = "none";
+        sharetitle.innerHTML = "Share Theme";
+        storedtheme = JSON.stringify(cus_theme);
+        if (storedtheme != "") {
+            debug("Unparsed cokie", 1)
+            debug(storedtheme, 1)
+            jsonedTheme = JSON.parse(storedtheme);
+            presets.style.display = "none";
+            debug("Parsed JSON", 1);
+            debug(jsonedTheme, 1);
+            var encoded = btoa(JSON.stringify(jsonedTheme));
+            sharethemeinputbox.value = encoded;
+            sharethemeinputbox.style.display = "block";
+            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
+        } else {
+            sharetext.innerHTML = "Please note you need a theme to use this tool."
+        }
     }
 
-    function checkWin() {
-        // ////console.log("CHECKING")
+    function closeshare() {
+        sharethemediv.style.display = "none";
+    }
+
+    function presettheme() {
+        debug("funct_loadtheme", 2);
+        makeintotile();
+        sharethemediv.style.display = "block";
+        loadbutton.style.display = "none";
+        sharethemeinputbox.style.display = "none";
+
+        presets.style.display = "block";
+        sharetitle.innerHTML = "Preset Themes";
+        sharetext.innerHTML = "Share your theme with me for the chance of it beign added here";
+    }
+
+    function loadtheme() {
+        debug("funct_loadtheme", 2);
+        makeintotile();
+        sharethemediv.style.display = "block";
+        sharethemeinputbox.style.display = "block";
+        loadbutton.style.display = "block";
+        presets.style.display = "none";
+        sharetitle.innerHTML = "Load Theme";
+        sharetext.innerHTML = "Paste your text and press the buton below";
+
+
+    }
+
+    function loadthemedata() {
+        debug("funct_loadthemedata", 2);
+        let shareddata = sharethemeinputbox.value;
+        try {
+            var decoded = atob(shareddata);
+        } catch (err) {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+        try {
+            var jsondata = JSON.parse(decoded)
+        } catch (err) {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+
+        if (jsondata == "") {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+        if (jsondata.encodedproperly == "") {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+        if (jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
+
+
+            setCookie("customTheme", decoded, 365);
+            tilenum = 0;
+            loadtilefromsave();
+            closeshare();
+            window.location = website[0] + ".html";
+        } else {
+            sharethemeinputbox.value = "ERROR LOADING";
+        }
+    }
+
+
+    //--------------------------------------------------------------------------------------------------------------------//
+    //________________________________________________Theme-Themer____________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    function BoardElement(bg, textcol, boxshadow, imagemode, imageurl) {
+        this.bg = bg;
+        this.textcol = textcol;
+        this.boxshadow = boxshadow;
+        this.imagemode = imagemode;
+        this.imageurl = imageurl;
+    }
+
+    function Theme(zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight, more2048, elemore, gameThemeData) {
+        this.zero = zero;
+
+        this.number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+        this.options = [zero, two, four, eight, sixteen, thirtytwo, sixtyfour, onetwentyeight, twofiftysix, fivetwelve, oneohtwentyfour, twozerofoureight];
+        this.moreenabled = more2048;
+        this.elementMore = elemore;
+        this.gamethem = gameThemeData;
+        this.encodedproperly = "it_works_pls_dont_mess_with_this_otherwise_it_breaks";
+    }
+
+
+
+    function themeBoard(Theme) {
+        debug("funct_themetheboard", 2);
+        debug(Theme, 1);
+        debug("CHECK POINT", 1);
+        gameTheme = Theme.gamethem;
         for (let x = 0; x < squares.length; x++) {
-            if (squares[x].innerHTML == goal && !continueEnabled) {
-                scoreResult.style.display = "block";
-                scoreResult.style.width = (width * 100) + "px";
-                scoreResult.style.height = width * 100 + "px";
-                scoreResult.style.background = "lightgreen";
-                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1><button onclick='resetGame()'>Replay</button><button id='cont'>Continue</button>"
-                document.getElementById("cont").addEventListener("click", continueGame);
-                autoplayCheck.checked = false;
-                autoplayCheck.removeEventListener("change", autoplay);
-                document.removeEventListener('keyup', control);
+            tinum = parseInt(squares[x].innerHTML);
+            firnum = spwantile;
+            stpnum = 0;
+            if (tinum != 0) {
+                if (reverse)
+                    for (let y = 1; y < 12; y++) {
+                        if (firnum == tinum) {
+                            stpnum = 12 - y;
+                            break
+                        } else {
+                            firnum = firnum / 2;
+                        }
+                    }
+                else
+                    for (let y = 1; y < 12 + Theme.elementMore[0].length; y++) {
+                        if (firnum == tinum) {
+                            stpnum = y;
+                            break
+                        } else {
+                            firnum = firnum * 2;
+                        }
+                    }
             }
 
+            for (let y = 0; y < Theme.options.length; y++) {
+                if (stpnum == parseInt(Theme.number[y])) {
+                    if (Theme.options[y].imagemode) {
+
+                        squares[x].style.fontSize = "0px";
+                        squares[x].style.background = "white"; //Fixed for transparancy
+                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                        squares[x].style.backgroundSize = "cover";
+                        squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
+                    } else {
+
+                        squares[x].style.fontSize = "40px";
+                        squares[x].style.color = Theme.options[y].textcol;
+                        squares[x].style.background = Theme.options[y].bg;
+                        squares[x].style.boxShadow = Theme.options[y].boxshadow;
+                    }
+
+                }
+
+            }
+            if (stpnum > 11) {
+                if (Theme.moreenabled) {
+                    themedtile = false;
+                    for (let y = 0; y < Theme.elementMore[0].length; y++) {
+                        if (stpnum == parseInt(Theme.elementMore[0][y])) {
+                            if (Theme.elementMore[1][y].imagemode) {
+
+                                squares[x].style.fontSize = "0px";
+                                squares[x].style.background = Theme.elementMore[1][y].bg;
+
+                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                                squares[x].style.backgroundSize = "cover";
+                                squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
+                            } else {
+
+                                squares[x].style.fontSize = "40px";
+                                squares[x].style.color = Theme.elementMore[1][y].textcol;
+                                squares[x].style.background = Theme.elementMore[1][y].bg;
+
+                                squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            }
+                            themedtile = true;
+                        }
+                    }
+                    if (!themedtile) {
+                        if (Theme.elementMore[1][y].imagemode) {
+
+                            squares[x].style.fontSize = "0px";
+                            squares[x].style.background = Theme.elementMore[1][y].bg;
+                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                            squares[x].style.backgroundSize = "cover";
+                            squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
+                        } else {
+
+                            squares[x].style.fontSize = "40px";
+                            squares[x].style.color = Theme.elementMore[1][y].textcol;
+                            squares[x].style.background = Theme.elementMore[1][y].bg;
+                            squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
+                        }
+                    }
+                } else {
+                    squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
+                    squares[x].style.background = Theme.options[Theme.options.length - 1].bg;
+                    squares[x].style.boxShadow = Theme.options[Theme.options.length - 1].boxshadow;
+                }
+
+            }
+        }
+
+        if (gameTheme != undefined) {
+
+            document.body.style.background = gameTheme[2];
+            document.body.style.color = gameTheme[3];
+            textclasses = document.querySelectorAll("p, .scoretab, .side-item");
+            for (let y = 0; y < textclasses.length; y++) {
+                textclasses[y].style.color = gameTheme[3];
+            }
+            sidecols = document.querySelectorAll(" .side-item");
+            for (let y = 0; y < sidecols.length; y++) {
+                sidecols[y].style.borderColor = gameTheme[1];
+            }
+            gridDisplay.style.border = "5px solid " + gameTheme[1];
+            gridDisplay.style.backgroundColor = zerocol;
+            tilestotheme = gridDisplay.children;
+            document.querySelector("#tagline").innerHTML = gameTheme[5];
+            scoresclass = document.querySelectorAll(".scoretab, .side-item");
+            for (let y = 0; y < scoresclass.length; y++) {
+                scoresclass[y].style.backgroundColor = gameTheme[4];
+            }
+
+            for (let y = 0; y < tilestotheme.length; y++) {
+                tilestotheme[y].style.backgroundColor = gameTheme[1];
+            }
+            // document.getElementsByClassName("grid")
         }
     }
+    ////////////////////////////////////////////////////////GAME////////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------------------------------------------------//
+    //____________________________________________________Game-Vars_______________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
 
-    function checkGameOver() {
+    //Scores
+    const scoreDisplay = document.querySelector('#score');
+    const hscoreDisplay = document.querySelector('#hscore');
+    const scoreAddDisplay = document.querySelector('#scoreadd');
+    //best
+    const bestDisplay = document.querySelector('#best');
+    const hbestDisplay = document.querySelector('#hbest');
+    //end
+    const scoreResult = document.querySelector('#result');
+    //back
+    let backdata = [];
+    //--------------------------------------------------------------------------------------------------------------------//
+    //_______________________________________________Game-Functions_______________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    ///ENITITY
+
+    /////////////////////////BOARD/////////////////
+    game1.createBoard();
+    game1.checkGameOver = function checkGameOver() {
         let zeros = 0;
 
         let tmpsquares = [];
@@ -1510,8 +1290,254 @@ function loaded() {
 
 
     }
+    game1.generate();
+    game1.generate();
+    var testfunct  =  {hello: function(){console.log("Hello")}}
+    game1.hello = function(){console.log("Hello")};
+    game1.hello();
+    if (customThemeActive) {
+        themeBoard(cus_theme);
+    } else {
+        themeBoard(def_theme);
+    }
 
-    function checkhigh() {
+
+
+    /////////////////////////MOVEMENT/////////////////
+    game1.moveRight = function moveRight() {
+        for (let x = 0; x < width * width; x++) {
+            if (x % width === 0) {
+                let row = [];
+                for (let y = 0; y < width; y++) {
+                    row.push(parseInt(squares[x + y].innerHTML));
+                }
+                let filteredRow = row.filter(num => num);
+                let missing = width - filteredRow.length;
+                let zeros = Array(missing).fill(0);
+                let newRow = zeros.concat(filteredRow);
+                for (let y = 0; y < width; y++) {
+                    let oldval = parseInt(squares[x + y].innerHTML);
+                    squares[x + y].innerHTML = newRow[0 + y];
+                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                        squares[x + y].parentNode.classList.add("animate-right");
+
+                        squares[x + y].parentNode.addEventListener('animationend', function() {
+                            squares[x + y].parentNode.classList.remove('animate-right');
+                        })
+                    }
+                }
+            }
+        }
+
+    }
+
+    game1.moveLeft = function moveLeft() {
+        for (let x = 0; x < width * width; x++) {
+            if (x % width === 0) {
+                let row = [];
+                for (let y = 0; y < width; y++) {
+                    row.push(parseInt(squares[x + y].innerHTML));
+                }
+                let filteredRow = row.filter(num => num);
+                let missing = width - filteredRow.length;
+                let zeros = Array(missing).fill(0);
+
+                let newRow = filteredRow.concat(zeros);
+
+                for (let y = 0; y < width; y++) {
+                    let oldval = parseInt(squares[x + y].innerHTML);
+                    squares[x + y].innerHTML = newRow[0 + y];
+                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                        squares[x + y].parentNode.classList.add("animate-left");
+                        squares[x + y].parentNode.addEventListener('animationend', function() {
+                            squares[x + y].parentNode.classList.remove('animate-left');
+                        })
+                    }
+                }
+            }
+        }
+
+    }
+
+    game1.moveDown = function moveDown() {
+        for (let x = 0; x < width; x++) {
+            let collum = [];
+            for (let y = 0; y < width; y++) {
+                collum.push(parseInt(squares[x + y * width].innerHTML));
+            }
+            let filteredCol = collum.filter(num => num);
+            let missing = width - filteredCol.length;
+            let zeros = Array(missing).fill(0);
+
+            let newCol = zeros.concat(filteredCol);
+            for (let y = 0; y < width; y++) {
+                let oldval = parseInt(squares[x + y * width].innerHTML);
+                squares[x + y * width].innerHTML = newCol[0 + y];
+                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                    squares[x + y * width].parentNode.classList.add("animate-down");
+                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
+                        squares[x + y * width].parentNode.classList.remove('animate-down');
+                    })
+                }
+
+            }
+        }
+    }
+
+    game1.moveUp = function moveUp() {
+        for (let x = 0; x < width; x++) {
+            let collum = [];
+            for (let y = 0; y < width; y++) {
+                collum.push(parseInt(squares[x + y * width].innerHTML));
+            }
+            let filteredCol = collum.filter(num => num);
+            let missing = width - filteredCol.length;
+            let zeros = Array(missing).fill(0);
+
+            let newCol = filteredCol.concat(zeros);
+            for (let y = 0; y < width; y++) {
+                let oldval = parseInt(squares[x + y * width].innerHTML);
+                squares[x + y * width].innerHTML = newCol[0 + y];
+                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                    squares[x + y * width].parentNode.classList.add("animate-up");
+                    squares[x + y * width].parentNode.addEventListener('animationend', function() {
+                        squares[x + y * width].parentNode.classList.remove('animate-up');
+                    })
+                }
+            }
+        }
+    }
+    /////////////////////////COMBINE/////////////////
+    game1.combineRow = function combineRow(mode) {
+        for (let x = 0; x < (width * width) - 1; x++) {
+            if (squares[x].innerHTML === squares[x + 1].innerHTML) {
+                let combinedTotal = 0;
+                if (reverse)
+                    combinedTotal = parseInt(squares[x].innerHTML) / 2;
+                else
+                    combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + 1].innerHTML);
+                if (mode != "nocheck") {
+                    if (combinedTotal != 0) {
+                        scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                        scoreAddDisplay.className = "scoreanimate";
+                        setTimeout(function() {
+                            scoreAddDisplay.className = "";
+                        }, 1000);
+
+                    }
+
+                    score += combinedTotal;
+                }
+
+                scoreDisplay.innerHTML = score;
+                game1.checkhigh();
+                squares[x].innerHTML = combinedTotal;
+                if (mode != "nocheck")
+                    game1.checkbest();
+                squares[x + 1].innerHTML = 0;
+                if (mode == "left") {
+                    //////console.log("Left: "+x)
+                    if (parseInt(squares[x].innerHTML) != 0) {
+                        squares[x].parentNode.classList.add("animate-pop");
+                        squares[x].parentNode.addEventListener('animationend', function() {
+                            squares[x].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                } else {
+
+                    if (parseInt(squares[x].innerHTML) != 0) {
+
+                        squares[x + 1].parentNode.classList.add("animate-pop");
+                        squares[x + 1].parentNode.addEventListener('animationend', function() {
+                            squares[x + 1].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                }
+
+
+            }
+
+        }
+        if (mode != "nocheck")
+            game1.checkWin();
+    }
+
+    game1.combineCol = function combineCol(mode) {
+        for (let x = 0; x < (width * width) - width; x++) {
+            if (squares[x].innerHTML === squares[x + width].innerHTML) {
+                let combinedTotal = 0;
+                if (reverse)
+                    combinedTotal = parseInt(squares[x].innerHTML) / 2;
+                else
+                    combinedTotal = parseInt(squares[x].innerHTML) + parseInt(squares[x + width].innerHTML);
+                if (mode != "nocheck") {
+                    if (combinedTotal != 0) {
+                        scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                        scoreAddDisplay.className = "scoreanimate";
+                        setTimeout(function() {
+                            scoreAddDisplay.className = "";
+                        }, 1000);
+
+                    }
+
+                    score += combinedTotal;
+                }
+                scoreDisplay.innerHTML = score;
+                game1.checkhigh();
+                squares[x].innerHTML = combinedTotal;
+                if (mode == "up") {
+                    if (parseInt(squares[x].innerHTML) != 0) {
+                        squares[x].parentNode.classList.add("animate-pop");
+                        squares[x].parentNode.addEventListener('animationend', function() {
+                            squares[x].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                } else {
+                    if (parseInt(squares[x].innerHTML) != 0) {
+                        squares[x + width].parentNode.classList.add("animate-pop");
+                        squares[x + width].parentNode.addEventListener('animationend', function() {
+                            squares[x + width].parentNode.classList.remove('animate-pop');
+                        })
+                    }
+                }
+                if (mode != "nocheck")
+                    game1.checkbest();
+
+                squares[x + width].innerHTML = 0;
+            }
+
+        }
+        if (mode != "nocheck")
+            game1.checkWin();
+    }
+    /////////////////////////GAME STATES/////////////////
+    game1.continueGame = function continueGame() {
+        scoreResult.style.display = "none";
+        continueEnabled = true;
+        autoplayCheck.addEventListener("change", autoplay);
+        document.addEventListener('keyup', control);
+    }
+
+    game1.checkWin = function checkWin() {
+        for (let x = 0; x < squares.length; x++) {
+            if (squares[x].innerHTML == goal && !continueEnabled) {
+                scoreResult.style.display = "block";
+                scoreResult.style.width = (width * 100) + "px";
+                scoreResult.style.height = width * 100 + "px";
+                scoreResult.style.background = "lightgreen";
+                scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1><button onclick='resetGame()'>Replay</button><button id='cont'>Continue</button>"
+                document.getElementById("cont").addEventListener("click", continueGame);
+                autoplayCheck.checked = false;
+                autoplayCheck.removeEventListener("change", autoplay);
+                document.removeEventListener('keyup', control);
+            }
+
+        }
+    }
+
+
+    /////////////////////////SCORES/////////////////
+    game1.checkhigh = function checkhigh() {
         if (!reverse) {
             let current = parseInt(scoreDisplay.innerHTML);
             let high = getCookie("highscore");
@@ -1528,7 +1554,7 @@ function loaded() {
         }
     }
 
-    function checkh_best() {
+    game1.checkh_best = function checkh_best() {
         if (!reverse) {
 
             let current = parseInt(bestDisplay.innerHTML);
@@ -1548,9 +1574,7 @@ function loaded() {
 
     }
 
-
-
-    function checkbest() {
+    game1.checkbest = function checkbest() {
         let current = parseInt(bestDisplay.innerHTML);
         let best = current;
         for (let x = 0; x < squares.length; x++) {
@@ -1571,14 +1595,14 @@ function loaded() {
             }
 
         }
-        checkh_best();
+        game1.checkh_best();
         bestDisplay.innerHTML = best;
 
 
     }
-    checkbest();
-    checkhigh()
-
+    game1.checkbest();
+    game1.checkhigh()
+    /////////////////////////INPUT/////////////////
     function control(e) {
         if (e.keyCode === 39) {
             keyRight();
@@ -1599,7 +1623,66 @@ function loaded() {
         if (savemode)
             savegame();
     }
+    document.addEventListener('keyup', control);
 
+    function autoplay() {
+        if (autoplayCheck.checked) {
+            setTimeout(function() {
+                document.removeEventListener('keyup', control);
+                let min = Math.ceil(1);
+                let max = Math.floor(5);
+                let rand = Math.floor(Math.random() * (max - min) + min); //The
+                if (rand == 1)
+                    keyLeft();
+                else if (rand == 2)
+                    keyRight();
+                else if (rand == 3)
+                    keyup();
+                else if (rand == 4)
+                    keydown();
+                if (customThemeActive) {
+                    themeBoard(cus_theme);
+                } else {
+                    themeBoard(def_theme);
+                }
+                moves += 1;
+                movesdisplay.innerHTML = moves;
+                autoplay();
+            }, 100);
+        } else {
+            document.addEventListener('keyup', control);
+        }
+
+    }
+
+    function keyup() {
+        game1.moveUp();
+        game1.combineCol("up");
+        game1.moveUp();
+        game1.generate();
+    }
+
+    function keydown() {
+        game1.moveDown();
+        game1.combineCol("down");
+        game1.moveDown();
+        game1.generate();
+    }
+
+    function keyRight() {
+        game1.moveRight();
+        game1.combineRow("right");
+        game1.moveRight();
+        game1.generate();
+    }
+
+    function keyLeft() {
+        game1.moveLeft();
+        game1.combineRow("left");
+        game1.moveLeft();
+        game1.generate();
+    }
+    /////////////////////////LOAD/SAVE/////////////////
     function savegame() {
         let scoredata = [];
         for (let x = 0; x < squares.length; x++) {
@@ -1642,66 +1725,30 @@ function loaded() {
         }
         savegame();
     }
-    if(savemode)
+    if (savemode)
         loadgame(getCookie("savegame").split(","))
 
-    function keyup() {
-        moveUp();
-        combineCol("up");
-        moveUp();
-        generate();
+
+    ////////////////////////////////////////////////////////OTHER////////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------------------------------------------------//
+    //_________________________________________________OTHER-FUNCTIONS____________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+    function debug(text, bugfixingid) {
+        ////console.log(text);
     }
 
-    function keydown() {
-        moveDown();
-        combineCol("down");
-        moveDown();
-        generate();
-    }
-
-    function keyRight() {
-        moveRight();
-        combineRow("right");
-        moveRight();
-        generate();
-    }
-
-    function keyLeft() {
-        moveLeft();
-        combineRow("left");
-        moveLeft();
-        generate();
-    }
-
-    function autoplay() {
-        if (autoplayCheck.checked) {
-            setTimeout(function() {
-                document.removeEventListener('keyup', control);
-                let min = Math.ceil(1);
-                let max = Math.floor(5);
-                let rand = Math.floor(Math.random() * (max - min) + min); //The
-                if (rand == 1)
-                    keyLeft();
-                else if (rand == 2)
-                    keyRight();
-                else if (rand == 3)
-                    keyup();
-                else if (rand == 4)
-                    keydown();
-                if (customThemeActive) {
-                    themeBoard(cus_theme);
-                } else {
-                    themeBoard(def_theme);
-                }
-                moves += 1;
-                movesdisplay.innerHTML = moves;
-                autoplay();
-            }, 100);
-        } else {
-            document.addEventListener('keyup', control);
+    function getUrlVar(varible) {
+        debug("funct_geturl", 2);
+        vars = window.location.search.split("?");
+        for (let x = 0; x < vars.length; x++) {
+            varibleData = vars[x].split("=");
+            if (varibleData[0] == varible) {
+                return varibleData[1];
+            }
         }
 
     }
+
     var passedTheme = getUrlVar("rawTheme")
     if (passedTheme != undefined) {
         sharethemeinputbox.value = passedTheme;
@@ -1709,6 +1756,7 @@ function loaded() {
     }
 
 }
+
 
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
