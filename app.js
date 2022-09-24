@@ -8,11 +8,12 @@ if (!window.location.href.includes("index.html")) {
 //NEXT:
 
 //May have  to remake tiles  and animations before gamemodes
-//modes: splitscreen multiplayer, flappy, tertirs, 3d maybe,
+//modes: splitscreen multiplayer, upsidedown flappy, tertirs,racing, 3d maybe,
 //Gamemode exporting
 
 //BUGS mostly theming ofc
 //tile 2 not loading
+
 //Body text no work for default
 //FUCK THEMING i aint fix till later
 
@@ -22,7 +23,7 @@ if (!window.location.href.includes("index.html")) {
 
 function loaded() {
     function debug(text, bugfixingid) {
-        //console.log(text);
+        ////console.log(text);
     }
 
     function getUrlVar(varible) {
@@ -158,7 +159,7 @@ function loaded() {
     let continueEnabled = false;
 
 
-    //	//console.log(reverse)
+    //	////console.log(reverse)
     let container = [];
     let squares = [];
     let score = 0;
@@ -183,7 +184,7 @@ function loaded() {
         ["4096"],
         [def_4096]
     ];
-    ////Example game theme data: Empty Board Background Body Score colours tagline
+    ////Example game Empty    Board     Background    Body     Score     tagline
     def_gametheme = [def_0, "#cacece", "#72b182ab", "#fffff", "#808080", "WildCard"];
     def_theme = new Theme(def_0, def_2, def_4, def_8, def_16, def_32, def_64, def_128, def_256, def_512, def_1024, def_2048, der_morethen2048, def_morele, def_gametheme);
     //////////////////////////////////THEME GENARATOR//////////////////
@@ -335,7 +336,7 @@ function loaded() {
     }
 
     function themeModeincrese() {
-        //console.log("Increase");
+        //("Increase");
 
 
         if (currentmode + 1 == modes.length) {
@@ -347,7 +348,7 @@ function loaded() {
     }
 
     function themeModedecrese() {
-        //console.log("Decrease");
+        //("Decrease");
 
         if (currentmode - 1 == -1) {
             currentmode = modes.length - 1;
@@ -477,7 +478,9 @@ function loaded() {
                         if (boxshadow != "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
-                            default_glowamt = parseInt(glowData[3].replace('px', ''));
+                            glowAmtnum = parseInt(glowData[3].replace('px', ''));
+
+
                         }
                         default_textcol = jsonedTheme.elementMore[1][y].textcol;
                         default_bgcol = jsonedTheme.elementMore[1][y].bg;
@@ -504,15 +507,15 @@ function loaded() {
 
                 for (let y = 0; y < jsonedTheme.options.length; y++) {
                     if (stpnum == parseInt(jsonedTheme.number[y])) {
-                        if (stpnum == 10)
-                            console.log(jsonedTheme.options[y])
+
                         boxshadow = jsonedTheme.options[y].boxshadow;
                         if (boxshadow != "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
-                            default_glowamt = parseInt(glowData[3].replace('px', ''));
+                            glowAmtnum = parseInt(glowData[3].replace('px', ''));
+
                         }
-                        //console.log(jsonedTheme.options[y].textcol)
+                        ////console.log(jsonedTheme.options[y].textcol)
                         default_textcol = jsonedTheme.options[y].textcol;
                         default_bgcol = jsonedTheme.options[y].bg;
                         bgcolpciker.color.set(default_bgcol);
@@ -536,7 +539,7 @@ function loaded() {
                 }
             }
         }
-        //console.log("LOADEE")
+        ////console.log("LOADEE")
     }
 
     //ZeroCol
@@ -599,7 +602,7 @@ function loaded() {
 
     function settag() {
         tagline = taginput.value;
-        //console.log(tagline)
+        ////console.log(tagline)
         if (realtime)
             makeintotile()
     }
@@ -635,7 +638,7 @@ function loaded() {
 
                 loadtilefromsave(true);
                 makeintotile(false);
-
+                //console.log(tilenum+": _loaded_ "+glowAmtnum);
                 tilenum = tilenum + tilenum;
             }
             loadtilefromsave(true);
@@ -667,6 +670,7 @@ function loaded() {
     }
     loadallfromsave();
     tilenum = 2
+    loadtilefromsave();
     makeintotile();
 
     tilenum = 2;
@@ -679,6 +683,7 @@ function loaded() {
             cus_2 = newBoardElemet();
         }
         if (tilenum == 4) {
+
             cus_4 = newBoardElemet();
         }
         if (tilenum == 8) {
@@ -752,7 +757,7 @@ function loaded() {
         function newBoardElemet() {
 
             element = "";
-
+            //console.log(tilenum+": _boaring_ "+glowAmtnum);
             if (modename[currentmode] == "Image") {
 
                 element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
@@ -1060,7 +1065,7 @@ function loaded() {
 
     //SPAWN
     function setspawn(mode) {
-        ////console.log("Clicked");
+        //////console.log("Clicked");
         if (mode == 1) {
             if (spwantile != 1)
                 spwantile -= 1;
@@ -1085,7 +1090,7 @@ function loaded() {
     setspawn(0);
     //GOAL
     function setgoal(mode) {
-        ////console.log("Clicked");
+        //////console.log("Clicked");
 
         let stepscookie = getCookie("steps");
         if (stepscookie == "") {
@@ -1129,7 +1134,7 @@ function loaded() {
     setgoal(0);
 
     function setsize(mode) {
-        ////console.log("Clicked");
+        //////console.log("Clicked");
         if (mode == 1) {
             if (width != 2)
                 size = width - 2;
@@ -1152,7 +1157,7 @@ function loaded() {
     sizeDisplay.innerHTML = "<p>" + width + "</p>";
 
     function setmovecap(mode) {
-        ////console.log("Clicked");
+        //////console.log("Clicked");
         if (mode == 1) {
             if (movecap != 0)
                 movecap -= 100;
@@ -1191,7 +1196,7 @@ function loaded() {
     } else if (!reverse) {
         reverseCheck.checked = false
     }
-    //	//console.log(reverseCheck.checked +"="+reverse);
+    //	////console.log(reverseCheck.checked +"="+reverse);
     reverseCheck.addEventListener("change", setreverse);
 
     function setsave() {
@@ -1204,7 +1209,7 @@ function loaded() {
     } else if (!savemode) {
         savemodeCheck.checked = false
     }
-    //	//console.log(reverseCheck.checked +"="+reverse);
+    //	////console.log(reverseCheck.checked +"="+reverse);
     savemodeCheck.addEventListener("change", setsave);
     autoplayCheck.addEventListener("change", autoplay);
 
@@ -1357,7 +1362,7 @@ function loaded() {
                     checkbest();
                 squares[x + 1].innerHTML = 0;
                 if (mode == "left") {
-                    ////console.log("Left: "+x)
+                    //////console.log("Left: "+x)
                     if (parseInt(squares[x].innerHTML) != 0) {
                         squares[x].parentNode.classList.add("animate-pop");
                         squares[x].parentNode.addEventListener('animationend', function() {
@@ -1440,7 +1445,7 @@ function loaded() {
     }
 
     function checkWin() {
-        // //console.log("CHECKING")
+        // ////console.log("CHECKING")
         for (let x = 0; x < squares.length; x++) {
             if (squares[x].innerHTML == goal && !continueEnabled) {
                 scoreResult.style.display = "block";
@@ -1619,7 +1624,6 @@ function loaded() {
     function loadgame(scoredata) {
 
         if (scoredata != "") {
-            console.log(scoredata)
             for (let x = 0; x < squares.length; x++) {
                 squares[x].innerHTML = scoredata[x];
                 moves = parseInt(scoredata[scoredata.length - 2])
