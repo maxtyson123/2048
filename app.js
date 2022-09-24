@@ -6,9 +6,9 @@ openNav = "";
 closeNav = "";
 //FINAL
 //make ai, ai give hint or image
-
 //NEXT:
 
+//Cookies into misc
 //Preformace
 //Can combine thru walls
 //Co-Op Multiplayer/ turnbased
@@ -30,12 +30,12 @@ closeNav = "";
 
 function loaded() {
 
+    vecookie = getCookie("version");
+    if(vecookie != "17"){
+        setCookie("version","17",356);
+        setCookie("settingsData","",356);
 
-    //MUST BE HERE
-
-
-
-    //for (let g = 0; g < games.length; g++) {
+    }
 
     const headertext = document.querySelector('.goaltext');
     const headertext2 = document.querySelector('.goaltext2');
