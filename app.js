@@ -5,36 +5,44 @@ if (!window.location.href.includes("index.html")) {
 openNav = "";
 closeNav = "";
 //__________________Done this update___________________________
-//Added Zoom to replay controlls
-//Added Saving
-//Added Sharing
-//Fixed Replay PRogress Bar
-//Added restarting Replay
-//Added Support for cross sized boards
+
+//Mode Selector
+//Upsidedown
 
 //_______________________NEXT__________________________________
 
-/////Game modes
-//Upsidedown
-//tertirs
-//cnsl ver
+//Game modes
+
+//--Mode Description
+
+//--Modes
+//----tertirs
+//----cnsl ver
+//Gamemode exporting
 
 //__________________Remake Tiles b4___________________________
-//flappy
-//racing
-//Replay direction
+
+//Game modes
+//--flappy
+//--racing
+//Replay direction backward/forward
 //Animate Back
 
-//Gamemode exporting
-//_______________________________FINAL________________________
+//______________________FINAL_________________________________
+
 //make ai, ai give hint or image
 //COMENT all this uhgh
+
+//_______________________FUTURE________________________________
+
+
+//mod maker
 
 function loaded() {
 
     vecookie = getCookie("version");
-    if (vecookie != "20") {
-        setCookie("version", "20", 356);
+    if (vecookie != "21") {
+        setCookie("version", "21", 356);
         setCookie("settingsData", "", 356);
         setCookie("savedgames", "", 356);
 
@@ -65,6 +73,8 @@ function loaded() {
         settingsData.savemode = true;
         settingsData.opened = false;
         settingsData.movecap = 0;
+        settingsData.gamemode = "Default";
+        settingsData.currentgamemode = 0;
         settingsData.realtime = false;
         settingsData.replayopened = false;
         settingsData.zoom = 100;
@@ -81,6 +91,8 @@ function loaded() {
         movecap = settingsData.movecap;
         realtime = settingsData.realtime;
         zoom = settingsData.zoom;
+        gamemode = settingsData.gamemode;
+        currentgamemode = settingsData.currentgamemode;
     }
     function updatezoom() {
 
@@ -105,6 +117,12 @@ function loaded() {
     }
 
     loadsettingstovar();
+    //GAMEMODE
+    const gameModeDisplay = document.querySelector('#gameMode');
+    const gameModeincrease = document.querySelector('#gameModeincrease');
+    const gameModedecrease = document.querySelector('#gameModedecrese');
+    gamemodename = ["Default", "Upsidedown"]
+
 
     //GOAL
     const goalDisplay = document.querySelector('#goal');
@@ -143,6 +161,39 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
     //_______________________________________________Settings-Functions___________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
+
+    function updategamemode() {
+        gamemode = gamemodename[currentgamemode];
+        settingsData.currentgamemode = currentgamemode;
+        settingsData.gamemode = gamemode;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        for (let g = 0; g < games.length; g++) {
+            games[g].reset2();
+        }
+        ReloadPage();
+    }
+
+    function gamemodeeincrese() {
+        if (currentgamemode + 1 == gamemodename.length) {
+            currentgamemode = 0;
+        } else {
+            currentgamemode += 1;
+        }
+        updategamemode();
+    }
+
+    function gamemodedecrese() {
+
+        if (currentgamemode - 1 == -1) {
+            currentgamemode = gamemodename.length - 1;
+        } else {
+            currentgamemode -= 1;
+        }
+        updategamemode();
+    }
+
+
+
     //SPAWN
     function setspawn(mode) {
 
@@ -369,6 +420,9 @@ function loaded() {
         reverseCheck.addEventListener("change", setreverse);
         savemodeCheck.addEventListener("change", setsave);
         autoplayCheck.addEventListener("change", autoplay);
+        gameModeincrease.addEventListener("click", gamemodeeincrese);
+        gameModedecrease.addEventListener("click", gamemodedecrese);
+        gameModeDisplay.innerHTML = "<p>" + gamemode + "</p>";
     }
 
 
@@ -1522,6 +1576,7 @@ function loaded() {
                 updatezoom();
                 games[x].gridDisplay.innerHTML = "";
                 games[x].squares.length = 0;
+                SetUpGame(games[x], games[x].keycodes)
                 games[x].createBoard();
                 replay(games[x], JSON.stringify(repdata))
             }
@@ -1987,6 +2042,8 @@ function loaded() {
                 tile = document.createElement("div");
                 tile.className = "tile";
                 tile.innerHTML = 0;
+                if(gamemode == "Upsidedown")
+                    tile.style.transform = "rotate(180deg)";
                 square.appendChild(tile)
                 this.gridDisplay.appendChild(square);
                 this.squares.push(tile);
@@ -2291,15 +2348,17 @@ function loaded() {
                 game.reset2();
                 game.scoreResult.style.display = "none";
             }.bind(game), false); ///BINDING
-            document.getElementById('watchreplay-' + game.gameId).addEventListener('click', function () {
-                if(!game.replaying){
-                    addtoreplayhistory(game);
-                }
-                replay(game, genarateReplay(game, "json"))
-            }.bind(game), false); ///BINDING
-            document.getElementById('savereplay-' + game.gameId).addEventListener('click', function () {
-                genarateReplay(game, "file")
-            }.bind(game), false); ///BINDING
+            if(!game.replaying){
+                document.getElementById('watchreplay-' + game.gameId).addEventListener('click', function () {
+                    if(!game.replaying){
+                        addtoreplayhistory(game);
+                    }
+                    replay(game, genarateReplay(game, "json"))
+                }.bind(game), false); ///BINDING
+                document.getElementById('savereplay-' + game.gameId).addEventListener('click', function () {
+                    genarateReplay(game, "file")
+                }.bind(game), false); ///BINDING
+            }
             autoplayCheck.checked = false;
             autoplayCheck.removeEventListener("change", autoplay);
             game.allowInput = false;
@@ -2733,6 +2792,35 @@ function loaded() {
         this.generate();
     }
 
+    Upsidedown_keyUpfunct = function keydown() {
+        this.moveDown();
+        this.combineCol("down");
+        this.moveDown();
+        this.generate();
+    }
+
+    Upsidedown_keyDonwFunct = function keyup() {
+        this.moveUp();
+        this.combineCol("up");
+        this.moveUp();
+        this.generate();
+    }
+
+    Upsidedown_keyRightFunct = function keyLeft() {
+        this.moveLeft();
+        this.combineRow("left");
+        this.moveLeft();
+        this.generate();
+    }
+
+    Upsidedown_keyLeftFunct = function keyRight() {
+
+        this.moveRight();
+        this.combineRow("right");
+        this.moveRight();
+        this.generate();
+    }
+
     //--------------------------------------------------------------------------------------------------------------------//
     //_________________________________________________Game-Setup_________________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
@@ -2762,16 +2850,28 @@ function loaded() {
         game.checkh_best = checkh_bestFunct;
         game.checkbest = checkbestFunct;
         game.themeBoard = themeBoardFunct;
-        game.keyLeft = keyLeftFunct;
-        game.keydown = keyDonwFunct;
-        game.keyRight = keyRightFunct;
-        game.keyup = keyUpfunct;
+        if(gamemode == "Upsidedown"){
+            game.keyLeft = Upsidedown_keyLeftFunct;
+            game.keydown = Upsidedown_keyDonwFunct;
+            game.keyRight = Upsidedown_keyRightFunct;
+            game.keyup = Upsidedown_keyUpfunct;
+        }else{
+            game.keyLeft = keyLeftFunct;
+            game.keydown = keyDonwFunct;
+            game.keyRight = keyRightFunct;
+            game.keyup = keyUpfunct;
+        }
         game.squares = [];
         game.allowInput = true;
         //Run Functs
         //Settings
 
         //Game
+
+        return game;
+    }
+
+    function StartingGameFunctions(game){
         game.createBoard();
         game.generate();
         game.generate();
@@ -2785,8 +2885,8 @@ function loaded() {
         } else {
             game.themeBoard(def_theme);
         }
-        return game;
     }
+
     for (let g = 0; g < games.length; g++) {
         games[g] = SetUpGame(games[g]);
     }
@@ -2799,6 +2899,7 @@ function loaded() {
     makeNewGame = function makeNewGameFunct(id, keys) {
         CreateNewGameData(id);
         SetUpGame(games[id], keys);
+        StartingGameFunctions(games[id]);
     }
     makeNewGame(games.length, [37, 39, 38, 40]);
 
@@ -2917,4 +3018,5 @@ function resetTheme() {
     location.href = website[0] + ".html";
 }
 
-//2000+ lines with  a messed  up spacekey
+//2000+ lines with a messed  up spacekey
+//3000+ lines for replay and dynamic creation, with much less of a headache then from theme-ing
