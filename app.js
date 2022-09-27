@@ -6,12 +6,12 @@ openNav = "";
 closeNav = "";
 //__________________Done this update___________________________
 
-//Fixed themeinfo for reverse
-//-Block iframe if not with iframe tag
-//Gamemode exporting
-//-Create Data
-//-Load Data
-//-Added to instructions
+//Cleaned Up Code
+//Code Validation (Went from 1000+ Warnings & Errors to only 2)
+//Bug: Side UI doesnt Scale with zoom
+//BUg: Multi Boards replay Bit BRoken
+//Bug: Glow DOesnt SCake With Zoom
+//BUg: Share Custom Broken
 
 //_______________________NEXT__________________________________
 
@@ -25,6 +25,7 @@ closeNav = "";
 //Game modes
 //--flappy
 //--racing
+
 //Genarate Random for gmaemode exporting
 
 
@@ -34,14 +35,16 @@ closeNav = "";
 //COMENT all this uhgh
 
 //_______________________FUTURE________________________________
-
-
+//UI Rehaul
+//Game Rehaul
+//Multiplayer
 //mod maker  -  your dreaming if you  expect me to do this
+//Full 3D (Like a rubix Cube)
 
 function loaded() {
 
-    vecookie = getCookie("version");
-    if (vecookie != "21") {
+    let vecookie = getCookie("version");
+    if (vecookie !== "21") {
         setCookie("version", "21", 356); //22
         setCookie("settingsData", "", 356);
         setCookie("savedgames", "", 356);
@@ -58,11 +61,11 @@ function loaded() {
     //__________________________________________________Settings-Vars_____________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
     //CLASS
-    zoom = 100;
+    let zoom = 100;
 
     let settingsData = {}
     //If cookie then  load it
-    if (getCookie("settingsData") != "") {
+    if (getCookie("settingsData") !== "") {
         settingsData = JSON.parse(getCookie("settingsData"));
 
     } else {
@@ -106,7 +109,7 @@ function loaded() {
         root.style.setProperty('--border-zoom', (zoom / 10) / 2 + "px");
         for (let g = 0; g < games.length; g++) {
             games[g].gridDisplay.style.width = width * zoom + "px";
-            if (gamemode == "Tetris") {
+            if (gamemode === "Tetris") {
                 games[g].gridDisplay.style.height = (width + 1) * zoom + "px";
             } else {
                 games[g].gridDisplay.style.height = width * zoom + "px";
@@ -187,7 +190,7 @@ function loaded() {
     }
 
     function gamemodeeincrese() {
-        if (currentgamemode + 1 == gamemodename.length) {
+        if (currentgamemode + 1 === gamemodename.length) {
             currentgamemode = 0;
         } else {
             currentgamemode += 1;
@@ -197,7 +200,7 @@ function loaded() {
 
     function gamemodedecrese() {
 
-        if (currentgamemode - 1 == -1) {
+        if (currentgamemode - 1 === -1) {
             currentgamemode = gamemodename.length - 1;
         } else {
             currentgamemode -= 1;
@@ -210,19 +213,19 @@ function loaded() {
     //SPAWN
     function setspawn(mode) {
 
-        if (mode == 1) {
-            if (spwantile != 1)
+        if (mode === 1) {
+            if (spwantile !== 1)
                 settingsData.spwantile -= 1;
             else
                 settingsData.spwantile = 1;
         }
-        if (mode == 2) {
+        if (mode === 2) {
             settingsData.spwantile += 1;
         }
         spawnDisplay.innerHTML = "<p>" + settingsData.spwantile + "</p>";
         loadsettingstovar();
         setCookie("settingsData", JSON.stringify(settingsData), 1);
-        if (mode != 0) {
+        if (mode !== 0) {
             for (let g = 0; g < games.length; g++) {
                 games[g].reset2();
             }
@@ -238,20 +241,20 @@ function loaded() {
     //ZOOM
     function setzoom(mode) {
 
-        if (mode == 1) {
-            if (zoom != 50)
+        if (mode === 1) {
+            if (zoom !== 50)
                 settingsData.zoom -= 5;
             else
                 settingsData.zoom = 50;
         }
-        if (mode == 2) {
-            if (zoom != 200)
+        if (mode === 2) {
+            if (zoom !== 200)
                 settingsData.zoom += 5;
             else
                 settingsData.zoom = 200;
         }
         zoomDisplay.innerHTML = "<p>" + settingsData.zoom + "%</p>";
-        if (mode != 0) {
+        if (mode !== 0) {
             loadsettingstovar();
             updatezoom();
         }
@@ -269,7 +272,7 @@ function loaded() {
     function setgoal(mode) {
 
         let stepscookie = getCookie("steps");
-        if (stepscookie == "") {
+        if (stepscookie === "") {
             setCookie("steps", 11, 1);
             setps = 11;
         } else {
@@ -284,14 +287,14 @@ function loaded() {
             goal = startnum;
         }
 
-        if (mode == 1) {
-            if (goal != spwantile) {
+        if (mode === 1) {
+            if (goal !== spwantile) {
                 settingsData.goal = goal / 2;
                 setCookie("steps", setps - 1, 1);
             } else
                 settingsData.goal = 2;
         }
-        if (mode == 2) {
+        if (mode === 2) {
             settingsData.goal = goal * 2;
             setCookie("steps", setps + 1, 1);
         }
@@ -313,13 +316,13 @@ function loaded() {
 
     function setsize(mode) {
 
-        if (mode == 1) {
-            if (width != 2)
+        if (mode === 1) {
+            if (width !== 2)
                 size = width - 2;
             else
                 size = 2;
         }
-        if (mode == 2) {
+        if (mode === 2) {
             size = width + 2;
         }
         settingsData.width = size;
@@ -340,13 +343,13 @@ function loaded() {
 
     function setmovecap(mode) {
 
-        if (mode == 1) {
-            if (movecap != 0)
+        if (mode === 1) {
+            if (movecap !== 0)
                 movecap -= 100;
             else
                 movecap = 0;
         }
-        if (mode == 2) {
+        if (mode === 2) {
             movecap += 100;
         }
         settingsData.movecap = movecap;
@@ -635,7 +638,7 @@ function loaded() {
     function themeTiledecrese() {
         debug("funct_decreasetile", 2);
         tilenum = tilenum / 2;
-        if (tilenum == 1) {
+        if (tilenum === 1) {
             themeTileincrese();
         }
         if (reverse) {
@@ -684,7 +687,7 @@ function loaded() {
     function updatemode() {
         for (let y = 0; y < modes.length; y++) {
 
-            if (y == currentmode) {
+            if (y === currentmode) {
                 modes[y].style.display = "block";
 
 
@@ -700,7 +703,7 @@ function loaded() {
         //("Increase");
 
 
-        if (currentmode + 1 == modes.length) {
+        if (currentmode + 1 === modes.length) {
             currentmode = 0;
         } else {
             currentmode += 1;
@@ -711,7 +714,7 @@ function loaded() {
     function themeModedecrese() {
         //("Decrease");
 
-        if (currentmode - 1 == -1) {
+        if (currentmode - 1 === -1) {
             currentmode = modes.length - 1;
         } else {
             currentmode -= 1;
@@ -789,7 +792,7 @@ function loaded() {
     function themeglowAmtdecrese() {
         debug("funct_glowdecrease", 2);
         glowAmtnum -= 2;
-        if (glowAmtnum == 0) {
+        if (glowAmtnum === 0) {
             glowAmtnum = 2;
         }
         themeglowAmtlDisplay.innerHTML = "<p>" + glowAmtnum + "px</p>";
@@ -919,20 +922,20 @@ function loaded() {
     }
     ///////////Loading
 
-    function loadtilefromsave(initial = false) {
+    function loadtilefromsave() {
         debug("loadfromsave", 1);
         storedtheme = getCookie("customTheme");
 
 
-        if (storedtheme != "") {
+        if (storedtheme !== "") {
             jsonedTheme = JSON.parse(storedtheme);
             customThemeLoaded = true;
             tinum = tilenum;
             firnum = 2;
             stpnum = 1;
-            if (tinum != 0) {
+            if (tinum !== 0) {
                 for (let y = 1; y < 12 + jsonedTheme.elementMore[0].length; y++) {
-                    if (firnum == tinum) {
+                    if (firnum === tinum) {
                         stpnum = y;
 
 
@@ -943,16 +946,16 @@ function loaded() {
                 }
             }
             if (tilenum >= 4096) {
-                if (jsonedTheme.elementMore[0].length != 0) {
+                if (jsonedTheme.elementMore[0].length !== 0) {
                     cus_morele = jsonedTheme.elementMore;
 
                 }
 
                 for (let y = 0; y < jsonedTheme.elementMore[0].length; y++) {
-                    if (stpnum == parseInt(jsonedTheme.elementMore[0][y])) {
+                    if (stpnum === parseInt(jsonedTheme.elementMore[0][y])) {
 
                         boxshadow = jsonedTheme.elementMore[1][y].boxshadow;
-                        if (boxshadow != "") {
+                        if (boxshadow !== "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
                             glowAmtnum = parseInt(glowData[3].replace('px', ''));
@@ -983,10 +986,10 @@ function loaded() {
             } else {
 
                 for (let y = 0; y < jsonedTheme.options.length; y++) {
-                    if (stpnum == parseInt(jsonedTheme.number[y])) {
+                    if (stpnum === parseInt(jsonedTheme.number[y])) {
 
                         boxshadow = jsonedTheme.options[y].boxshadow;
-                        if (boxshadow != "") {
+                        if (boxshadow !== "") {
                             glowData = boxshadow.split(" ");
                             default_glowCol = glowData[4]
                             glowAmtnum = parseInt(glowData[3].replace('px', ''));
@@ -1024,10 +1027,10 @@ function loaded() {
         cache_tilenum = tilenum;
         storedtheme = getCookie("customTheme");
 
-        if (storedtheme != "") {
+        if (storedtheme !== "") {
             customThemeLoaded = true;
             jsonedTheme = JSON.parse(storedtheme);
-            while (tilenum != 2048) {
+            while (tilenum !== 2048) {
 
                 loadtilefromsave(true);
                 makeintotile(false);
@@ -1064,45 +1067,45 @@ function loaded() {
 
 
     ///////////Theming tiles
-    function makeintotile(save = true) {
+    function makeintotile() {
         debug("funct_maketile", 2);
         customThemeActive = true;
         cus_0 = new BoardElement(zerocol, zerocol, "");
-        if (tilenum == 2) {
+        if (tilenum === 2) {
             cus_2 = newBoardElemet();
         }
-        if (tilenum == 4) {
+        if (tilenum === 4) {
 
             cus_4 = newBoardElemet();
         }
-        if (tilenum == 8) {
+        if (tilenum === 8) {
             cus_8 = newBoardElemet();
 
         }
-        if (tilenum == 16) {
+        if (tilenum === 16) {
             cus_16 = newBoardElemet();
         }
-        if (tilenum == 32) {
+        if (tilenum === 32) {
             cus_32 = newBoardElemet();
         }
-        if (tilenum == 64) {
+        if (tilenum === 64) {
             cus_64 = newBoardElemet();
         }
-        if (tilenum == 128) {
+        if (tilenum === 128) {
             cus_128 = newBoardElemet();
         }
-        if (tilenum == 256) {
+        if (tilenum === 256) {
             cus_256 = newBoardElemet();
         }
-        if (tilenum == 512) {
+        if (tilenum === 512) {
             cus_512 = newBoardElemet();
         }
-        if (tilenum == 1024) {
+        if (tilenum === 1024) {
 
             cus_1024 = newBoardElemet();
 
         }
-        if (tilenum == 2048) {
+        if (tilenum === 2048) {
             cus_2048 = newBoardElemet();
         }
         if (tilenum >= 4096) {
@@ -1110,7 +1113,7 @@ function loaded() {
             stpnum = 1;
 
             for (let y = 1; y < tilenum; y++) {
-                if (firnum == tilenum) {
+                if (firnum === tilenum) {
                     stpnum = y;
                     break
                 } else {
@@ -1120,10 +1123,10 @@ function loaded() {
 
 
             der_morethen2048 = true;
-            if (cus_morele.length != 0) {
+            if (cus_morele.length !== 0) {
                 replaced = false;
                 for (let y = 0; y < cus_morele[0].length; y++) {
-                    if (stpnum == parseInt(cus_morele[0][y])) {
+                    if (stpnum === parseInt(cus_morele[0][y])) {
                         cus_morele[0][y] = stpnum;
                         cus_morele[1][y] = newBoardElemet();
 
@@ -1147,7 +1150,7 @@ function loaded() {
 
             element = "";
 
-            if (modename[currentmode] == "Image") {
+            if (modename[currentmode] === "Image") {
 
                 element = new BoardElement(bgcol, textcol, "0 0 " + glowAmtnum + "px " + glowAmtnum + "px " + glowCol, true, urldata)
             } else
@@ -1199,7 +1202,7 @@ function loaded() {
         loadbutton.style.display = "none";
         sharetitle.innerHTML = "Share Theme";
         storedtheme = JSON.stringify(cus_theme);
-        if (storedtheme != "") {
+        if (storedtheme !== "") {
             debug("Unparsed cokie", 1)
             debug(storedtheme, 1)
             jsonedTheme = JSON.parse(storedtheme);
@@ -1255,13 +1258,13 @@ function loaded() {
             sharethemeinputbox.value = "ERROR LOADING";
         }
 
-        if (jsondata == "") {
+        if (jsondata === "") {
             sharethemeinputbox.value = "ERROR LOADING";
         }
-        if (jsondata.encodedproperly == "") {
+        if (jsondata.encodedproperly === "") {
             sharethemeinputbox.value = "ERROR LOADING";
         }
-        if (jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
+        if (jsondata.encodedproperly === "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
             setCookie("customTheme", decoded, 365);
             tilenum = 0;
             loadtilefromsave();
@@ -1309,10 +1312,10 @@ function loaded() {
             tinum = parseInt(this.squares[x].innerHTML);
             firnum = spwantile;
             stpnum = 0;
-            if (tinum != 0) {
+            if (tinum !== 0) {
                 if (reverse)
                     for (let y = 1; y < 12; y++) {
-                        if (firnum == tinum) {
+                        if (firnum === tinum) {
                             stpnum = 12 - y;
                             break
                         } else {
@@ -1321,7 +1324,7 @@ function loaded() {
                     }
                 else
                     for (let y = 1; y < 12 + Theme.elementMore[0].length; y++) {
-                        if (firnum == tinum) {
+                        if (firnum === tinum) {
                             stpnum = y;
                             break
                         } else {
@@ -1331,7 +1334,7 @@ function loaded() {
             }
 
             for (let y = 0; y < Theme.options.length; y++) {
-                if (stpnum == parseInt(Theme.number[y])) {
+                if (stpnum === parseInt(Theme.number[y])) {
                     if (Theme.options[y].imagemode) {
 
                         this.squares[x].style.fontSize = "0px";
@@ -1354,7 +1357,7 @@ function loaded() {
                 if (Theme.moreenabled) {
                     themedtile = false;
                     for (let y = 0; y < Theme.elementMore[0].length; y++) {
-                        if (stpnum == parseInt(Theme.elementMore[0][y])) {
+                        if (stpnum === parseInt(Theme.elementMore[0][y])) {
                             if (Theme.elementMore[1][y].imagemode) {
 
                                 this.squares[x].style.fontSize = "0px";
@@ -1401,9 +1404,9 @@ function loaded() {
                 }
 
             }
-            if (gamemode == "Tetris") {
+            if (gamemode === "Tetris") {
                 if (x < width) {
-                    if (tinum == 0) {
+                    if (tinum === 0) {
                         this.squares[x].style.background = boardcol;
                         this.squares[x].style.color = boardcol;
                     }
@@ -1412,7 +1415,7 @@ function loaded() {
             }
         }
 
-        if (gameTheme != undefined) {
+        if (gameTheme !== undefined) {
 
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
@@ -1443,7 +1446,7 @@ function loaded() {
 
     function setTHeming() {
         let thememakerOpened = getCookie("theme-open");
-        if (thememakerOpened != "") {
+        if (thememakerOpened !== "") {
             if (settingsData.theme_opened)
                 openThemeMaker();
 
@@ -1496,7 +1499,7 @@ function loaded() {
         const fileList = event.target.files;
         let filename = fileList[0].name;
         filename = filename.split('.').pop();
-        if (filename == "replay") {
+        if (filename === "replay") {
             var fr = new FileReader();
             fr.onload = function () {
                 openreplfile(fr.result);
@@ -1527,14 +1530,14 @@ function loaded() {
         historyJson = { saved: [] }
         savedhistory = localStorage.getItem("replayHistory");
         historycontinaer.innerHTML = "";
-        if (savedhistory != null ) {
+        if (savedhistory !== null ) {
             historyJson = JSON.parse(savedhistory);
 
             for (x = 0; x < historyJson.saved.length; x++) {
                 historyData = JSON.parse(historyJson.saved[x]);
                 historyItem = document.createElement("div");
                 historyTitle = document.createElement("p");
-                if (historyData.best != undefined) {
+                if (historyData.best !== undefined) {
                     historyTitle.innerHTML = historyData.time + ", " + historyData.best;
                 } else {
                     historyTitle.innerHTML = historyData.time + ", " + historyData.settings.goal;
@@ -1575,7 +1578,7 @@ function loaded() {
 
     function clearreplay(){
         savedhistory = localStorage.getItem("replayHistory");
-        if (savedhistory != null) {
+        if (savedhistory !== null) {
             localStorage.removeItem("replayHistory")
             openReplay();
         }
@@ -1588,7 +1591,7 @@ function loaded() {
         newreplay = genarateReplay(game, "json")
         historyJson = { saved: [] }
         savedhistory = localStorage.getItem("replayHistory");
-        if (savedhistory != null) {
+        if (savedhistory !== null) {
             historyJson = JSON.parse(savedhistory);
         }
         let size = new Blob([newreplay]).size;
@@ -1631,14 +1634,14 @@ function loaded() {
         }
         repdata = new ReplayData(game.backdata[0], game.backdata, game.backdata.length, settingsData, game.ctile);
         replaydata = JSON.stringify(repdata);
-        if (type == "file") {
+        if (type === "file") {
             var hiddenElement = document.createElement('a');
             hiddenElement.href = 'data:attachment/text,' + encodeURI(btoa(replaydata));
             hiddenElement.target = '_blank';
             hiddenElement.download = "(" + today + ")_" + game.ctile + "_[" + game.gameId + "]_.replay";
             hiddenElement.click();
         }
-        if (type == "json") {
+        if (type === "json") {
             return replaydata;
         }
     }
@@ -1660,15 +1663,14 @@ function loaded() {
         replay(resdata.game, JSON.stringify(resdata.replaydata))
 
     }
-    function shareReplay(data) {
+    function shareReplay() {
         sharethemediv.style.display = "block";
         loadbutton.style.display = "none";
         sharetitle.innerHTML = "Share Replay";
         presets.style.display = "none";
-        var encoded = btoa(JSON.stringify(data));
         sharethemeinputbox.value = encoded;
         sharethemeinputbox.style.display = "block";
-        sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or copy the text above and email it via this link: <a href='mailto:example@example.com?subject=I've shared my replay with you!&body=Copy the text below into the replay section of this website: " + website[0] + " Data to Copy: INSERT_TEXT_FROM_WEBSITE'>Email Link</a>";
+        sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or copy the text above and email it via this link: <a href='mailto:example@example.com?subject=Ive shared my replay with you!&body=Copy the text below into the replay section of this website: " + website[0] + " Data to Copy: INSERT_TEXT_FROM_WEBSITE'>Email Link</a>";
     }
 
     //////////////////////////       Playback
@@ -1690,7 +1692,7 @@ function loaded() {
         }
         for (let x = 0; x < games.length; x++) {
             console.log(repdata.id)
-            if (games[x].gameId == repdata.id) {
+            if (games[x].gameId === repdata.id) {
                 settingsData = repdata.settings;
                 loadsettingstovar();
                 updatezoom();
@@ -1702,7 +1704,7 @@ function loaded() {
 
             }
         }
-    };
+    }
 
     function replay(game, replaydata) {
         replaydisplay = document.getElementById("speed-" + game.gameId);
@@ -1710,7 +1712,7 @@ function loaded() {
         a = replayspeed.pop();
         replayspeed = replayspeed.join("");
         replayspeed = parseInt(replayspeed)
-        if (replayspeed == 0) {
+        if (replayspeed === 0) {
             replayspeed = 0.5;
         }
         replayspeed = 500 / replayspeed;
@@ -1739,7 +1741,7 @@ function loaded() {
     function replayStep(x, game, replaydata,) {
 
         play_pause.html = document.getElementById('play_pause-' + game.gameId);
-        if (play_pause.html.innerHTML == "Play") {
+        if (play_pause.html.innerHTML === "Play") {
             play_pause.x = x;
             play_pause.game = game;
             play_pause.replaydata = replaydata;
@@ -1750,20 +1752,20 @@ function loaded() {
         a = replayspeed.pop();
         replayspeed = replayspeed.join("");
         replayspeed = parseInt(replayspeed)
-        if (replayspeed == 0) {
+        if (replayspeed === 0) {
             replayspeed = 0.5;
         }
         root = document.documentElement;
         root.style.setProperty('--anim-speed', 0.2/replayspeed+"s");
         replayspeed = 500 / replayspeed;
 
-        if (replaydata.state[x].keyPressed == "inital") {
+        if (replaydata.state[x].keyPressed === "inital") {
             replayspeed = 100;
         }
         setTimeout(function () {
             bardisplay = document.getElementById("bar-" + game.gameId);
             key = replaydata.state[x].keyPressed;
-            if (key == "inital") {
+            if (key === "inital") {
                 bardisplay.innerHTML = x + " / Loading";
                 bardisplay.style.width = "100%";
             } else {
@@ -1772,35 +1774,35 @@ function loaded() {
             }
             loadgame(replaydata.state[x - 1], game, true)
             console.log(key + "_" + x)
-            if (key == "left") {
+            if (key === "left") {
                 game.keyLeft();
             }
-            else if (key == "right") {
+            else if (key === "right") {
                 game.keyRight();
             }
-            else if (key == "up") {
+            else if (key === "up") {
                 game.keyup();
             }
-            else if (key == "down") {
+            else if (key === "down") {
                 game.keydown();
-            }else if (key == "gravity") {
+            }else if (key === "gravity") {
                 game.moveDown();
                 for (let y = 0; y < width; y++) {
-                    if(parseInt(game.squares[y].innerHTML) == 0){
+                    if(parseInt(game.squares[y].innerHTML) === 0){
 
                     }else{
 
                         game.checkGameOver.game_die(game);
                     }
                 }
-            }else if (key == "gift") {
+            }else if (key === "gift") {
                 game.generate();
                 loadgame(replaydata.state[x], game, true);
-            }else if (key == "combine_row") {
+            }else if (key === "combine_row") {
                 game.combineRow();
 
             }
-            else if (key == "combine_down") {
+            else if (key === "combine_down") {
                 game.combineCol("down");
                 game.moveDown();
             }
@@ -1811,7 +1813,7 @@ function loaded() {
             }
             game.movesdisplay.innerHTML = parseInt(game.movesdisplay.innerHTML) + 1;
 
-            if (x != replaydata.max - 1 && !cancelothers)
+            if (x !== replaydata.max - 1 && !cancelothers)
                 replayStep(x + 1, game, replaydata)
             else {
                 bardisplay.innerHTML = "Finished"
@@ -2127,20 +2129,20 @@ function loaded() {
 
             spped = document.querySelector('#speed-' + this.gameId);
 
-            if (spped.innerHTML == "1x") {
+            if (spped.innerHTML === "1x") {
                 spped.innerHTML = "2x";
-            } else if (spped.innerHTML == "2x") {
+            } else if (spped.innerHTML === "2x") {
                 spped.innerHTML = "4x";
-            } else if (spped.innerHTML == "4x") {
+            } else if (spped.innerHTML === "4x") {
                 spped.innerHTML = "0.5x";
-            } else if (spped.innerHTML == "0.5x") {
+            } else if (spped.innerHTML === "0.5x") {
                 spped.innerHTML = "1x";
             }
 
         },
         playpause: function () {
             play_pause.html = document.getElementById('play_pause-' + this.gameId);
-            if (play_pause.html.innerHTML == "Play") {
+            if (play_pause.html.innerHTML === "Play") {
                 play_pause.html.innerHTML = "Pause";
                 replayStep(play_pause.x, play_pause.game, play_pause.replaydata)
             } else {
@@ -2162,7 +2164,7 @@ function loaded() {
         moved: true,
         frameUpdate: function () {
             if (!this.replaying) {
-                if (gamemode == "Tetris") {
+                if (gamemode === "Tetris") {
                     if (!this.moved) {
                         if(this.combineCol("down")){
                             this.moveDown();
@@ -2172,7 +2174,7 @@ function loaded() {
                         }
                         else{
                             for (let y = 0; y < width; y++) {
-                                if(parseInt(this.squares[y].innerHTML) == 0){
+                                if(parseInt(this.squares[y].innerHTML) === 0){
 
                                 }else{
                                     this.checkGameOver.game_die(this);
@@ -2203,7 +2205,7 @@ function loaded() {
                             this.moveDown();
 
                             for (let y = 0; y < width; y++) {
-                                if(parseInt(this.squares[y].innerHTML) == 0){
+                                if(parseInt(this.squares[y].innerHTML) === 0){
 
                                 }else{
                                     this.checkGameOver.game_die(this);
@@ -2229,7 +2231,7 @@ function loaded() {
             this.frameUpdate();
             setTimeout(function () {
                 this.time.sec += 1;
-                if (this.time.sec == 60) {
+                if (this.time.sec === 60) {
                     this.time.sec = 0;
                     this.time.min += 1;
                 }
@@ -2244,19 +2246,19 @@ function loaded() {
         createBoard: function () {
             debug("funct_createboard", 2);
             this.gridDisplay.style.width = width * zoom + "px";
-            if (gamemode == "Tetris") {
+            if (gamemode === "Tetris") {
                 this.gridDisplay.style.height = (width + 1) * zoom + "px";
             } else {
                 this.gridDisplay.style.height = width * zoom + "px";
             }
-            if (gamemode == "Tetris") {
+            if (gamemode === "Tetris") {
                 for (let x = 0; x < (width * width) + width; x++) {
                     square = document.createElement('div');
                     square.className = "squareItem";
                     tile = document.createElement("div");
                     tile.className = "tile";
                     tile.innerHTML = 0;
-                    if (gamemode == "Upsidedown") {
+                    if (gamemode === "Upsidedown") {
                         tile.style.transform = "rotate(180deg)";
                     }
 
@@ -2271,7 +2273,7 @@ function loaded() {
                     tile = document.createElement("div");
                     tile.className = "tile";
                     tile.innerHTML = 0;
-                    if (gamemode == "Upsidedown") {
+                    if (gamemode === "Upsidedown") {
                         tile.style.transform = "rotate(180deg)";
                     }
 
@@ -2283,8 +2285,8 @@ function loaded() {
 
         },
         generate: function () {
-            let randNum = 0
-            if (gamemode == "Tetris") {
+            let randNum;
+            if (gamemode === "Tetris") {
                 randNum = Math.floor(Math.random() * width);
             } else {
                 randNum = Math.floor(Math.random() * this.squares.length);
@@ -2298,17 +2300,17 @@ function loaded() {
             randGenNum = Math.floor(Math.random() * gens.length);
             var zeros = 0;
             for (let x = 0; x < this.squares.length; x++) {
-                if (this.squares[x].innerHTML == 0) {
+                if (this.squares[x].innerHTML === 0) {
                     zeros++;
                 }
             }
 
-            if (this.squares[randNum].innerHTML == 0) {
+            if (this.squares[randNum].innerHTML == 0) { //NOTE: This breaks tetris if like "===" instead of "=="
                 var newel = this.squares[randNum].cloneNode(true);
                 this.squares[randNum].parentNode.replaceChild(newel, this.squares[randNum]);
                 this.squares[randNum] = newel;
                 this.squares[randNum].innerHTML = gens[randGenNum];
-                if (gamemode == "Tetris") {
+                if (gamemode === "Tetris") {
                     for (let y = 0; y < this.squares.length; y++) {
                         this.squares[y].active = false;
                     }
@@ -2316,10 +2318,10 @@ function loaded() {
                 }
 
             } else {
-                if (gamemode == "Tetris") {
+                if (gamemode === "Tetris") {
                     this.checkGameOver.game_die(this)
                 }else{
-                    if(zeros != 0)
+                    if(zeros !== 0)
                         this.generate();
                 }
             }
@@ -2349,13 +2351,13 @@ function loaded() {
                     filteredRow.push(row[y]);
                 }
                 for (let y = 0; y < filteredRow.length; y++) {
-                    if (row[y] > row[y + 1] && y + 1 != filteredRow.length && row[y + 1] == 0 && actives[y]) {
+                    if (row[y] > row[y + 1] && y + 1 !== filteredRow.length && row[y + 1] === 0 && actives[y]) {
 
                         filteredRow[y + 1] = row[y];
                         filteredRow[y] = row[y + 1];
                         actives[y + 1] = true;
                         actives[y] = false;
-                        if (filteredRow[y] == undefined) {
+                        if (filteredRow[y] === undefined) {
                             filteredRow[y] = 0;
                         }
                         mooved = true;
@@ -2368,9 +2370,9 @@ function loaded() {
                 let newRow = filteredRow;
                 for (let y = 0; y < width; y++) {
                     let oldval = parseInt(this.squares[x + y].innerHTML);
-                    this.squares[x + y].innerHTML = newRow[0 + y];
+                    this.squares[x + y].innerHTML = newRow[y];
                     this.squares[x + y].active = actives[y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                    if (newRow[y] !== 0 && oldval !== newRow[y]) {
                         this.squares[x + y].parentNode.classList.add("animate-right");
 
                         this.squares[x + y].parentNode.addEventListener('animationend', function () {
@@ -2395,8 +2397,8 @@ function loaded() {
                 let newRow = zeros.concat(filteredRow);
                 for (let y = 0; y < width; y++) {
                     let oldval = parseInt(this.squares[x + y].innerHTML);
-                    this.squares[x + y].innerHTML = newRow[0 + y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                    this.squares[x + y].innerHTML = newRow[y];
+                    if (newRow[y] !== 0 && oldval !== newRow[y]) {
                         this.squares[x + y].parentNode.classList.add("animate-right");
 
                         this.squares[x + y].parentNode.addEventListener('animationend', function () {
@@ -2426,12 +2428,12 @@ function loaded() {
 
                 for (let y = filteredRow.length; y > 0; y--) {
 
-                    if (row[y] > row[y - 1] && y - 1 != filteredRow.length && row[y - 1] == 0 && actives[y]) {
+                    if (row[y] > row[y - 1] && y - 1 !== filteredRow.length && row[y - 1] === 0 && actives[y]) {
                         filteredRow[y - 1] = row[y];
                         filteredRow[y] = row[y - 1];
                         actives[y - 1] = true;
                         actives[y] = false;
-                        if (filteredRow[y] == undefined) {
+                        if (filteredRow[y] === undefined) {
                             filteredRow[y] = 0;
                         }
                         mooved = true;
@@ -2442,9 +2444,9 @@ function loaded() {
                 let newRow = filteredRow;
                 for (let y = 0; y < width; y++) {
                     let oldval = parseInt(this.squares[x + y].innerHTML);
-                    this.squares[x + y].innerHTML = newRow[0 + y];
+                    this.squares[x + y].innerHTML = newRow[y];
                     this.squares[x + y].active = actives[y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                    if (newRow[y] !== 0 && oldval !== newRow[y]) {
                         this.squares[x + y].parentNode.classList.add("animate-left");
                         this.squares[x + y].parentNode.addEventListener('animationend', function () {
                             this.squares[x + y].parentNode.classList.remove('animate-left');
@@ -2470,8 +2472,8 @@ function loaded() {
 
                 for (let y = 0; y < width; y++) {
                     let oldval = parseInt(this.squares[x + y].innerHTML);
-                    this.squares[x + y].innerHTML = newRow[0 + y];
-                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                    this.squares[x + y].innerHTML = newRow[y];
+                    if (newRow[y] !== 0 && oldval !== newRow[y]) {
                         this.squares[x + y].parentNode.classList.add("animate-left");
                         this.squares[x + y].parentNode.addEventListener('animationend', function () {
                             this.squares[x + y].parentNode.classList.remove('animate-left');
@@ -2500,12 +2502,12 @@ function loaded() {
             //let filteredCol = collum.filter(num => num);
 
             for (let y = 0; y < filteredCol.length; y++) {
-                if (collum[y] > collum[y + 1] && y + 1 != filteredCol.length && collum[y + 1] == 0) {
+                if (collum[y] > collum[y + 1] && y + 1 !== filteredCol.length && collum[y + 1] === 0) {
                     filteredCol[y + 1] = collum[y];
                     filteredCol[y] = collum[y - 1];
                     actives[y + 1] = true;
                     actives[y] = false;
-                    if (filteredCol[y] == undefined) {
+                    if (filteredCol[y] === undefined) {
                         filteredCol[y] = 0;
                     }
                     mooved = true;
@@ -2519,9 +2521,9 @@ function loaded() {
 
             for (let y = 0; y < width + 1; y++) {
                 let oldval = parseInt(this.squares[x + y * width].innerHTML);
-                this.squares[x + y * width].innerHTML = newCol[0 + y];
+                this.squares[x + y * width].innerHTML = newCol[y];
                 this.squares[x + y * width].active = actives[y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                if (newCol[y] !== 0 && oldval !== newCol[y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-down");
                     this.squares[x + y * width].parentNode.addEventListener('animationend', function () {
                         this.squares[x + y * width].parentNode.classList.remove('animate-down');
@@ -2531,7 +2533,7 @@ function loaded() {
             }
         }
         this.moved = mooved;
-        if (mode != "def" && this.moved) {
+        if (mode !== "def" && this.moved) {
             this.moveDown("press");
         }
     }
@@ -2548,8 +2550,8 @@ function loaded() {
             let newCol = zeros.concat(filteredCol);
             for (let y = 0; y < width; y++) {
                 let oldval = parseInt(this.squares[x + y * width].innerHTML);
-                this.squares[x + y * width].innerHTML = newCol[0 + y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                this.squares[x + y * width].innerHTML = newCol[y];
+                if (newCol[y] !== 0 && oldval !== newCol[y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-down");
                     this.squares[x + y * width].parentNode.addEventListener('animationend', function () {
                         this.squares[x + y * width].parentNode.classList.remove('animate-down');
@@ -2560,7 +2562,7 @@ function loaded() {
         }
     }
     Tetris_moveUpFunct = function moveUp() {
-        return;
+
     }
     moveUpFunct = function moveUp() {
         for (let x = 0; x < width; x++) {
@@ -2575,8 +2577,8 @@ function loaded() {
             let newCol = filteredCol.concat(zeros);
             for (let y = 0; y < width; y++) {
                 let oldval = parseInt(this.squares[x + y * width].innerHTML);
-                this.squares[x + y * width].innerHTML = newCol[0 + y];
-                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                this.squares[x + y * width].innerHTML = newCol[y];
+                if (newCol[y] !== 0 && oldval !== newCol[y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-up");
                     this.squares[x + y * width].parentNode.addEventListener('animationend', function () {
                         this.squares[x + y * width].parentNode.classList.remove('animate-up');
@@ -2591,7 +2593,7 @@ function loaded() {
         for (let x = 0; x < ((width * width) + width) - 1; x++) {
             dontdo = false;
             didcombine = false;
-            if (x != ((width * width) + width) - 1) {
+            if (x !== ((width * width) + width) - 1) {
                 if (this.squares[x].innerHTML === this.squares[x + 1].innerHTML) {
                     mode = "left";
                     didcombine = true;
@@ -2600,8 +2602,8 @@ function loaded() {
                         combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
                     else
                         combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + 1].innerHTML);
-                    if (mode != "nocheck") {
-                        if (combinedTotal != 0) {
+                    if (mode !== "nocheck") {
+                        if (combinedTotal !== 0) {
 
                             if ((x + 1) % (width) === 0) {
                                 dontdo = true;
@@ -2639,12 +2641,12 @@ function loaded() {
                 this.checkhigh();
                 if (!dontdo) {
 
-                    if (mode != "nocheck")
+                    if (mode !== "nocheck")
                         this.checkbest();
 
-                    if (mode == "left") {
+                    if (mode === "left") {
 
-                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                        if (parseInt(this.squares[x].innerHTML) !== 0) {
                             this.squares[x].active = true;
                             this.squares[x].parentNode.classList.add("animate-pop");
                             this.squares[x].parentNode.addEventListener('animationend', function () {
@@ -2653,7 +2655,7 @@ function loaded() {
                         }
                     } else {
 
-                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                        if (parseInt(this.squares[x].innerHTML) !== 0) {
                             this.squares[x + 1].active = true;
                             this.squares[x + 1].parentNode.classList.add("animate-pop");
                             this.squares[x + 1].parentNode.addEventListener('animationend', function () {
@@ -2668,12 +2670,10 @@ function loaded() {
 
 
         }
-        if (mode != "nocheck")
+        if (mode !== "nocheck")
             this.checkWin();
-        if (returntype)
-            return true;
-        else
-            return false;
+        return returntype;
+
     }
     combineRowFunct = function combineRow(mode) {
         for (let x = 0; x < (width * width) - 1; x++) {
@@ -2685,10 +2685,10 @@ function loaded() {
                     combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + 1].innerHTML);
-                if (mode != "nocheck") {
-                    if (combinedTotal != 0) {
+                if (mode !== "nocheck") {
+                    if (combinedTotal !== 0) {
 
-                        if ((x + 1) % width == 0) {
+                        if ((x + 1) % width === 0) {
                             dontdo = true;
                         }
                         if (!dontdo) {
@@ -2710,12 +2710,12 @@ function loaded() {
                 this.checkhigh();
                 if (!dontdo) {
                     this.squares[x].innerHTML = combinedTotal;
-                    if (mode != "nocheck")
+                    if (mode !== "nocheck")
                         this.checkbest();
                     this.squares[x + 1].innerHTML = 0;
-                    if (mode == "left") {
+                    if (mode === "left") {
 
-                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                        if (parseInt(this.squares[x].innerHTML) !== 0) {
                             this.squares[x].parentNode.classList.add("animate-pop");
                             this.squares[x].parentNode.addEventListener('animationend', function () {
                                 this.squares[x].parentNode.classList.remove('animate-pop');
@@ -2723,7 +2723,7 @@ function loaded() {
                         }
                     } else {
 
-                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                        if (parseInt(this.squares[x].innerHTML) !== 0) {
 
                             this.squares[x + 1].parentNode.classList.add("animate-pop");
                             this.squares[x + 1].parentNode.addEventListener('animationend', function () {
@@ -2737,7 +2737,7 @@ function loaded() {
             }
 
         }
-        if (mode != "nocheck")
+        if (mode !== "nocheck")
             this.checkWin();
 
     }
@@ -2750,8 +2750,8 @@ function loaded() {
                     combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + width].innerHTML);
-                if (mode != "nocheck") {
-                    if (combinedTotal != 0) {
+                if (mode !== "nocheck") {
+                    if (combinedTotal !== 0) {
                         this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
                         this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
                         returntype = true;
@@ -2767,15 +2767,15 @@ function loaded() {
                 this.scoreDisplay.innerHTML = this.score;
                 this.checkhigh();
                 this.squares[x].innerHTML = combinedTotal;
-                if (mode == "up") {
-                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                if (mode === "up") {
+                    if (parseInt(this.squares[x].innerHTML) !== 0) {
                         this.squares[x].parentNode.classList.add("animate-pop");
                         this.squares[x].parentNode.addEventListener('animationend', function () {
                             this.squares[x].parentNode.classList.remove('animate-pop');
                         }.bind(this))
                     }
                 } else {
-                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                    if (parseInt(this.squares[x].innerHTML) !== 0) {
 
                         this.squares[x + width].parentNode.classList.add("animate-pop");
                         this.squares[x + width].parentNode.addEventListener('animationend', function () {
@@ -2783,19 +2783,16 @@ function loaded() {
                         }.bind(this))
                     }
                 }
-                if (mode != "nocheck")
+                if (mode !== "nocheck")
                     this.checkbest();
 
                 this.squares[x + width].innerHTML = 0;
             }
 
         }
-        if (mode != "nocheck")
+        if (mode !== "nocheck")
             this.checkWin();
-        if (returntype)
-            return true;
-        else
-            return false;
+        return returntype;
     }
     combineColFunct = function combineCol(mode) {
         for (let x = 0; x < (width * width) - width; x++) {
@@ -2805,8 +2802,8 @@ function loaded() {
                     combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
                 else
                     combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + width].innerHTML);
-                if (mode != "nocheck") {
-                    if (combinedTotal != 0) {
+                if (mode !== "nocheck") {
+                    if (combinedTotal !== 0) {
                         this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
                         this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
                         setTimeout(function () {
@@ -2821,29 +2818,29 @@ function loaded() {
                 this.scoreDisplay.innerHTML = this.score;
                 this.checkhigh();
                 this.squares[x].innerHTML = combinedTotal;
-                if (mode == "up") {
-                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                if (mode === "up") {
+                    if (parseInt(this.squares[x].innerHTML) !== 0) {
                         this.squares[x].parentNode.classList.add("animate-pop");
                         this.squares[x].parentNode.addEventListener('animationend', function () {
                             this.squares[x].parentNode.classList.remove('animate-pop');
                         }.bind(this))
                     }
                 } else {
-                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                    if (parseInt(this.squares[x].innerHTML) !== 0) {
                         this.squares[x + width].parentNode.classList.add("animate-pop");
                         this.squares[x + width].parentNode.addEventListener('animationend', function () {
                             this.squares[x + width].parentNode.classList.remove('animate-pop');
                         }.bind(this))
                     }
                 }
-                if (mode != "nocheck")
+                if (mode !== "nocheck")
                     this.checkbest();
 
                 this.squares[x + width].innerHTML = 0;
             }
 
         }
-        if (mode != "nocheck")
+        if (mode !== "nocheck")
             this.checkWin();
     }
     /////////////////////////GAME STATES/////////////////
@@ -2852,7 +2849,7 @@ function loaded() {
 
         let tmpsquares = [];
         for (let x = 0; x < this.squares.length; x++) {
-            if (this.squares[x].innerHTML == 0) {
+            if (this.squares[x].innerHTML === 0) {
                 zeros++;
             }
             tmpsquares.push(this.squares[x])
@@ -2860,7 +2857,7 @@ function loaded() {
         if (zeros === 0) {
             let possible = false;
             for (let x = 0; x < (width * width) - 1; x++) {
-                if ((x + 1) % width != 0) {
+                if ((x + 1) % width !== 0) {
                     if (tmpsquares[x].innerHTML === tmpsquares[x + 1].innerHTML) {
                         possible = true;
                     }
@@ -2877,7 +2874,7 @@ function loaded() {
 
 
         }
-        if (movecap != 0)
+        if (movecap !== 0)
             if (this.moves >= movecap) {
                 game_die(this);
             }
@@ -2886,7 +2883,7 @@ function loaded() {
             game.scoreResult.style.display = "block";
             game.scoreResult.style.left = game.gridDisplay.getBoundingClientRect().left + "px";
             game.scoreResult.style.width = (width * zoom) + 8 + "px";
-            if(gamemode == "Tetris"){
+            if(gamemode === "Tetris"){
                 game.scoreResult.style.height = ((width+1) * zoom) + 8 + "px";
             }else{
                 game.scoreResult.style.height = (width * zoom) + 8 + "px";
@@ -2936,13 +2933,13 @@ function loaded() {
 
     checkWinFunct = function checkWin() {
         for (let x = 0; x < this.squares.length; x++) {
-            if (this.squares[x].innerHTML == goal && !this.continueEnabled) {
+            if (this.squares[x].innerHTML === goal && !this.continueEnabled) {
                 this.paused = true;
                 this.scoreResult.style.display = "block";
                 this.allowInput = false;
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = (width * zoom) + 8 + "px";
-                if(gamemode == "Tetris"){
+                if(gamemode === "Tetris"){
                     this.scoreResult.style.height = ((width+1) * zoom) + 8 + "px";
                 }else{
                     this.scoreResult.style.height = (width * zoom) + 8 + "px";
@@ -2985,13 +2982,13 @@ function loaded() {
 
     /////////////////////////SCORES/////////////////
     checkhighFunct = function checkhigh() {
-        if (this.hscore == undefined || isNaN(this.hscore)) {
+        if (this.hscore === undefined || isNaN(this.hscore)) {
             this.hscore = 0;
         }
         if (!reverse) {
             let current = parseInt(this.scoreDisplay.innerHTML);
             let high = this.hscore;
-            if (high != "") {
+            if (high !== "") {
                 if (current >= high) {
                     this.hscore = current;
                 }
@@ -3006,14 +3003,14 @@ function loaded() {
     }
 
     checkh_bestFunct = function checkh_best() {
-        if (this.hscore == undefined) {
+        if (this.hscore === undefined) {
             this.hscore = 0;
         }
         if (!reverse) {
 
             let current = parseInt(this.bestDisplay.innerHTML);
             let high = this.btile
-            if (high != "") {
+            if (high !== "") {
                 if (current >= high) {
                     this.btile = current;
                 }
@@ -3031,13 +3028,12 @@ function loaded() {
     }
 
     checkbestFunct = function checkbest() {
-        let current = parseInt(this.bestDisplay.innerHTML);
-        let best = current;
+        let best = parseInt(this.bestDisplay.innerHTML);
         for (let x = 0; x < this.squares.length; x++) {
             if (reverse) {
                 best = 2048;
                 if (parseInt(this.squares[x].innerHTML) <= best) {
-                    if (parseInt(this.squares[x].innerHTML) == 0) {
+                    if (parseInt(this.squares[x].innerHTML) === 0) {
 
                     } else {
                         best = parseInt(this.squares[x].innerHTML);
@@ -3064,7 +3060,7 @@ function loaded() {
             "boards": []
         };
         let cookiedGame = getCookie("savedgames");
-        if (cookiedGame != "" && cookiedGame != "{}") {
+        if (cookiedGame !== "" && cookiedGame !== "{}") {
             loadedGame = JSON.parse(cookiedGame);
         }
 
@@ -3079,7 +3075,7 @@ function loaded() {
         }
         exists = false;
         for (let x = 0; x < loadedGame.boards.length; x++) {
-            if (parseInt(loadedGame.boards[x].id) == game.gameId) {
+            if (parseInt(loadedGame.boards[x].id) === game.gameId) {
                 scoredata = loadedGame.boards[x].data;
                 scoredata.length = 0;
                 for (let x = 0; x < game.squares.length; x++) {
@@ -3122,7 +3118,7 @@ function loaded() {
 
     function loadgame(gamedata, game, isback = false) {
 
-        if (gamedata != "") {
+        if (gamedata !== "") {
 
             scoredata = gamedata.data;
             game.btile = gamedata.btile;
@@ -3132,7 +3128,7 @@ function loaded() {
             undefinedinc = false;
             for (let x = 0; x < scoredata.length; x++) {
 
-                if (scoredata[x] == "undefined") {
+                if (scoredata[x] === "undefined") {
                     undefinedinc = true
                 }
             }
@@ -3175,10 +3171,10 @@ function loaded() {
     function intialLoad(game) {
         loadedGame = {};
         let cookiedGame = getCookie("savedgames");
-        if (cookiedGame != "") {
+        if (cookiedGame !== "") {
             loadedGame = JSON.parse(cookiedGame);
             for (let x = 0; x < loadedGame.boards.length; x++) {
-                if (parseInt(loadedGame.boards[x].id) == game.gameId) {
+                if (parseInt(loadedGame.boards[x].id) === game.gameId) {
                     if (savemode)
                         loadgame(loadedGame.boards[x], game)
                 }
@@ -3192,10 +3188,10 @@ function loaded() {
         autoplayCheck.addEventListener("change", autoplay);
         loadedGame = {};
         let cookiedGame = getCookie("savedgames");
-        if (cookiedGame != "") {
+        if (cookiedGame !== "") {
             loadedGame = JSON.parse(cookiedGame);
             for (let x = 0; x < loadedGame.boards.length; x++) {
-                if (loadedGame.boards[x].id = game.gameId) {
+                if (loadedGame.boards[x].id === game.gameId) {
                     loadedGame.boards.splice(x);
 
                 }
@@ -3225,12 +3221,12 @@ function loaded() {
 
         document.getElementById("replaycontrol-" + game.gameId).style.display = "none";
         game.gridDisplay.innerHTML = "";
-        if(gamemode == "Tetris"){
+        if(gamemode === "Tetris"){
             ReloadPage();
         }
-        if (mode != 1) {
+        if (mode !== 1) {
             game.createBoard();
-            if (gamemode == "Tetris") {
+            if (gamemode === "Tetris") {
                 game.generate();
             } else {
                 game.generate();
@@ -3298,19 +3294,19 @@ function loaded() {
                     let min = Math.ceil(1);
                     let max = Math.floor(5);
                     let rand = Math.floor(Math.random() * (max - min) + min); //The
-                    if (rand == 1) {
+                    if (rand === 1) {
                         games[g].keyPressed = "left";
                         games[g].keyLeft();
                     }
-                    else if (rand == 2) {
+                    else if (rand === 2) {
                         games[g].keyPressed = "right";
                         games[g].keyRight();
                     }
-                    else if (rand == 3) {
+                    else if (rand === 3) {
                         games[g].keyPressed = "up";
                         games[g].keyup();
                     }
-                    else if (rand == 4) {
+                    else if (rand === 4) {
                         games[g].keyPressed = "down";
                         games[g].keydown();
                     }
@@ -3400,7 +3396,7 @@ function loaded() {
     }
 
     Tetris_keyUpfunct = function keyup() {
-        return;
+        //Theres no up in tetris what r u on???
     }
 
     Tetris_keyRightFunct = function keyRight() {
@@ -3431,7 +3427,7 @@ function loaded() {
     function SetUpGame(game, keys) {
         game.keycodes = keys;
 
-        if (gamemode == "Tetris") {
+        if (gamemode === "Tetris") {
             game.moveLeft = Tetris_moveLeftFunct;
             game.moveRight = Tetris_moveRightFunct;
             game.moveDown = Tetris_moveDownFunct;
@@ -3444,7 +3440,7 @@ function loaded() {
             game.moveUp = moveUpFunct;
         }
 
-        if (gamemode == "Tetris") {
+        if (gamemode === "Tetris") {
             game.combineCol = Tetris_combineColFunct;
             game.combineRow = Tetris_combineRowFunct;
         } else {
@@ -3458,12 +3454,12 @@ function loaded() {
         game.checkh_best = checkh_bestFunct;
         game.checkbest = checkbestFunct;
         game.themeBoard = themeBoardFunct;
-        if (gamemode == "Upsidedown") {
+        if (gamemode === "Upsidedown") {
             game.keyLeft = Upsidedown_keyLeftFunct;
             game.keydown = Upsidedown_keyDonwFunct;
             game.keyRight = Upsidedown_keyRightFunct;
             game.keyup = Upsidedown_keyUpfunct;
-        } else if (gamemode == "Tetris") {
+        } else if (gamemode === "Tetris") {
             game.keyLeft = Tetris_keyLeftFunct;
             game.keydown = Tetris_keyDonwFunct;
             game.keyRight = Tetris_keyRightFunct;
@@ -3487,7 +3483,7 @@ function loaded() {
 //P
     function StartingGameFunctions(game) {
         game.createBoard();
-        if (gamemode == "Tetris") {
+        if (gamemode === "Tetris") {
             game.generate();
         } else {
             game.generate();
@@ -3525,7 +3521,7 @@ function loaded() {
     function loadOtherGames() {
         loadedGame = {};
         let cookiedGame = getCookie("savedgames");
-        if (cookiedGame != "") {
+        if (cookiedGame !== "") {
             loadedGame = JSON.parse(cookiedGame);
             for (let x = 1; x < loadedGame.boards.length; x++) {
                 makeNewGame(games.length, loadedGame.boards[x].movekeys)
@@ -3561,7 +3557,7 @@ function loaded() {
         function inputmapping(key) {
             mappedkeys.push(key.keyCode);
             mode += 1;
-            if (mode == 4) {
+            if (mode === 4) {
                 makeNewGame(games.length, mappedkeys);
                 document.removeEventListener('keyup', inputmapping);
                 keydiv.style.display = "none";
@@ -3581,21 +3577,21 @@ function loaded() {
 
     //////Sharing
     passedcustomization = getUrlVar("customgame");
-    if(passedcustomization != undefined){
+    if(passedcustomization !== undefined){
         passedcustomization = passedcustomization.replaceAll("%22",'"')
         customizedjson = JSON.parse(passedcustomization);
-        if(customizedjson.customize != undefined){
+        if(customizedjson.customize !== undefined){
 
             loaded_settingsData = atob(customizedjson.customize);
             setCookie("settingsData", loaded_settingsData, 1);
         }
-        if(customizedjson.theme != undefined){
+        if(customizedjson.theme !== undefined){
             sharethemeinputbox.value = customizedjson.theme;
             loadthemedata(true);
         }
 
         passediframestate = getUrlVar("iframe");
-        if(passediframestate  == undefined){
+        if(passediframestate  === undefined){
             window.location.href = website[0]+".html"
         }else{
             window.location.href = website[0]+".html?iframe=true"
@@ -3608,7 +3604,7 @@ function loaded() {
     }
 
     function debug(text, bugfixingid) { }
-    if (getCookie("reloadRequest") == "yes") {
+    if (getCookie("reloadRequest") === "yes") {
         setCookie("reloadRequest", "no", 1)
         location.href = website[0] + ".html";
         //STFU ik its a hack
@@ -3619,7 +3615,7 @@ function loaded() {
         vars = window.location.search.split("?");
         for (let x = 0; x < vars.length; x++) {
             varibleData = vars[x].split("=");
-            if (varibleData[0] == varible) {
+            if (varibleData[0] === varible) {
                 return varibleData[1];
             }
         }
@@ -3638,9 +3634,9 @@ function loaded() {
                 } else {
                     type = "combind"
                 }
-                if (gamemode == "Upsidedown") {
+                if (gamemode === "Upsidedown") {
                     howtoplaytext.push("Same as regular " + goal + " but instead the controls have been inverted and the tiles have been flipped upside down");
-                } else if (gamemode == "Tetris") {
+                } else if (gamemode === "Tetris") {
                     howtoplaytext.push("In this version of " + goal + " the tiles generate at the top of the board and slowly move down. When you press a key only the active tile (tile that moved or recently was "+type+"ed from another) gets moved in that direction. If a tile generates in the top area and it cant fall down then it's game over.");
                 } else{
                     howtoplaytext.push("Using the arrow keys " + type + " tiles until one of them reaches " + goal + ". When you press a key all the tiles on the board move in that direction. If a tile cannot generate and no more tiles can be "+type+"ed then its game over.");
@@ -3655,7 +3651,7 @@ function loaded() {
                 howtoplaytext.push("<strong>Board's Side Tabs: </strong>");
                 howtoplaytext.push("Press the '&#x21bb' button to reset the board. Press the '&#8592' button to go back one step. This counter '" + games[0].moves + "' displays your moves. This is your time: '" + games[0].time.min + ":" + games[0].time.sec + "'");
                 howtoplaytext.push("")
-                if (games[0].scoreResult.style.display == "block") {
+                if (games[0].scoreResult.style.display === "block") {
                     howtoplaytext.push("<strong>Result Screen: </strong> Active");
                     howtoplaytext.push("The game is over and you have either won or lost, press restart to have another attempt, press watch replay to watch a replay of your game, press save replay to download your replay.");
                 } else {
@@ -3699,7 +3695,7 @@ function loaded() {
                 howtoplaytext.push("Using the controls in the game section of the Theme Maker you are able to set the colour of: empty tiles, board color, text color, tabs color. Other optioal settings are the tagline and also real-time which allows the theme to be previewed in realtime before being set. Note you must Apply Theme before reloading or progress wont be saved.  ")
                 howtoplaytext.push("")
                 howtoplaytext.push("<strong>Theme Maker [Tile]: </strong>" + modename[currentmode]);
-                if (modename[currentmode] == "Image") {
+                if (modename[currentmode] === "Image") {
                     howtoplaytext.push("Using the Image controls in the game section of the Theme Maker you are able to set the background of a tile of your choosing to what ever image you have a direct URL to. Please Note: When cycling through tiles, images may temporally be out of sync - this is a bug so dont be alarmed.")
                 } else {
                     howtoplaytext.push("Using the Image controls in the game section of the Theme Maker you are able to set the colours of various parts of the tile such as text, backgroud or glow colour. The glow amount is also customsiable.");
@@ -3752,7 +3748,7 @@ function loaded() {
                     this.tileNum = this.tileNum/2;
                 else
                     this.tileNum += this.tileNum;
-                if (gamemode == "Upsidedown") {
+                if (gamemode === "Upsidedown") {
                     tile.style.transform = "rotate(180deg)";
                 }
 
@@ -3780,7 +3776,7 @@ function loaded() {
                     this.tileNum = this.tileNum/2;
                 else
                     this.tileNum += this.tileNum;
-                if (gamemode == "Upsidedown") {
+                if (gamemode === "Upsidedown") {
                     tile.style.transform = "rotate(180deg)";
                 }
 
@@ -3796,13 +3792,13 @@ function loaded() {
         setTimeout(function () {
             themdescripttext = [];
             if (customThemeLoaded) {
-                if (jsonedTheme.gamethem[5] == "Cupcakes") {
+                if (jsonedTheme.gamethem[5] === "Cupcakes") {
                     themdescripttext.push("<strong>Active Theme: </strong> Cupcakes");
                     themdescripttext.push("This is a custom theme based around various cupcakes that was desgined by the developer of this website. It was based of the orginal cupcakes theme by <a href='https://0x0800.github.io/2048-CUPCAKES/'>This Person.</a>");
-                } else if (jsonedTheme.gamethem[5] == "Doughnuts") {
+                } else if (jsonedTheme.gamethem[5] === "Doughnuts") {
                     themdescripttext.push("<strong>Active Theme: </strong> Doughnuts");
                     themdescripttext.push("This is a custom theme based around various Doughnuts that was desgined by the developer of this website.");
-                } else if (jsonedTheme.gamethem[5] == "Sushi") {
+                } else if (jsonedTheme.gamethem[5] === "Sushi") {
                     themdescripttext.push("<strong>Active Theme: </strong> Sushi");
                     themdescripttext.push("This is a custom theme based around various Sushi pecies that was desgined by the developer of this website.");
                 } else {
@@ -3861,12 +3857,12 @@ function loaded() {
     themingDescription();
 
     var passedTheme = getUrlVar("rawTheme")
-    if (passedTheme != undefined) {
+    if (passedTheme !== undefined) {
         sharethemeinputbox.value = passedTheme;
         loadthemedata();
     }
     var passedReplay = getUrlVar("rawReplay")
-    if (passedReplay != undefined) {
+    if (passedReplay !== undefined) {
 
     }
 
@@ -3886,10 +3882,10 @@ function getCookie(cname) {
     let ca = decodedCookie.split(';');
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) === ' ') {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }

@@ -1,3 +1,13 @@
+:root {
+    /*All this BS is setup in JS*/
+    --anim-move: 0;
+    --full-zoom: 0;
+    --half-zoom: 0;
+    --tile-zoom: 0;
+    --border-zoom: 0;
+    --anim-speed: 0;
+}
+
 html,
 body {
     scroll-behavior: smooth;
@@ -256,8 +266,8 @@ h2 {
     margin-top: 4px;
     color: white;
     display: block;
-    border-radius: 0px 15px 15px 0px;
-    border-width: 3px 3px 3px 0px;
+    border-radius: 0 15px 15px 0;
+    border-width: 3px 3px 3px 0;
     border-style: solid;
 }
 
@@ -329,11 +339,11 @@ h2 {
         opacity: 1;
     }
     20% {
-        top: 0px;
+        top: 0;
         opacity: 1;
     }
     100% {
-        top: 0px;
+        top: 0;
         opacity: 0;
         left: -2.5%;
     }
@@ -466,8 +476,8 @@ h2 {
     right: 1;
     margin-left: auto;
     margin-right: auto;
-    width: 0px;
-    height: 0px;
+    width: 0;
+    height: 0;
     z-index: 2;
     background-color: rgba(0, 255, 0, 0.2);
 }
@@ -527,7 +537,7 @@ h2 {
     background-color: #ffffff;
     color: #ffffff;
     outline: 1px solid gainsboro;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     font-size: var(--half-zoom);
 }
 
@@ -539,7 +549,7 @@ h2 {
     height: 20px;
     text-align: center;
     background-color: royalblue;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     transition: width 0.3s cubic-bezier(0,.96,0,.96);
 }
 
