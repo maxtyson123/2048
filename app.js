@@ -4,39 +4,39 @@ if (!window.location.href.includes("index.html")) {
 }
 openNav = "";
 closeNav = "";
-//FINAL
-//make ai, ai give hint or image
-//NEXT:
+//__________________Done this update___________________________
+//Added Zoom to replay controlls
+//Added Saving
+//Added Sharing
+//Fixed Replay PRogress Bar
+//Added restarting Replay
+//Added Support for cross sized boards
 
+//_______________________NEXT__________________________________
 
-//Replay
-//--Loading from file
-//--game ver data
-//--replay controls speed
-//--sharing
-//--Save history to localstorage, 5  replays?
-
+/////Game modes
 //Upsidedown
 //tertirs
 //cnsl ver
 
-//Remake Tiles b4:
+//__________________Remake Tiles b4___________________________
 //flappy
 //racing
 //Replay direction
 //Animate Back
 
 //Gamemode exporting
-
+//_______________________________FINAL________________________
+//make ai, ai give hint or image
 //COMENT all this uhgh
 
 function loaded() {
 
     vecookie = getCookie("version");
-    if(vecookie != "18"){
-        setCookie("version","18",356);
-        setCookie("settingsData","",356);
-        setCookie("savedgames","",356);
+    if (vecookie != "20") {
+        setCookie("version", "20", 356);
+        setCookie("settingsData", "", 356);
+        setCookie("savedgames", "", 356);
 
     }
 
@@ -66,11 +66,12 @@ function loaded() {
         settingsData.opened = false;
         settingsData.movecap = 0;
         settingsData.realtime = false;
+        settingsData.replayopened = false;
         settingsData.zoom = 100;
         setCookie("settingsData", JSON.stringify(settingsData), 1);
 
     }
-    function loadsettingstovar(){
+    function loadsettingstovar() {
         goal = settingsData.goal;
         spwantile = settingsData.spwantile;
         width = settingsData.width;
@@ -81,15 +82,19 @@ function loaded() {
         realtime = settingsData.realtime;
         zoom = settingsData.zoom;
     }
-    function updatezoom(){
-        root =  document.documentElement;
-        root.style.setProperty('--anim-move', "-"+zoom + "px");
+    function updatezoom() {
+
+        root = document.documentElement;
+        root.style.setProperty('--anim-move', "-" + zoom + "px");
         root.style.setProperty('--full-zoom', zoom + "px");
-        root.style.setProperty('--tile-zoom', zoom-(zoom/10) + "px");
-        root.style.setProperty('--border-zoom', (zoom/10)/2 + "px");
+        root.style.setProperty('--half-zoom', zoom / 6 + "px");
+        root.style.setProperty('--tile-zoom', zoom - (zoom / 10) + "px");
+        root.style.setProperty('--border-zoom', (zoom / 10) / 2 + "px");
         for (let g = 0; g < games.length; g++) {
             games[g].gridDisplay.style.width = width * zoom + "px";
             games[g].gridDisplay.style.height = width * zoom + "px";
+            games[g].checkGameOver();
+            games[g].checkWin();
             if (customThemeActive) {
                 games[g].themeBoard(cus_theme);
             } else {
@@ -160,10 +165,10 @@ function loaded() {
             ReloadPage();
         }
     }
-    spawnincrease.addEventListener("click", function() {
+    spawnincrease.addEventListener("click", function () {
         setspawn(2);
     });
-    spawndecrease.addEventListener("click", function() {
+    spawndecrease.addEventListener("click", function () {
         setspawn(1);
     });
     //ZOOM
@@ -182,17 +187,17 @@ function loaded() {
                 settingsData.zoom = 200;
         }
         zoomDisplay.innerHTML = "<p>" + settingsData.zoom + "%</p>";
-        if(mode != 0){
+        if (mode != 0) {
             loadsettingstovar();
             updatezoom();
         }
 
         setCookie("settingsData", JSON.stringify(settingsData), 1);
     }
-    zoomincrease.addEventListener("click", function() {
+    zoomincrease.addEventListener("click", function () {
         setzoom(2);
     });
-    zoomdecrease.addEventListener("click", function() {
+    zoomdecrease.addEventListener("click", function () {
         setzoom(1);
     });
     setzoom(0);
@@ -234,10 +239,10 @@ function loaded() {
 
         setCookie("settingsData", JSON.stringify(settingsData), 1);
     }
-    goalincrease.addEventListener("click", function() {
+    goalincrease.addEventListener("click", function () {
         setgoal(2);
     });
-    goaldecrease.addEventListener("click", function() {
+    goaldecrease.addEventListener("click", function () {
         setgoal(1);
     });
 
@@ -261,10 +266,10 @@ function loaded() {
         ReloadPage();
 
     }
-    sizeincrease.addEventListener("click", function() {
+    sizeincrease.addEventListener("click", function () {
         setsize(2);
     });
-    sizedecrease.addEventListener("click", function() {
+    sizedecrease.addEventListener("click", function () {
         setsize(1);
     });
 
@@ -284,10 +289,10 @@ function loaded() {
         setCookie("settingsData", JSON.stringify(settingsData), 1);
         movescapdisplay.innerHTML = "<p>" + settingsData.movecap + "</p>";
     }
-    moveincrease.addEventListener("click", function() {
+    moveincrease.addEventListener("click", function () {
         setmovecap(2);
     });
-    movedecrease.addEventListener("click", function() {
+    movedecrease.addEventListener("click", function () {
         setmovecap(1);
     });
 
@@ -337,6 +342,7 @@ function loaded() {
 
 
     openNav = function openNavFunct() {
+
         settingsData.opened = true;
         setCookie("settingsData", JSON.stringify(settingsData), 1);
         document.getElementById("settingspannel").style.width = "250px";
@@ -347,6 +353,8 @@ function loaded() {
         setCookie("settingsData", JSON.stringify(settingsData), 1);
         document.getElementById("settingspannel").style.width = "0";
     }
+
+
 
     if (settingsData.opened)
         openNav()
@@ -425,7 +433,7 @@ function loaded() {
     default_glowCol = "#FFFFFF";
     zerocol = "rgb(128, 190, 128)"
     boardcol = "#cacece"
-    bodytextcol = "#776e65"
+    bodytextcol = "#ffffff"
     bodybgcol = "#72b182ab"
     scorecol = "#808080";
     tagline = "WildCard";
@@ -442,6 +450,7 @@ function loaded() {
     ///////////UI//////////////
     function openThemeMaker() {
         debug("funct_openthememaker", 2);
+        closeReplay();
         themeMakerDisplay.style.width = "250px";
         setCookie("theme-open", "yes", 1);
     }
@@ -451,14 +460,7 @@ function loaded() {
         themeMakerDisplay.style.width = "0";
         setCookie("theme-open", "no", 1);
     }
-    let thememakerOpened = getCookie("theme-open");
-    if (thememakerOpened != "") {
-        if (thememakerOpened == "yes")
-            openThemeMaker()
-        else
-            closeThemeMaker()
 
-    }
 
     //TileSelector
     const themeTilelDisplay = document.querySelector('#themeTile');
@@ -593,7 +595,7 @@ function loaded() {
         color: default_textcol
     });
     textcol = textcolpciker.color.hexString;
-    textcolpciker.on('color:change', function() {
+    textcolpciker.on('color:change', function () {
         textcol = textcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -608,7 +610,7 @@ function loaded() {
         color: default_bgcol
     });
     bgcol = bgcolpciker.color.hexString;
-    bgcolpciker.on('color:change', function() {
+    bgcolpciker.on('color:change', function () {
         bgcol = bgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -655,7 +657,7 @@ function loaded() {
         color: default_glowCol
     });
     glowCol = glowcolpciker.color.hexString;
-    glowcolpciker.on('color:change', function() {
+    glowcolpciker.on('color:change', function () {
         glowCol = glowcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -671,7 +673,7 @@ function loaded() {
         color: zerocol
     });
     zerocol = zerocolpciker.color.hexString;
-    zerocolpciker.on('color:change', function() {
+    zerocolpciker.on('color:change', function () {
         zerocol = zerocolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -685,7 +687,7 @@ function loaded() {
         color: boardcol
     });
     boardcol = boardcolpciker.color.hexString;
-    boardcolpciker.on('color:change', function() {
+    boardcolpciker.on('color:change', function () {
         boardcol = boardcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -699,7 +701,7 @@ function loaded() {
         color: bodybgcol
     });
     bodybgcol = bodybgcolpciker.color.hexString;
-    bodybgcolpciker.on('color:change', function() {
+    bodybgcolpciker.on('color:change', function () {
         bodybgcol = bodybgcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -713,7 +715,7 @@ function loaded() {
         color: bodytextcol
     });
     bodytextcol = bodytextcolpciker.color.hexString;
-    bodytextcolpciker.on('color:change', function() {
+    bodytextcolpciker.on('color:change', function () {
         bodytextcol = bodytextcolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -727,7 +729,7 @@ function loaded() {
         color: scorecol
     });
     scorecol = scorecolpciker.color.hexString;
-    scorecolpciker.on('color:change', function() {
+    scorecolpciker.on('color:change', function () {
         scorecol = scorecolpciker.color.hexString;
         if (realtime) {
             makeintotile();
@@ -751,7 +753,7 @@ function loaded() {
     } else {
         submitbutton.innerHTML = "Apply Theme"
     }
-    submitbutton.addEventListener("click", function() {
+    submitbutton.addEventListener("click", function () {
         if (!realtime) {
             makeintotile();
             for (let g = 0; g < games.length; g++) {
@@ -1057,7 +1059,7 @@ function loaded() {
             var encoded = btoa(JSON.stringify(jsonedTheme));
             sharethemeinputbox.value = encoded;
             sharethemeinputbox.style.display = "block";
-            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or share this link <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
+            sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or email this file <a href='" + website[0] + ".html?rawTheme=" + encoded + "'>Link to Theme</a>";
         } else {
             sharetext.innerHTML = "Please note you need a theme to use this tool."
         }
@@ -1113,8 +1115,6 @@ function loaded() {
             sharethemeinputbox.value = "ERROR LOADING";
         }
         if (jsondata.encodedproperly == "it_works_pls_dont_mess_with_this_otherwise_it_breaks") {
-
-
             setCookie("customTheme", decoded, 365);
             tilenum = 0;
             loadtilefromsave();
@@ -1191,7 +1191,7 @@ function loaded() {
                         this.squares[x].style.backgroundImage = "url('" + Theme.options[y].imageurl + "')";
                     } else {
 
-                        this.squares[x].style.fontSize = 4*(zoom/10)+"px";
+                        this.squares[x].style.fontSize = 4 * (zoom / 10) + "px";
                         this.squares[x].style.color = Theme.options[y].textcol;
                         this.squares[x].style.background = Theme.options[y].bg;
                         this.squares[x].style.boxShadow = Theme.options[y].boxshadow;
@@ -1215,7 +1215,7 @@ function loaded() {
                                 this.squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
                             } else {
 
-                                this.squares[x].style.fontSize = 4*(zoom/10)+"px";
+                                this.squares[x].style.fontSize = 4 * (zoom / 10) + "px";
                                 this.squares[x].style.color = Theme.elementMore[1][y].textcol;
                                 this.squares[x].style.background = Theme.elementMore[1][y].bg;
 
@@ -1234,7 +1234,7 @@ function loaded() {
                             this.squares[x].style.backgroundImage = "url('" + Theme.elementMore[1][y].imageurl + "')";
                         } else {
 
-                            this.squares[x].style.fontSize = 4*(zoom/10)+"px";
+                            this.squares[x].style.fontSize = 4 * (zoom / 10) + "px";
                             this.squares[x].style.color = Theme.elementMore[1][y].textcol;
                             this.squares[x].style.background = Theme.elementMore[1][y].bg;
                             this.squares[x].style.boxShadow = Theme.elementMore[1][y].boxshadow;
@@ -1243,7 +1243,7 @@ function loaded() {
                 } else {
                     if (Theme.elementMore[1][y].imagemode) {
                         this.squares[x].style.color = "black";
-                    }else{
+                    } else {
                         this.squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
                     }
                     this.squares[x].style.background = Theme.options[Theme.options.length - 1].bg;
@@ -1257,11 +1257,11 @@ function loaded() {
 
             document.body.style.background = gameTheme[2];
             document.body.style.color = gameTheme[3];
-            textclasses = document.querySelectorAll("p, .scoretab, .side-item");
+            textclasses = document.querySelectorAll("p, .scoretab, .side-item, .bar, .play");
             for (let y = 0; y < textclasses.length; y++) {
                 textclasses[y].style.color = gameTheme[3];
             }
-            sidecols = document.querySelectorAll(" .side-item");
+            sidecols = document.querySelectorAll(".side-item, .progress");
             for (let y = 0; y < sidecols.length; y++) {
                 sidecols[y].style.borderColor = gameTheme[1];
             }
@@ -1269,7 +1269,7 @@ function loaded() {
             this.gridDisplay.style.backgroundColor = zerocol;
             tilestotheme = this.gridDisplay.children;
             document.querySelector("#tagline").innerHTML = gameTheme[5];
-            scoresclass = document.querySelectorAll(".scoretab, .side-item");
+            scoresclass = document.querySelectorAll(".scoretab, .side-item, .bar, .play");
             for (let y = 0; y < scoresclass.length; y++) {
                 scoresclass[y].style.backgroundColor = gameTheme[4];
             }
@@ -1282,6 +1282,15 @@ function loaded() {
     }
 
     function setTHeming() {
+        let thememakerOpened = getCookie("theme-open");
+        if (thememakerOpened != "") {
+            if (thememakerOpened == "yes")
+                openThemeMaker();
+
+            else
+                closeThemeMaker()
+
+        }
         themeMakerOpen.addEventListener("click", openThemeMaker);
         themeMakerClose.addEventListener("click", closeThemeMaker);
         themeTilelDisplay.innerHTML = "<p>" + tempnum + "</p>";
@@ -1296,7 +1305,327 @@ function loaded() {
         loadthemebutton.addEventListener("click", loadtheme);
         presetthemebutton.addEventListener("click", presettheme);
         loadbutton.addEventListener("click", loadthemedata);
+
     }
+    ////////////////////////////////////////////////////////Replay////////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------------------------------------------------//
+    //___________________________________________________Replay-Vars______________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+
+    const replaypannel = document.getElementById("replaypannel");
+    const sharereplaydata = document.getElementById("sharereplaydata");
+    const loadReplay = document.getElementById("loadReplay");
+    const historycontinaer = document.getElementById("historycontinaer");
+    const openbutton = document.getElementById("openreplayfile");
+    const closebutton = document.querySelector(".replay_close");
+    var play_pause = {};
+    var cancelothers = false;
+
+    var resdata = {};
+    localStorageSpace = function () {
+        var allStrings = '';
+        for (var key in window.localStorage) {
+            if (window.localStorage.hasOwnProperty(key)) {
+                allStrings += window.localStorage[key];
+            }
+        }
+        return allStrings ? 3 + ((allStrings.length * 16) / (8 * 1024)) : 0;
+    };
+    openbutton.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        let filename = fileList[0].name;
+        filename = filename.split('.').pop();
+        if (filename == "replay") {
+            var fr = new FileReader();
+            fr.onload = function () {
+                openreplfile(fr.result);
+            }
+            fr.readAsText(fileList[0]);
+        }
+    });
+    loadReplay.addEventListener('click',function(){
+        openreplfile(sharereplaydata.value);
+    })
+
+    //--------------------------------------------------------------------------------------------------------------------//
+    //________________________________________________Replay-Functions____________________________________________________//
+    //--------------------------------------------------------------------------------------------------------------------//
+
+    /////////// UI
+
+    openReplay = function openReplay() {
+        closeThemeMaker();
+        settingsData.replayopened = true;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        replaypannel.style.width = "250px";
+        historyJson = { saved: [] }
+        savedhistory = localStorage.getItem("replayHistory");
+        if (savedhistory != null) {
+
+            historyJson = JSON.parse(savedhistory);
+            historycontinaer.innerHTML = "";
+            for (x = 0; x < historyJson.saved.length; x++) {
+                historyData = JSON.parse(historyJson.saved[x]);
+                historyItem = document.createElement("div");
+                historyTitle = document.createElement("p");
+                if(historyData.best != undefined){
+                    historyTitle.innerHTML = historyData.time +", "+historyData.best;
+                }else{
+                    historyTitle.innerHTML = historyData.time +", "+historyData.settings.goal;
+                }
+
+                historyItem.appendChild(historyTitle);
+                historyreplay = document.createElement("button");
+                historyreplay.innerHTML = "Play Replay";
+                historyreplay.replaydadata = historyData;
+                historyreplay.addEventListener("click", function (evt) {
+                    openreplfile(
+                        btoa(
+                            JSON.stringify(evt.currentTarget.replaydadata)
+                        )
+                    )
+                })
+                historyItem.appendChild(historyreplay);
+                historycontinaer.appendChild(historyItem);
+
+
+            }
+        }
+    }
+
+    closeReplay = function closeReplay() {
+        settingsData.replayopened = false;
+        setCookie("settingsData", JSON.stringify(settingsData), 1);
+        replaypannel.style.width = "0";
+    }
+    closebutton.addEventListener("click", closeReplay);
+
+    if (settingsData.replayopened)
+        openReplay()
+    else
+        closeReplay();
+
+    ////////////////////////////   Saving
+    function addtoreplayhistory(game) {
+
+        space = localStorageSpace();
+        if (space <= 3000) {
+            newreplay = genarateReplay(game, "json")
+            historyJson = { saved: [] }
+            savedhistory = localStorage.getItem("replayHistory");
+            if (savedhistory != null) {
+                historyJson = JSON.parse(savedhistory);
+            }
+            let size = new Blob([newreplay]).size;
+            if ((space + (size / 1000)) <= 3000) {
+
+                historyJson.saved.push(newreplay)
+                localStorage.setItem("replayHistory", JSON.stringify(historyJson))
+            } else {
+                function removeFromhistory(newreplay) {
+                    historyJson.saved.pop();
+                    localStorage.setItem("replayHistory", JSON.stringify(historyJson));
+                    space = localStorageSpace();
+                    let size = new Blob([newreplay]).size;
+                    if ((space + (size / 1000)) <= 3000) {
+                        historyJson.saved.push(newreplay)
+                    } else {
+                        removeFromhistory(newreplay);
+                    }
+
+                }
+                removeFromhistory(newreplay);
+            }
+            if (settingsData.replayopened) {
+                openReplay();
+            }
+        }
+    }
+
+    function genarateReplay(game, type) {
+        var today = new Date().toLocaleDateString();
+        function ReplayData(initial, states, max, settings,best) {
+            this.id = game.gameId;
+            this.time = today;
+            this.initial = initial;
+            this.state = states;
+            this.settings = settings;
+            this.max = max;
+            this.best = best;
+        }
+        repdata = new ReplayData(game.backdata[0], game.backdata, game.backdata.length, settingsData, game.ctile);
+        replaydata = JSON.stringify(repdata);
+        if (type == "file") {
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:attachment/text,' + encodeURI(btoa(replaydata));
+            hiddenElement.target = '_blank';
+            hiddenElement.download = "(" + today + ")_" + game.ctile + "_[" + game.gameId + "]_.replay";
+            hiddenElement.click();
+        }
+        if (type == "json") {
+            return replaydata;
+        }
+    }
+
+
+
+    function begin_sharereplay(){
+        shareReplay(resdata.replaydata)
+    }
+    function begin_savereplay(){
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:attachment/text,' + encodeURI(btoa(JSON.stringify(resdata.replaydata)));
+        hiddenElement.target = '_blank';
+        hiddenElement.download = "(" + resdata.replaydata.time + ")_" + resdata.replaydata.best + "_[" + resdata.replaydata.id + "]_.replay";
+        hiddenElement.click();
+
+    }
+    function begin_restarting(){
+        replay(resdata.game,resdata.replaydata)
+
+    }
+    function shareReplay(data){
+        sharethemediv.style.display = "block";
+        loadbutton.style.display = "none";
+        sharetitle.innerHTML = "Share Replay";
+        presets.style.display = "none";
+        var encoded = btoa(JSON.stringify(data));
+        sharethemeinputbox.value = encoded;
+        sharethemeinputbox.style.display = "block";
+        sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or copy the text above and email it via this link: <a href='mailto:example@example.com?subject=I've shared my replay with you!&body=Copy the text below into the replay section of this website: "+website[0]+" Data to Copy: INSERT_TEXT_FROM_WEBSITE'>Email Link</a>";
+    }
+
+    //////////////////////////       Playback
+    function openreplfile(repfile) {
+        decodedfile = atob(repfile);
+        try
+        {
+            repdata = JSON.parse(decodedfile);
+        }
+        catch (err)
+        {
+            sharereplaydata.value = "Error Loading";
+        }
+
+        try
+        {
+            parseInt(repdata.id)
+        }
+        catch (err)
+        {
+            sharereplaydata.value = "Error Loading";
+        }
+        for (let x = 0; x < games.length; x++) {
+            if (games[x].gameId == repdata.id) {
+                settingsData = repdata.settings;
+                loadsettingstovar();
+                updatezoom();
+                games[x].gridDisplay.innerHTML = "";
+                games[x].squares.length = 0;
+                games[x].createBoard();
+                replay(games[x], JSON.stringify(repdata))
+            }
+        }
+    };
+
+    function replay(game, replaydata) {
+        replaydisplay = document.getElementById("speed-" + game.gameId);
+        replayspeed = replaydisplay.innerHTML.split("");
+        a = replayspeed.pop();
+        replayspeed = replayspeed.join("");
+        replayspeed = parseInt(replayspeed)
+        if(replayspeed == 0){
+            replayspeed = 0.5;
+        }
+        replayspeed = 500 / replayspeed;
+        document.getElementById("replaycontrol-" + game.gameId).style.display = "block";
+        replaydata = JSON.parse(replaydata);
+        game.scoreResult.style.display = "none";
+        game.allowInput = false;
+        resdata.game = game;
+        resdata.replaydata = JSON.stringify(replaydata);
+        if(game.replaying){
+            cancelothers = true;
+            setTimeout(function () {
+                cancelothers = false;
+                game.replaying = false;
+                replay(game, JSON.stringify(replaydata))
+            },(replayspeed+200))
+        }else{
+            game.replaying = true;
+            loadgame(replaydata.initial, game, true)
+            replayStep(1, game, replaydata)
+        }
+
+
+    }
+
+    function replayStep(x, game, replaydata,) {
+
+        play_pause.html = document.getElementById('play_pause-' + game.gameId);
+        if(play_pause.html.innerHTML == "Play"){
+            play_pause.x = x;
+            play_pause.game = game;
+            play_pause.replaydata = replaydata;
+            return;
+        }
+        replaydisplay = document.getElementById("speed-" + game.gameId);
+        replayspeed = replaydisplay.innerHTML.split("");
+        a = replayspeed.pop();
+        replayspeed = replayspeed.join("");
+        replayspeed = parseInt(replayspeed)
+        if(replayspeed == 0){
+            replayspeed = 0.5;
+        }
+        replayspeed = 500 / replayspeed;
+        if(replaydata.state[x].keyPressed == "inital"){
+            replayspeed = 100;
+        }
+        setTimeout(function () {
+            loadgame(replaydata.state[x - 1], game, true)
+            key = replaydata.state[x].keyPressed;
+            bardisplay = document.getElementById("bar-" + game.gameId);
+            if(key == "inital"){
+                bardisplay.innerHTML = x + " / Loading";
+                bardisplay.style.width = "100%";
+            }else{
+                bardisplay.innerHTML = x + "/"+(replaydata.max-1);
+                bardisplay.style.width = (x/(replaydata.max-1))*100 + "%";
+            }
+
+
+            console.log(key + "_" + x)
+            if (key == "left") {
+                game.keyLeft();
+            }
+            else if (key == "right") {
+                game.keyRight();
+            }
+            else if (key == "up") {
+                game.keyup();
+            }
+            else if (key == "down") {
+                game.keydown();
+            }
+            if (customThemeActive) {
+                game.themeBoard(cus_theme); //FIX LATER
+            } else {
+                game.themeBoard(def_theme); //FIX LATER
+            }
+            game.movesdisplay.innerHTML = parseInt(game.movesdisplay.innerHTML) + 1;
+
+            if (x != replaydata.max-1 && !cancelothers)
+                replayStep(x + 1, game, replaydata)
+            else {
+                bardisplay.innerHTML = "Finished"
+                settingsData = JSON.parse(getCookie("settingsData"));
+                loadsettingstovar();
+            }
+        }, replayspeed);
+
+    }
+
+
     ////////////////////////////////////////////////////////GAME////////////////////////////////////////////////////////////
     //--------------------------------------------------------------------------------------------------------------------//
     //____________________________________________________Game-Vars_______________________________________________________//
@@ -1314,13 +1643,13 @@ function loaded() {
         hbestDisplay: "",
         gameId: "",
         backdata: [],
-        createboardhtml: function(selector) {
+        createboardhtml: function (selector) {
             this.gameId = selector;
             gamespace = document.getElementById("gamespace");
             //Padding
             paddingdiv = document.createElement('div');
             paddingdiv.classList.add("padding25px");
-            paddingdiv.id = "**_"+selector+"_**";
+            paddingdiv.id = "**_" + selector + "_**";
             //Score Container
             score_containerdiv = document.createElement('div');
             score_containerdiv.classList.add("scoreContainer");
@@ -1471,13 +1800,87 @@ function loaded() {
             row2div.appendChild(col3div);
             row2div.appendChild(col4div);
             tile_containerdiv.appendChild(row2div);
+            //Replay Controls
+            replay_containerdiv = document.createElement('div');
+            replay_containerdiv.classList.add("replaycontrols");
+            replay_containerdiv.id = "replaycontrol-" + selector;
+            //Row 3
+            row3div = document.createElement('div');
+            row3div.classList.add("row");
+            //COntrols Container
+            container_contrls = document.createElement('div');
+            container_contrls.classList.add("settingrow");
+            //Play/Pause
+            play_pause = document.createElement('button');
+            play_pause.classList.add("play");
+            play_pause.id = "play_pause-" + selector;
+            play_pause.innerHTML = "Pause"
+            //Progress
+            progress_div = document.createElement('div');
+            progress_div.classList.add("progress");
+            //Bar
+            bar_div = document.createElement('div');
+            bar_div.classList.add("bar");
+            bar_div.id = "bar-" + selector;
+            bar_div.innerHTML = "1/1"
+            //PlayBack Speed
+            spped_button = document.createElement('button');
+            spped_button.classList.add("play");
+            spped_button.id = "speed-" + selector;
+            spped_button.innerHTML = "1x"
+
+            progress_div.appendChild(bar_div);
+
+            container_contrls.appendChild(play_pause);
+            container_contrls.appendChild(progress_div);
+            container_contrls.appendChild(spped_button);
+            //Replay Options Controls
+            container_contrls_options = document.createElement('div');
+            container_contrls_options.classList.add("settingrow");
+            //close_replay
+            close_replay = document.createElement('button');
+            close_replay.classList.add("play");
+            close_replay.id = "close_replay-" + selector;
+            close_replay.innerHTML = "Close Replay"
+            //Share
+            share_replay = document.createElement('button');
+            share_replay.classList.add("play");
+            share_replay.id = "share_replay-" + selector;
+            share_replay.innerHTML = "Share Replay"
+            //Save
+            save_replay = document.createElement('button');
+            save_replay.classList.add("play");
+            save_replay.id = "save_replay-" + selector;
+            save_replay.innerHTML = "Save Replay"
+            //Restart
+            restart_replay = document.createElement('button');
+            restart_replay.classList.add("play");
+            restart_replay.id = "restart_replay-" + selector;
+            restart_replay.innerHTML = "Restart Replay"
+
+            container_contrls_options.appendChild(close_replay)
+            container_contrls_options.appendChild(share_replay)
+            container_contrls_options.appendChild(save_replay)
+            container_contrls_options.appendChild(restart_replay)
+
+            row3div.appendChild(container_contrls);
+            row3div.appendChild(container_contrls_options);
+            replay_containerdiv.appendChild(row3div);
+
             paddingdiv.appendChild(score_containerdiv);
             paddingdiv.appendChild(game_containerdiv);
             paddingdiv.appendChild(tile_containerdiv);
+            paddingdiv.appendChild(replay_containerdiv);
             gamespace.appendChild(paddingdiv);
             document.getElementById('goback-' + selector).addEventListener('click', this.goback.bind(this), false); ///BINDING
-            document.getElementById('reset-' + selector).addEventListener('click', this.reset2.bind(this), false); ///BINDING
+            document.getElementById('reset-' + selector).addEventListener('click', this.reset3.bind(this), false); ///BINDING
             document.getElementById('remove-' + selector).addEventListener('click', this.remove.bind(this), false); ///BINDING
+            document.getElementById('speed-' + selector).addEventListener('click', this.replayspeed.bind(this), false); ///BINDING
+            document.getElementById('play_pause-' + selector).addEventListener('click', this.playpause.bind(this), false); ///BINDING
+            document.getElementById('close_replay-' + selector).addEventListener('click', function(){location.href = website[0] + ".html";}, false); ///BINDING
+            document.getElementById('share_replay-' + selector).addEventListener('click', begin_sharereplay, false); ///BINDING
+            document.getElementById('save_replay-' + selector).addEventListener('click', begin_savereplay, false); ///BINDING
+            document.getElementById('restart_replay-' + selector).addEventListener('click', begin_restarting, false); ///BINDING
             this.movesdisplay = document.querySelector('#moves-' + selector);
             this.scoreDisplay = document.querySelector('#score-' + selector);
             this.hscoreDisplay = document.querySelector('#hscore-' + selector);
@@ -1488,28 +1891,64 @@ function loaded() {
             this.gridDisplay = document.getElementById(this.gridDisplayId);
 
         },
-        remove: function(){
+        remove: function () {
             this.reset();
-            document.getElementById("**_"+this.gameId+"_**").remove();
+            document.getElementById("**_" + this.gameId + "_**").remove();
             rezizegameovers();
 
         },
-        goback: function() {
-            if(this.backdata.length >= 2){
-                this.backdata.pop();
-                this.keyPressed = "back";
-                loadgame(this.backdata[this.backdata.length - 1], this,true);
-                this.backdata.splice(this.backdata.length - 1)
+        goback: function () {
+            if (!this.replaying) {
+                if (this.backdata.length >= 2) {
+                    this.backdata.pop();
+                    this.keyPressed = "back";
+                    loadgame(this.backdata[this.backdata.length - 1], this, true);
+                    this.backdata.splice(this.backdata.length - 1)
+                }
+            }
+
+
+
+        },
+        reset: function () {
+            resetGame(this, 1);
+        },
+        reset2: function () {
+            resetGame(this, 2);
+            this.allowInput = true;
+
+        },
+        reset3: function () {
+            if (!this.replaying) {
+                resetGame(this, 2);
+                this.allowInput = true;
             }
 
 
         },
-        reset: function() {
-            resetGame(this, 1);
+        replayspeed: function(){
+
+            spped = document.querySelector('#speed-' + this.gameId);
+
+            if(spped.innerHTML == "1x"){
+                spped.innerHTML = "2x";
+            }else if(spped.innerHTML == "2x"){
+                spped.innerHTML = "4x";
+            }else if(spped.innerHTML == "4x"){
+                spped.innerHTML = "0.5x";
+            }else if(spped.innerHTML == "0.5x"){
+                spped.innerHTML = "1x";
+            }
+
         },
-        reset2: function() {
-            resetGame(this, 2);
-            this.allowInput = true;
+        playpause: function(){
+            play_pause.html = document.getElementById('play_pause-' + this.gameId);
+            if(play_pause.html.innerHTML == "Play"){
+                play_pause.html.innerHTML = "Pause";
+                replayStep(play_pause.x,play_pause.game,play_pause.replaydata)
+            }else{
+                play_pause.html.innerHTML = "Play";
+            }
         },
         squares: [],
         moves: 0,
@@ -1517,27 +1956,28 @@ function loaded() {
         ctile: 0,
         hscore: 0,
         btile: 0,
-        keyPressed:"inital",
-        time:{
-            min:0,
-            sec:0,
+        keyPressed: "inital",
+        time: {
+            min: 0,
+            sec: 0,
         },
         paused: false,
-        timing: function(){
-            setTimeout(function() {
+        timing: function () {
+            setTimeout(function () {
                 this.time.sec += 1;
-                if(this.time.sec == 60){
+                if (this.time.sec == 60) {
                     this.time.sec = 0;
                     this.time.min += 1;
                 }
                 timedisplay = document.getElementById('time-' + this.gameId);
-                timedisplay.innerHTML = this.time.min +":" + this.time.sec;
-                if(!this.paused)
+                timedisplay.innerHTML = this.time.min + ":" + this.time.sec;
+                if (!this.paused)
                     this.timing();
             }.bind(this), 1000);
         },
         continueEnabled: false,
-        createBoard: function() {
+        replaying: false,
+        createBoard: function () {
             debug("funct_createboard", 2);
             this.gridDisplay.style.width = width * zoom + "px";
             this.gridDisplay.style.height = width * zoom + "px";
@@ -1552,7 +1992,7 @@ function loaded() {
                 this.squares.push(tile);
             }
         },
-        generate: function() {
+        generate: function () {
             let randNum = Math.floor(Math.random() * this.squares.length);
             if (this.squares[randNum].innerHTML == 0) {
                 var newel = this.squares[randNum].cloneNode(true);
@@ -1566,7 +2006,7 @@ function loaded() {
             this.checkGameOver()
         }
     }
-    games = [];
+    var games = [];
 
     //--------------------------------------------------------------------------------------------------------------------//
     //_______________________________________________Game-Functions_______________________________________________________//
@@ -1590,7 +2030,7 @@ function loaded() {
                     if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
                         this.squares[x + y].parentNode.classList.add("animate-right");
 
-                        this.squares[x + y].parentNode.addEventListener('animationend', function() {
+                        this.squares[x + y].parentNode.addEventListener('animationend', function () {
                             this.squares[x + y].parentNode.classList.remove('animate-right');
                         }.bind(this))
                     }
@@ -1619,7 +2059,7 @@ function loaded() {
                     this.squares[x + y].innerHTML = newRow[0 + y];
                     if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
                         this.squares[x + y].parentNode.classList.add("animate-left");
-                        this.squares[x + y].parentNode.addEventListener('animationend', function() {
+                        this.squares[x + y].parentNode.addEventListener('animationend', function () {
                             this.squares[x + y].parentNode.classList.remove('animate-left');
 
                         }.bind(this))
@@ -1646,7 +2086,7 @@ function loaded() {
                 this.squares[x + y * width].innerHTML = newCol[0 + y];
                 if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-down");
-                    this.squares[x + y * width].parentNode.addEventListener('animationend', function() {
+                    this.squares[x + y * width].parentNode.addEventListener('animationend', function () {
                         this.squares[x + y * width].parentNode.classList.remove('animate-down');
                     }.bind(this))
                 }
@@ -1671,7 +2111,7 @@ function loaded() {
                 this.squares[x + y * width].innerHTML = newCol[0 + y];
                 if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
                     this.squares[x + y * width].parentNode.classList.add("animate-up");
-                    this.squares[x + y * width].parentNode.addEventListener('animationend', function() {
+                    this.squares[x + y * width].parentNode.addEventListener('animationend', function () {
                         this.squares[x + y * width].parentNode.classList.remove('animate-up');
                     }.bind(this))
                 }
@@ -1692,13 +2132,13 @@ function loaded() {
                 if (mode != "nocheck") {
                     if (combinedTotal != 0) {
 
-                        if((x+1) % width == 0){
+                        if ((x + 1) % width == 0) {
                             dontdo = true;
                         }
-                        if(!dontdo){
+                        if (!dontdo) {
                             this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
                             this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 this.scoreAddDisplay.className = "class_scoreadd";
                                 this.scoreAddDisplay.innerHTML = "";
                             }.bind(this), 500);
@@ -1712,7 +2152,7 @@ function loaded() {
 
                 this.scoreDisplay.innerHTML = this.score;
                 this.checkhigh();
-                if(!dontdo){
+                if (!dontdo) {
                     this.squares[x].innerHTML = combinedTotal;
                     if (mode != "nocheck")
                         this.checkbest();
@@ -1721,7 +2161,7 @@ function loaded() {
 
                         if (parseInt(this.squares[x].innerHTML) != 0) {
                             this.squares[x].parentNode.classList.add("animate-pop");
-                            this.squares[x].parentNode.addEventListener('animationend', function() {
+                            this.squares[x].parentNode.addEventListener('animationend', function () {
                                 this.squares[x].parentNode.classList.remove('animate-pop');
                             }.bind(this))
                         }
@@ -1730,7 +2170,7 @@ function loaded() {
                         if (parseInt(this.squares[x].innerHTML) != 0) {
 
                             this.squares[x + 1].parentNode.classList.add("animate-pop");
-                            this.squares[x + 1].parentNode.addEventListener('animationend', function() {
+                            this.squares[x + 1].parentNode.addEventListener('animationend', function () {
                                 this.squares[x + 1].parentNode.classList.remove('animate-pop');
                             }.bind(this))
                         }
@@ -1757,7 +2197,7 @@ function loaded() {
                     if (combinedTotal != 0) {
                         this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
                         this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
-                        setTimeout(function() {
+                        setTimeout(function () {
                             this.scoreAddDisplay.className = "class_scoreadd";
                             this.scoreAddDisplay.innerHTML = "";
                         }.bind(this), 500);
@@ -1772,14 +2212,14 @@ function loaded() {
                 if (mode == "up") {
                     if (parseInt(this.squares[x].innerHTML) != 0) {
                         this.squares[x].parentNode.classList.add("animate-pop");
-                        this.squares[x].parentNode.addEventListener('animationend', function() {
+                        this.squares[x].parentNode.addEventListener('animationend', function () {
                             this.squares[x].parentNode.classList.remove('animate-pop');
                         }.bind(this))
                     }
                 } else {
                     if (parseInt(this.squares[x].innerHTML) != 0) {
                         this.squares[x + width].parentNode.classList.add("animate-pop");
-                        this.squares[x + width].parentNode.addEventListener('animationend', function() {
+                        this.squares[x + width].parentNode.addEventListener('animationend', function () {
                             this.squares[x + width].parentNode.classList.remove('animate-pop');
                         }.bind(this))
                     }
@@ -1819,54 +2259,51 @@ function loaded() {
                 }
             }
             if (!possible) {
-                this.paused = true;
-                this.scoreResult.style.display = "block";
-                this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
-                this.scoreResult.style.width = (width * zoom)+8 + "px";
-                this.scoreResult.style.height = (width * zoom)+8 + "px";
-                this.scoreResult.classList.add("gameoverbg");
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Restart</button><br<<button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>";
-                document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
-                    this.reset2();
-                    this.scoreResult.style.display = "none";
-                }.bind(this), false); ///BINDING
-                document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function() {
-                    replay(this,genarateReplay(this,"json"))
-                }.bind(this), false); ///BINDING
-                document.getElementById('savereplay-' + this.gameId).addEventListener('click', function() {
-                    genarateReplay(this,"file")
-                }.bind(this), false); ///BINDING
-                autoplayCheck.checked = false;
-                autoplayCheck.removeEventListener("change", autoplay);
-                this.allowInput = false;
+                game_die(this);
             }
 
 
         }
         if (movecap != 0)
             if (this.moves >= movecap) {
-                this.paused = true;
-                this.scoreResult.style.display = "block";
-                this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
-                this.scoreResult.style.width = (width * zoom)+8 + "px";
-                this.scoreResult.style.height = (width * zoom)+8 + "px";
-                this.scoreResult.classList.add("gameoverbg");
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Restart</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>";
-                document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
-                    this.reset2();
-                    this.scoreResult.style.display = "none";
-                }.bind(this), false); ///BINDING
-                document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function() {
-                    replay(this,genarateReplay(this,"json"))
-                }.bind(this), false); ///BINDING
-                document.getElementById('savereplay-' + this.gameId).addEventListener('click', function() {
-                    genarateReplay(this,"file")
-                }.bind(this), false); ///BINDING
-                autoplayCheck.checked = false;
-                autoplayCheck.removeEventListener("change", autoplay);
-                this.allowInput = false;
+                game_die(this);
             }
-
+        function game_die(game){
+            game.paused = true;
+            game.scoreResult.style.display = "block";
+            game.scoreResult.style.left = game.gridDisplay.getBoundingClientRect().left + "px";
+            game.scoreResult.style.width = (width * zoom) + 8 + "px";
+            game.scoreResult.style.height = (width * zoom) + 8 + "px";
+            game.scoreResult.className = "result gameoverbg";
+            if(!game.replaying){
+                game.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + game.gameId + "'>Restart</button><br><button id='watchreplay-" + game.gameId + "'>Watch Replay</button><button id='savereplay-" + game.gameId + "'>Save Replay</button>";
+            }else{
+                game.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + game.gameId + "'>Close Replay</button>";
+            }
+            document.getElementById('replay-' + game.gameId).addEventListener('click', function () {
+                if(!game.replaying){
+                    addtoreplayhistory(game);
+                }else{
+                    location.href = website[0] + ".html";
+                    return;
+                }
+                game.replaying = false;
+                game.reset2();
+                game.scoreResult.style.display = "none";
+            }.bind(game), false); ///BINDING
+            document.getElementById('watchreplay-' + game.gameId).addEventListener('click', function () {
+                if(!game.replaying){
+                    addtoreplayhistory(game);
+                }
+                replay(game, genarateReplay(game, "json"))
+            }.bind(game), false); ///BINDING
+            document.getElementById('savereplay-' + game.gameId).addEventListener('click', function () {
+                genarateReplay(game, "file")
+            }.bind(game), false); ///BINDING
+            autoplayCheck.checked = false;
+            autoplayCheck.removeEventListener("change", autoplay);
+            game.allowInput = false;
+        }
 
     }
 
@@ -1886,22 +2323,38 @@ function loaded() {
                 this.scoreResult.style.display = "block";
                 this.allowInput = false;
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
-                this.scoreResult.style.width = (width * zoom)+8 + "px";
-                this.scoreResult.style.height = (width * zoom)+8 + "px";
-                this.scoreResult.classList.add("gamewinbg");
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Restart</button><button id='cont'>Continue</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>"
-                document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
+                this.scoreResult.style.width = (width * zoom) + 8 + "px";
+                this.scoreResult.style.height = (width * zoom) + 8 + "px";
+                this.scoreResult.className = "result gamewinbg";
+                if(!this.replaying){
+                    this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Restart</button><button id='cont'>Continue</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>"
+                }else{
+                    this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Close Replay</button>"
+                }
+                document.getElementById('replay-' + this.gameId).addEventListener('click', function () {
+                    if(!this.replaying){
+                        addtoreplayhistory(this);
+                    }else{
+                        location.href = website[0] + ".html";
+                        return;
+                    }
+                    this.replaying = false;
                     this.reset2();
                     this.scoreResult.style.display = "none";
                 }.bind(this), false);
-                document.getElementById("cont").addEventListener("click", function() {
-                    this.continueGame(this);
-                }.bind(this));				document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function() {
-                    replay(this,genarateReplay(this,"json"))
-                }.bind(this), false); ///BINDING
-                document.getElementById('savereplay-' + this.gameId).addEventListener('click', function() {
-                    genarateReplay(this,"file")
-                }.bind(this), false); ///BINDING
+                if(!this.replaying){
+                    document.getElementById("cont").addEventListener("click", function () {
+                        this.continueGame(this);
+                    }.bind(this)); document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function () {
+                        if(!this.replaying){
+                            addtoreplayhistory(this);
+                        }
+                        replay(this, genarateReplay(this, "json"))
+                    }.bind(this), false); ///BINDING
+                    document.getElementById('savereplay-' + this.gameId).addEventListener('click', function () {
+                        genarateReplay(this, "file")
+                    }.bind(this), false); ///BINDING
+                }
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 this.allowInput = false;
@@ -1980,6 +2433,7 @@ function loaded() {
 
         }
         this.checkh_best();
+        this.ctile = best;
         this.bestDisplay.innerHTML = best;
 
 
@@ -1995,7 +2449,7 @@ function loaded() {
             loadedGame = JSON.parse(cookiedGame);
         }
 
-        function SaveData(gameId, saveData, hscore, besttile, movekeys,time,keyPressed) {
+        function SaveData(gameId, saveData, hscore, besttile, movekeys, time, keyPressed) {
             this.id = gameId;
             this.data = saveData;
             this.hscore = hscore;
@@ -2020,7 +2474,7 @@ function loaded() {
                 loadedGame.boards[x].btile = game.btile;
                 loadedGame.boards[x].time = game.time;
                 loadedGame.boards[x].keyPressed = game.keyPressed;
-                if(!dontback)
+                if (!dontback)
                     game.backdata.push(loadedGame.boards[x]);
                 exists = true;
 
@@ -2034,12 +2488,12 @@ function loaded() {
             }
             scoredata.push(game.moves);
             scoredata.push(game.score);
-            savedData = new SaveData(game.gameId, scoredata, game.hscore, game.btile, game.keycodes,game.time,game.keyPressed);
-            if(!dontback)
+            savedData = new SaveData(game.gameId, scoredata, game.hscore, game.btile, game.keycodes, game.time, game.keyPressed);
+            if (!dontback)
                 game.backdata.push(savedData);
             loadedGame.boards.push(savedData)
         }
-        localStorage.setItem(game.gameId+'_backdata', JSON.stringify(game.backdata));
+        localStorage.setItem(game.gameId + '_backdata', JSON.stringify(game.backdata));
         setCookie("savedgames", JSON.stringify(loadedGame), 31)
 
     }
@@ -2076,9 +2530,9 @@ function loaded() {
             game.hbestDisplay.innerHTML = game.btile;
             game.hscoreDisplay.innerHTML = game.hscore;
             timedisplay = document.getElementById('time-' + game.gameId);
-            timedisplay.innerHTML = game.time.min +":" + game.time.sec;
-            if(!isback){
-                game.backdata = JSON.parse(localStorage.getItem(game.gameId+'_backdata'));
+            timedisplay.innerHTML = game.time.min + ":" + game.time.sec;
+            if (!isback) {
+                game.backdata = JSON.parse(localStorage.getItem(game.gameId + '_backdata'));
             }
             game.checkGameOver();
             game.checkWin();
@@ -2092,8 +2546,8 @@ function loaded() {
         } else {
             game.themeBoard(def_theme);
         }
-        if(!isback)
-            savegame(game,false);
+        if (!isback)
+            savegame(game, false);
 
 
     }
@@ -2115,6 +2569,7 @@ function loaded() {
     }
 
     function resetGame(game, mode) {
+
         loadedGame = {};
         let cookiedGame = getCookie("savedgames");
         if (cookiedGame != "") {
@@ -2131,15 +2586,20 @@ function loaded() {
         game.moves = 0;
         game.score = 0;
         game.backdata = [];
+        game.squares = [];
         game.time = {
-            min:0,
-            sec:0,
+            min: 0,
+            sec: 0,
         }
         game.paused = false;
+        game.replaying = false;
+        game.keyPressed = "inital"
         game.scoreResult.style.display = "none";
         game.bestDisplay.innerHTML = "2";
         game.movesdisplay.innerHTML = game.moves;
         game.scoreDisplay.innerHTML = game.score;
+
+        document.getElementById("replaycontrol-" + game.gameId).style.display = "none";
         game.gridDisplay.innerHTML = "";
         if (mode != 1) {
             game.createBoard();
@@ -2158,7 +2618,7 @@ function loaded() {
     }
 
     function ReloadPage() {
-        location.reload();
+        location.href = website[0] + ".html";
         setCookie("reloadRequest", "yes", 1)
     }
     /////////////////////////INPUT/////////////////
@@ -2203,23 +2663,23 @@ function loaded() {
     function autoplay() {
         if (autoplayCheck.checked) {
             for (let g = 0; g < games.length; g++) {
-                setTimeout(function() {
+                setTimeout(function () {
                     let min = Math.ceil(1);
                     let max = Math.floor(5);
                     let rand = Math.floor(Math.random() * (max - min) + min); //The
-                    if (rand == 1){
+                    if (rand == 1) {
                         games[g].keyPressed = "left";
                         games[g].keyLeft();
                     }
-                    else if (rand == 2){
+                    else if (rand == 2) {
                         games[g].keyPressed = "right";
                         games[g].keyRight();
                     }
-                    else if (rand == 3){
+                    else if (rand == 3) {
                         games[g].keyPressed = "up";
                         games[g].keyup();
                     }
-                    else if (rand == 4){
+                    else if (rand == 4) {
                         games[g].keyPressed = "down";
                         games[g].keydown();
                     }
@@ -2242,65 +2702,7 @@ function loaded() {
         }
 
     }
-    function genarateReplay(game,type){
-        function ReplayData(initial,states,max){
-            this.id = game.gameId;
-            this.initial = initial;
-            this.state = states;
-            this.max = max;
-        }
-        repdata = new ReplayData(game.backdata[0],game.backdata,game.backdata.length);
-        replaydata = JSON.stringify(repdata);
-        if(type == "file"){
-            var hiddenElement = document.createElement('a');
-            hiddenElement.href = 'data:attachment/text,' + encodeURI(btoa(replaydata));
-            hiddenElement.target = '_blank';
-            var today = new Date().toLocaleDateString();
-            hiddenElement.download = "("+today+")_"+goal+'["+game.gameId+"]_.replay';
-            hiddenElement.click();
-        }
-        if(type == "json"){
-            return replaydata;
-        }
-    }
 
-    function replay(game,replaydata){
-        replaydata = JSON.parse(replaydata);
-        game.scoreResult.style.display = "none";
-        game.allowInput = false;
-        loadgame(replaydata.initial,game,true)
-        replayStep(1,game,replaydata)
-
-    }
-
-    function replayStep(x,game,replaydata){
-        setTimeout(function() {
-            loadgame(replaydata.state[x-1],game,true)
-            key = replaydata.state[x].keyPressed;
-            console.log(key+"_"+x)
-            if (key == "left"){
-                game.keyLeft();
-            }
-            else if (key == "right"){
-                game.keyRight();
-            }
-            else if (key == "up"){
-                game.keyup();
-            }
-            else if (key == "down"){
-                game.keydown();
-            }
-            if (customThemeActive) {
-                game.themeBoard(cus_theme); //FIX LATER
-            } else {
-                game.themeBoard(def_theme); //FIX LATER
-            }
-            game.movesdisplay.innerHTML = parseInt(game.movesdisplay.innerHTML)+1;
-
-            if(x != replaydata.max)
-                replayStep(x+1,game,replaydata)
-        }, 250);
-    }
 
     keyUpfunct = function keyup() {
         this.moveUp();
@@ -2412,7 +2814,7 @@ function loaded() {
     }
     loadOtherGames()
 
-    function rezizegameovers(){
+    function rezizegameovers() {
         games[0].checkGameOver();
         games[0].checkWin();
     }
@@ -2420,7 +2822,7 @@ function loaded() {
     window.onresize = rezizegameovers;
     updatezoom();
     newboardButton = document.querySelector(".newboard");
-    newboardButton.addEventListener("click", function() {
+    newboardButton.addEventListener("click", function () {
         makenew();
         rezizegameovers();
     });
@@ -2454,10 +2856,10 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
     //_________________________________________________OTHER-FUNCTIONS____________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
-    function debug(text, bugfixingid) {}
+    function debug(text, bugfixingid) { }
     if (getCookie("reloadRequest") == "yes") {
         setCookie("reloadRequest", "no", 1)
-        location.reload();
+        location.href = website[0] + ".html";
         //STFU ik its a hack
     }
 
@@ -2477,6 +2879,10 @@ function loaded() {
     if (passedTheme != undefined) {
         sharethemeinputbox.value = passedTheme;
         loadthemedata();
+    }
+    var passedReplay = getUrlVar("rawReplay")
+    if (passedReplay != undefined) {
+
     }
 
 }
@@ -2508,7 +2914,7 @@ function getCookie(cname) {
 
 function resetTheme() {
     setCookie("customTheme", "", 365);
-    location.reload();
+    location.href = website[0] + ".html";
 }
 
 //2000+ lines with  a messed  up spacekey

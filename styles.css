@@ -1,5 +1,3 @@
-
-
 html,
 body {
     background: #ffffffab;
@@ -13,7 +11,7 @@ body {
     padding-top: 5%;
 }
 
-.themepannel {
+.themepannel,.replaypannel {
     width: 0;
     position: fixed;
     z-index: 2;
@@ -32,8 +30,15 @@ body {
     display: none;
 }
 
+.replaypannel{
+    z-index: 3;
+}
+.replaypannel button{
+    z-index: 3;
+}
+
 .themepannel p,
-.themepannel a {
+.themepannel a, .replaypannel a {
     text-decoration: none;
     font-size: 25px;
     color: #818181;
@@ -42,7 +47,16 @@ body {
     right: 10px;
 }
 
-.themepannel .theme_closebtn {
+.replaypannel p{
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    right: 10px;
+}
+
+.themepannel .theme_closebtn, .replaypannel .replay_close {
     position: absolute;
     top: 0;
     right: 200px;
@@ -109,6 +123,7 @@ body {
 
 .sidepanel button,
 .themepannel button,
+.replaypannel button,
 #loadbutton {
     border-radius: 10px;
     text-decoration: none;
@@ -117,6 +132,11 @@ body {
     background-color: rgb(43, 41, 41);
     display: block;
     transition: 0.3s;
+}
+
+.replaypannel button{
+    font-size: 18px;
+
 }
 
 .sidepanel input,
@@ -490,4 +510,44 @@ h2 {
 }
 .gamewinbg:hover{
     background-color: rgba(0, 255, 0, 0.4);
+}
+
+
+.progress {
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-top: 10px;
+    width: 75%;
+    height: 20px;
+    background-color: #ffffff;
+    color: #ffffff;
+    outline: 1px solid gainsboro;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    font-size: var(--half-zoom);
+}
+
+.bar {
+    border-radius: 5px;
+    width: 50%;
+    margin-left: -6px;
+    margin-top: -6px;
+    height: 20px;
+    text-align: center;
+    background-color: royalblue;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    transition: width 0.3s cubic-bezier(0,.96,0,.96);
+}
+
+.play{
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: royalblue;
+    color: #ffffff;
+    font-size: var(--half-zoom);
+    border-color: #ffffff;
+}
+
+.replaycontrols{
+    display: none;
 }

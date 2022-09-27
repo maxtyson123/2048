@@ -38,6 +38,7 @@
 
 
     </div>
+
 </div>
 
 <br>
@@ -70,209 +71,255 @@
         <h1 class="newboardtect">Press key for "left"</h1>
     </div>
     <div class="row">
-        <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
+        <button class="openbtn" onclick="openReplay()">☰ Open Replay Controls</button>
         <div>
-        </div>
-
-        <div class="themepannel">
-            <a href="javascript:void(0)" class="theme_closebtn">×</a>
-            <div class="settingrow">
-                <h2>Theme Maker </h2>
-            </div>
-            <div class="settingrow">
-                <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
-                </p>
-            </div>
-            <div class="settingrow">
-                <p>Realtime:&nbsp;&nbsp;</p>
-                <input type="checkbox" id="realtime">
-            </div>
-            <div class="settingrow">
-                <h2>Game</h2>
-            </div>
-            <div class="settingrow">
-                <p>Empty Col: </p>
-                <div id="zeropicker"></div>
-            </div>
-            <div class="settingrow">
-                <p>Board Col: </p>
-                <div id="boardpicker"></div>
-            </div>
-            <div class="settingrow">
-                <p>Bg Col: </p>
-                <div id="worldbgpicker"></div>
-            </div>
-            <div class="settingrow">
-                <p>Body Text: </p>
-                <div id="worldtextpicker"></div>
-            </div>
-            <div class="settingrow">
-                <p>Tag Line:</p>
-            </div>
-            <div class="settingrow">
-                <p style="font-size: 18px">Press Enter To Update</p>
-            </div>
-
-            <div class="settingrow">
-                <input id="taginput" type="textarea">
-            </div>
-            <div class="settingrow">
-                <p>Score Colour: </p>
-                <div id="worldscore"></div>
-            </div>
-            <div class="settingrow">
-                <h2>Tiles</h2>
-            </div>
-            <div class="settingrow">
-                <p>Tile:&nbsp;&nbsp;</p>
-                <button id="themeTiledecrese">-</button>
-                <div id="themeTile">
-                    <p>2</p>
+            <br>
+            <div class="row">
+                <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
+                <div>
                 </div>
-                <button id="themeTileincrese">+</button>
-            </div>
-            <div class="settingrow">
-                <p>Mode:</p>
-            </div>
-            <div class="makeTileConatiner">
-                <div class="settingrow">
+                <div class="replaypannel" id="replaypannel">
+                    <a href="javascript:void(0)" class="replay_close">×</a>
+                    <h2>Replays</h2>
 
-                    <button id="themeModedecrese"><</button>
-                    <div id="themeMode">
-                        <p>Colour</p>
+                    <h3>Open Replay:</h3>
+                    <div class="settingrow">
+                        <p>File: </p>
+                        <input type="file" id="openreplayfile">
                     </div>
-                    <button id="themeModeincrese">></button>
-                </div>
-            </div>
-            <div class="imagemode">
-                <div class="settingrow">
-                    <p>Image URL:</p>
-                </div>
-                <div class="settingrow">
-                    <p style="font-size: 18px">Press Enter To Update</p>
-                </div>
-                <div class="settingrow">
-                    <input id="imgurl" type="textarea">
-                </div>
-                <br>
-                <br>
-            </div>
-
-            <div class="colourmode">
-
-                <div class="settingrow">
-                    <p>Num Col: </p>
-                    <div id="textcolpciker"></div>
-                </div>
-                <div class="settingrow">
-                    <p>Bg Col: </p>
-                    <div id="bgcolpciker"></div>
-                </div>
-                <div class="settingrow">
-                    <p>Glow Amount:&nbsp;&nbsp;</p>
-                    <button id="themeglowAmtdecrese">-</button>
-                    <div id="themeglowAmt">
-                        <p>0px</p>
+                    <div class="settingrow">
+                        <p>Text: </p>
+                        <input id="sharereplaydata" type="textarea">
                     </div>
-                    <button id="themeglowAmtincrese">+</button>
-                </div>
-                <div class="settingrow">
-                    <p>Glow Col:</p>
-                    <div id="glowcolpciker"></div>
-                </div>
-            </div>
-            <div class="settingrow">
-                <div class="makeTileConatiner">
-                    <button class="makeTile">Set Tile</button>
-                </div>
-            </div>
-            <div class="settingrow">
-                <div class="makeTileConatiner">
-                    <button id="sharethemebutton">Share Theme</button>
-                </div>
-            </div>
-            <div class="settingrow">
-                <div class="makeTileConatiner">
-                    <button id="loadthemebutton">Load Theme</button>
-                </div>
-            </div>
-            <div class="settingrow">
-                <div class="makeTileConatiner">
-                    <button id="presetthemebutton">Preset Theme</button>
-                </div>
-            </div>
-            <div class="settingrow">
-                <div class="makeTileConatiner">
-                    <button onclick="resetTheme()">Reset Theme</button>
-                </div>
-            </div>
-            <div class="settingrow">
-                <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
-            </div>
-            <div class="settingrow">
-                <p>2022</p>
-            </div>
-        </div>
-        <div id="settingspannel" class="sidepanel">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-            <div id="settings">
-                <div class="settingrow">
-                    <p>Goal:&nbsp;&nbsp;</p>
-                    <button id="goaldecrease">-</button>
-                    <div id="goal">--</div>
-                    <button id="goalincrease">+</button>
-                </div>
-                <div class="settingrow">
-                    <p>Spawn Tile:&nbsp;&nbsp;</p>
-                    <button id="spawndecrease">-</button>
-                    <div id="spawn">--</div>
-                    <button id="spawnincrease">+</button>
-                </div>
-                <div class="settingrow">
-                    <p>Size:&nbsp;&nbsp;</p>
-                    <button id="sizedecrease">-</button>
-                    <div id="size">--</div>
-                    <button id="sizeincrease">+</button>
-                </div>
-                <div class="settingrow">
-                    <p>Move Cap:&nbsp;&nbsp;</p>
-                    <button id="movedecrease">-</button>
-                    <div id="movecap">--</div>
-                    <button id="moveincrease">+</button>
-                </div>
-                <div class="settingrow">
-                    <p>Zoom:&nbsp;&nbsp;</p>
-                    <button id="zoomdecrease">-</button>
-                    <div id="zoom">--</div>
-                    <button id="zoomincrease">+</button>
-                </div>
-                <div class="settingrow">
-                    <p>Reverse:&nbsp;&nbsp;</p>
-                    <input type="checkbox" id="reverse">
-                </div>
-                <div class="settingrow">
-                    <p>Autoplay:&nbsp;&nbsp;</p>
-                    <input type="checkbox" id="auto">
-                </div>
-                <div class="settingrow">
-                    <p>Allow  Saving?:&nbsp;&nbsp;</p>
-                    <input type="checkbox" id="savemode">
-                </div>
-                <div class="settingrow">
-                    <button class="newboard">   New Board</button>
-                </div>
-                <br>
+                    <div class="settingrow">
+                        <button id="loadReplay">Load From Text</button>
+                    </div>
 
-                <div class="settingrow">
-                    <button class="theme_openbtn">☰ Open Theme Maker</button>
+                    <br>
+                    <h3>Past Replays:</h3>
+                    <div id="historycontinaer">
+
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <div class="themepannel">
+                    <a href="javascript:void(0)" class="theme_closebtn">×</a>
+                    <div class="settingrow">
+                        <h2>Theme Maker </h2>
+                    </div>
+                    <div class="settingrow">
+                        <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
+                        </p>
+                    </div>
+                    <div class="settingrow">
+                        <p>Realtime:&nbsp;&nbsp;</p>
+                        <input type="checkbox" id="realtime">
+                    </div>
+                    <div class="settingrow">
+                        <h2>Game</h2>
+                    </div>
+                    <div class="settingrow">
+                        <p>Empty Col: </p>
+                        <div id="zeropicker"></div>
+                    </div>
+                    <div class="settingrow">
+                        <p>Board Col: </p>
+                        <div id="boardpicker"></div>
+                    </div>
+                    <div class="settingrow">
+                        <p>Bg Col: </p>
+                        <div id="worldbgpicker"></div>
+                    </div>
+                    <div class="settingrow">
+                        <p>Body Text: </p>
+                        <div id="worldtextpicker"></div>
+                    </div>
+                    <div class="settingrow">
+                        <p>Tag Line:</p>
+                    </div>
+                    <div class="settingrow">
+                        <p style="font-size: 18px">Press Enter To Update</p>
+                    </div>
+
+                    <div class="settingrow">
+                        <input id="taginput" type="textarea">
+                    </div>
+                    <div class="settingrow">
+                        <p>Score Colour: </p>
+                        <div id="worldscore"></div>
+                    </div>
+                    <div class="settingrow">
+                        <h2>Tiles</h2>
+                    </div>
+                    <div class="settingrow">
+                        <p>Tile:&nbsp;&nbsp;</p>
+                        <button id="themeTiledecrese">-</button>
+                        <div id="themeTile">
+                            <p>2</p>
+                        </div>
+                        <button id="themeTileincrese">+</button>
+                    </div>
+                    <div class="settingrow">
+                        <p>Mode:</p>
+                    </div>
+                    <div class="makeTileConatiner">
+                        <div class="settingrow">
+
+                            <button id="themeModedecrese"><</button>
+                            <div id="themeMode">
+                                <p>Colour</p>
+                            </div>
+                            <button id="themeModeincrese">></button>
+                        </div>
+                    </div>
+                    <div class="imagemode">
+                        <div class="settingrow">
+                            <p>Image URL:</p>
+                        </div>
+                        <div class="settingrow">
+                            <p style="font-size: 18px">Press Enter To Update</p>
+                        </div>
+                        <div class="settingrow">
+                            <input id="imgurl" type="textarea">
+                        </div>
+                        <br>
+                        <br>
+                    </div>
+
+                    <div class="colourmode">
+
+                        <div class="settingrow">
+                            <p>Num Col: </p>
+                            <div id="textcolpciker"></div>
+                        </div>
+                        <div class="settingrow">
+                            <p>Bg Col: </p>
+                            <div id="bgcolpciker"></div>
+                        </div>
+                        <div class="settingrow">
+                            <p>Glow Amount:&nbsp;&nbsp;</p>
+                            <button id="themeglowAmtdecrese">-</button>
+                            <div id="themeglowAmt">
+                                <p>0px</p>
+                            </div>
+                            <button id="themeglowAmtincrese">+</button>
+                        </div>
+                        <div class="settingrow">
+                            <p>Glow Col:</p>
+                            <div id="glowcolpciker"></div>
+                        </div>
+                    </div>
+                    <div class="settingrow">
+                        <div class="makeTileConatiner">
+                            <button class="makeTile">Set Tile</button>
+                        </div>
+                    </div>
+                    <div class="settingrow">
+                        <div class="makeTileConatiner">
+                            <button id="sharethemebutton">Share Theme</button>
+                        </div>
+                    </div>
+                    <div class="settingrow">
+                        <div class="makeTileConatiner">
+                            <button id="loadthemebutton">Load Theme</button>
+                        </div>
+                    </div>
+                    <div class="settingrow">
+                        <div class="makeTileConatiner">
+                            <button id="presetthemebutton">Preset Theme</button>
+                        </div>
+                    </div>
+                    <div class="settingrow">
+                        <div class="makeTileConatiner">
+                            <button onclick="resetTheme()">Reset Theme</button>
+                        </div>
+                    </div>
+                    <div class="settingrow">
+                        <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
+                    </div>
+                    <div class="settingrow">
+                        <p>2022</p>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <div id="settingspannel" class="sidepanel">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                    <div id="settings">
+                        <div class="settingrow">
+                            <p>Goal:&nbsp;&nbsp;</p>
+                            <button id="goaldecrease">-</button>
+                            <div id="goal">--</div>
+                            <button id="goalincrease">+</button>
+                        </div>
+                        <div class="settingrow">
+                            <p>Spawn Tile:&nbsp;&nbsp;</p>
+                            <button id="spawndecrease">-</button>
+                            <div id="spawn">--</div>
+                            <button id="spawnincrease">+</button>
+                        </div>
+                        <div class="settingrow">
+                            <p>Size:&nbsp;&nbsp;</p>
+                            <button id="sizedecrease">-</button>
+                            <div id="size">--</div>
+                            <button id="sizeincrease">+</button>
+                        </div>
+                        <div class="settingrow">
+                            <p>Move Cap:&nbsp;&nbsp;</p>
+                            <button id="movedecrease">-</button>
+                            <div id="movecap">--</div>
+                            <button id="moveincrease">+</button>
+                        </div>
+                        <div class="settingrow">
+                            <p>Zoom:&nbsp;&nbsp;</p>
+                            <button id="zoomdecrease">-</button>
+                            <div id="zoom">--</div>
+                            <button id="zoomincrease">+</button>
+                        </div>
+                        <div class="settingrow">
+                            <p>Reverse:&nbsp;&nbsp;</p>
+                            <input type="checkbox" id="reverse">
+                        </div>
+                        <div class="settingrow">
+                            <p>Autoplay:&nbsp;&nbsp;</p>
+                            <input type="checkbox" id="auto">
+                        </div>
+                        <div class="settingrow">
+                            <p>Allow  Saving?:&nbsp;&nbsp;</p>
+                            <input type="checkbox" id="savemode">
+                        </div>
+                        <div class="settingrow">
+                            <button class="newboard">   New Board</button>
+                        </div>
+                        <br>
+
+                        <div class="settingrow">
+                            <button class="theme_openbtn">☰ Open Theme Maker</button>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+
+                    </div>
                 </div>
                 <br>
                 <br>
                 <br>
                 <br>
+                <br>	<br>
                 <br>
-            </div>
-        </div>
+                <br>
+                <br>
+                <br>
 </body>
 
 </html>
