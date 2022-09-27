@@ -6,21 +6,16 @@ openNav = "";
 closeNav = "";
 //__________________Done this update___________________________
 
-//Fixed gameover not being triggered
-//Fixed autoplay not working after gameover
-//Fixed autoplay breaking at board full
-//Fixed replay storage removal
-//Fixed duplicate replays
-//Fixed fresh cookies save error
-//Fixed hscore is NaN
-//Fixed tetris replaying
-//Clear replay  history button
+//Fixed themeinfo for reverse
+//-Block iframe if not with iframe tag
+//Gamemode exporting
+//-Create Data
+//-Load Data
+//-Added to instructions
 
 //_______________________NEXT__________________________________
 
-
-//Gamemode exporting (iframes aswell)
-//Fix tetris replays again (a bit janky in spawn area)
+//Remake Tiles (save me)
 
 //__________________Remake Tiles b4___________________________
 //Remake: save b4 combine, move each tile incrementally using the new filter array methord
@@ -30,6 +25,7 @@ closeNav = "";
 //Game modes
 //--flappy
 //--racing
+//Genarate Random for gmaemode exporting
 
 
 //______________________FINAL_________________________________
@@ -161,13 +157,19 @@ function loaded() {
     //AUTOPLAY
     const autoplayCheck = document.querySelector('#auto');
     //Moves
-
     const movescapdisplay = document.querySelector('#movecap');
     const moveincrease = document.querySelector('#moveincrease');
     const movedecrease = document.querySelector('#movedecrease');
-
     //REVERSED
     const realtimeCheck = document.querySelector('#realtime');
+    //SHARING
+    const sharingshowbutton = document.querySelector('#sharegame');
+    const shareoptions = document.querySelector('#shareoptions');
+    const shareCustomizeinput = document.querySelector('#share_customizeinput');
+    const shareCustomizeinputTheme = document.querySelector('#share_customizeinput_theme');
+    const shareCustomizeinputRandomize = document.querySelector('#share_customizeinput_randomize');
+    const shareCustomizeText = document.querySelector('#share_customize_text');
+
 
     //--------------------------------------------------------------------------------------------------------------------//
     //_______________________________________________Settings-Functions___________________________________________________//
@@ -423,6 +425,82 @@ function loaded() {
     else
         closeNav();
 
+    function sharecustom() {
+        sharethemediv.style.display = "block";
+        sharethemeinputbox.style.display = "none";
+        loadbutton.style.display = "none";
+        presets.style.display = "none";
+        shareoptions.style.display = "block";
+        sharetitle.innerHTML = "Share Game";
+        sharetext.innerHTML = "*Randomize will share the selected option(s) with random generated values";
+        shareCustomizeinput.addEventListener("change", generateCustomizedData)
+        shareCustomizeinputTheme.addEventListener("change", generateCustomizedData)
+        shareCustomizeinputRandomize.addEventListener("change", generateCustomizedData)
+        generateCustomizedData();
+    }
+
+    function generateCustomizedData(showiframe = false){
+        //Random TBC
+        let sharedata = {};
+        if(shareCustomizeinputRandomize.checked){
+            console.log("random")
+            if(shareCustomizeinput.checked){
+                var	rand_settingsData = {};
+                rand_settingsData.spwantile = getRandomValue([0.5,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8])*2;
+                rand_settingsData.goal = getRandomValue([1,2,3,4,5,6,7,8,9,10,11,12,13,14])*rand_settingsData.spwantile
+                rand_settingsData.width = getRandomValue([0.5,1,2,3,4,5,6,7,8])*4;
+                rand_settingsData.reverse = getRandomValue([true,false]);
+                rand_settingsData.savemode = true;
+                rand_settingsData.opened = false;
+                rand_settingsData.theme_opened = false;
+                rand_settingsData.themeopened = false;
+                rand_settingsData.movecap = getRandomValue([1,2,3,4,5,6,7,8,9,10])*100;
+                rand_settingsData.gamemode = getRandomValue(["Default","Upsidedown","Tetris"]);
+                rand_settingsData.currentgamemode = getRandomValue([0,1,2]);
+                rand_settingsData.realtime = true; //Ya gotta have  relatime
+                rand_settingsData.replayopened = false;
+                rand_settingsData.zoom = getRandomValue([60,80,100,120,140,160,180,200]);
+                sharedata.customize = btoa(JSON.stringify(rand_settingsData));
+            }
+            if(shareCustomizeinputTheme.checked){
+                if(customThemeActive)
+                    sharedata.theme = btoa(JSON.stringify(cus_theme));
+            }
+        }else{
+            if(shareCustomizeinput.checked){
+                sharedata.customize = btoa(JSON.stringify(settingsData));
+            }
+            if(shareCustomizeinputTheme.checked){
+                if(customThemeActive)
+                    sharedata.theme = btoa(JSON.stringify(cus_theme));
+            }
+
+        }
+
+        data = JSON.stringify(sharedata);
+        data = data.replaceAll("=","")
+        if(showiframe){
+            shareCustomizeText.innerHTML = "Link to custom game: <a href='"+website[0]+".html?customgame="+data+"'>Custom Game</a>.";
+            //	sharethemeinputbox.value = "<iframe src='"+website[0]+".html?customgame="+data+"?iframe=true'></iframe>";
+            //sharethemeinputbox.style.display = "block";
+
+        }else{
+            shareCustomizeText.innerHTML = "Link to custom game: <a href='"+website[0]+".html?customgame="+data+"'>Custom Game</a>.";
+            document.getElementById("showIframe").addEventListener("click",function(){generateCustomizedData(true)})
+            sharethemeinputbox.style.display = "none";
+        }
+
+
+    }
+
+    function getRandomValue(options){
+        return options[getRandomInt(options.length-1)]
+
+    }
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
     function setSettings() {
         root = document.documentElement;
         root.style.setProperty('--anim-speed', "0.2s");
@@ -435,6 +513,7 @@ function loaded() {
         autoplayCheck.addEventListener("change", autoplay);
         gameModeincrease.addEventListener("click", gamemodeeincrese);
         gameModedecrease.addEventListener("click", gamemodedecrese);
+        sharingshowbutton.addEventListener("click", sharecustom);
         gameModeDisplay.innerHTML = "<p>" + gamemode + "</p>";
     }
 
@@ -1146,7 +1225,6 @@ function loaded() {
         sharethemediv.style.display = "block";
         loadbutton.style.display = "none";
         sharethemeinputbox.style.display = "none";
-
         presets.style.display = "block";
         sharetitle.innerHTML = "Preset Themes";
         sharetext.innerHTML = "Share your theme with me for the chance of it beign added here";
@@ -1161,11 +1239,9 @@ function loaded() {
         presets.style.display = "none";
         sharetitle.innerHTML = "Load Theme";
         sharetext.innerHTML = "Paste your text and press the buton below";
-
-
     }
 
-    function loadthemedata() {
+    function loadthemedata(dontreload = false) {
         debug("funct_loadthemedata", 2);
         let shareddata = sharethemeinputbox.value;
         try {
@@ -1190,7 +1266,8 @@ function loaded() {
             tilenum = 0;
             loadtilefromsave();
             closeshare();
-            window.location = website[0] + ".html";
+            if(!dontreload)
+                window.location = website[0] + ".html";
         } else {
             sharethemeinputbox.value = "ERROR LOADING";
         }
@@ -3495,10 +3572,41 @@ function loaded() {
     }
 
 
+
+
     ////////////////////////////////////////////////////////OTHER////////////////////////////////////////////////////////////
     //--------------------------------------------------------------------------------------------------------------------//
     //_________________________________________________OTHER-FUNCTIONS____________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
+
+    //////Sharing
+    passedcustomization = getUrlVar("customgame");
+    if(passedcustomization != undefined){
+        passedcustomization = passedcustomization.replaceAll("%22",'"')
+        customizedjson = JSON.parse(passedcustomization);
+        if(customizedjson.customize != undefined){
+
+            loaded_settingsData = atob(customizedjson.customize);
+            setCookie("settingsData", loaded_settingsData, 1);
+        }
+        if(customizedjson.theme != undefined){
+            sharethemeinputbox.value = customizedjson.theme;
+            loadthemedata(true);
+        }
+
+        passediframestate = getUrlVar("iframe");
+        if(passediframestate  == undefined){
+            window.location.href = website[0]+".html"
+        }else{
+            window.location.href = website[0]+".html?iframe=true"
+        }
+    }
+
+    if ( window.location !== window.parent.location ) {
+
+        document.body.innerHTML = "<h1>Please Use The '<a href='https://maxtyson123.github.io/Games/wildcard_2048/'>Official Site</a>' For Best Experience</h1><br><p>(Save.Load breaks when using iframes)</p>"
+    }
+
     function debug(text, bugfixingid) { }
     if (getCookie("reloadRequest") == "yes") {
         setCookie("reloadRequest", "no", 1)
@@ -3573,6 +3681,16 @@ function loaded() {
                 howtoplaytext.push("<strong>New Board: </strong>" + games.length);
                 howtoplaytext.push("Use the this button (which is located at the bottom of the customization options) to create a new board for multiple players at once. Set the keys for input and I would recomend changing the zoom so all games fit on the screen")
                 howtoplaytext.push("")
+                if(shareCustomizeinput.checked){
+                    howtoplaytext.push("<strong>Share Customization: </strong> Customization");
+                }else if(shareCustomizeinputTheme.checked){
+                    howtoplaytext.push("<strong>Share Customization: </strong> Theme");
+                }else{
+                    howtoplaytext.push("<strong>Share Customization: </strong> None Selected");
+                }
+
+                howtoplaytext.push("Use the this button (which is located at the bottom of the customization options) to share your version of the game with another person. Just right click -> Copy Link -> Share link via Email")
+                howtoplaytext.push("")
                 if (settingsData.theme_opened) {
                     howtoplaytext.push("<strong>Theme Maker [Game]: </strong> Open");
                 } else {
@@ -3630,7 +3748,10 @@ function loaded() {
                 tile.className = "tile";
 
                 tile.innerHTML = this.tileNum;
-                this.tileNum += this.tileNum;
+                if(reverse)
+                    this.tileNum = this.tileNum/2;
+                else
+                    this.tileNum += this.tileNum;
                 if (gamemode == "Upsidedown") {
                     tile.style.transform = "rotate(180deg)";
                 }
@@ -3655,7 +3776,10 @@ function loaded() {
                 tile.className = "tile";
 
                 tile.innerHTML = this.tileNum;
-                this.tileNum += this.tileNum;
+                if(reverse)
+                    this.tileNum = this.tileNum/2;
+                else
+                    this.tileNum += this.tileNum;
                 if (gamemode == "Upsidedown") {
                     tile.style.transform = "rotate(180deg)";
                 }
