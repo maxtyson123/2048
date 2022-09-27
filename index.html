@@ -28,7 +28,8 @@
             </div>
         </div>
 
-        <p>Join the numbers and get to the <strong class="goaltext2">2048</strong> tile!</p>
+        <p>Join the numbers and get to the <strong class="goaltext2">2048</strong> tile! <br><a href="#howToPlay_top">How To Play</a>  <a href="#themeInfo_top">Theme Info</a>  <a href="#controlbuttons">Game Controls</a></p>
+
 
     </div>
 </div>
@@ -47,18 +48,32 @@
 <div class="header">
 
     <div class="row">
-        <p>Use the customization settingns to recreate the game to your desire</p>
+        <h3>How To Play [<a id="howToPlay_top" href="#howToPlay">Hide</a>]</h3>
+        <p id="howToPlay">Auto Generated How To Play</p>
         <p>_______________________________________</p>
-        <p>Game inspired by the original 2048 by Gabriele Cirulli. Game code was all written by me, Theme Maker, Customization, Replays all desgined in a almost 3000 line js file.
+        <h3>Theme Info [<a id="themeInfo_top" href="#howToPlay">Hide</a>]</h3>
+        <div id="themeInfoContainer">
+            <p id="themeInfo">Auto Generated Theme Info</p>
+            <div class="settingrow">
+                <p>Active Theme:</p>
+                <p style="margin-left: 80px;"></p>
+                <p>Representing Tiles:</p>
+            </div>
+            <div id="themeTiles" style="width: 100px; height: auto;" class="grid"></div>
+            <div id="themeNumTiles" style="width: 100px; height: auto;margin-left: 120px;" class="grid"></div>
+        </div>
+        <p>_______________________________________</p>
+        <p>Game inspired by the original 2048 by Gabriele Cirulli. Game code was all written by me, Theme Maker, Customization, Replays and Gamemodes all desgined in a over 3000 line js file.
         <p>_______________________________________</p>
     </div>
+
     <br>
     <div class="sharethemediv">
         <a href="javascript:void(0)" class="share_closebtn">×</a>
         <h1 id="sharetitle">Share Theme</h1>
         <ul id="presetlist">
-            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2Y5YTJiYyIsInRleHRjb2wiOiIjZjlhMmJjIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmOWEyYmMiLCJ0ZXh0Y29sIjoiI2Y5YTJiYyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmZmZmZmIiwidGV4dGNvbCI6IiMwMDAwMDAiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yLmpwZyJ9LHsiYmciOiIjNTRjMTU0IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy80LmpwZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy84LmpwZyJ9LHsiYmciOiIjMDA4NGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xNi5qcGcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvMzIuanBnIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzY0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMnB4IDJweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMjguanBnIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCA0cHggNHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzI1Ni5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDZweCA2cHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvNTEyLmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMDI0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yMDQ4LmpwZyJ9XSwibW9yZWVuYWJsZWQiOmZhbHNlLCJlbGVtZW50TW9yZSI6W1tdLFtdXSwiZ2FtZXRoZW0iOlt7ImJnIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwidGV4dGNvbCI6InJnYigxMjgsIDE5MCwgMTI4KSIsImJveHNoYWRvdyI6IiJ9LCIjZjY3MDk4IiwiI2ZiZjdmZiIsIiM2MzNmNGQiLCIjZjY3MDk4IiwiV2lsZENhcmQiXSwiZW5jb2RlZHByb3Blcmx5IjoiaXRfd29ya3NfcGxzX2RvbnRfbWVzc193aXRoX3RoaXNfb3RoZXJ3aXNlX2l0X2JyZWFrcyJ9=">Cupcakes</a></li>
-            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2JiNjlkYiIsInRleHRjb2wiOiIjYmI2OWRiIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNiYjY5ZGIiLCJ0ZXh0Y29sIjoiI2JiNjlkYiIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmZmZmZmIiwidGV4dGNvbCI6IiMwMDAwMDAiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vd3d3LmtyaXNweWtyZW1lLmNvLnVrL21lZGlhL2NhdGFsb2cvcHJvZHVjdC9jYWNoZS8yNDQ5Zjc3ZmQxMDdlYTA5NzE0ZDVmNGJjNzcwZDU5Mi91L2svdWstd2Vic2l0ZS0yMDE4LXByb2R1Y3RzLS0tY2FyYW1lbC1pY2VkLXRvcGRvd24ucG5nIn0seyJiZyI6IiM1NGMxNTQiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9jaGVhdGRheWRlc2lnbi5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjAvMDMvT3JpZ2luYWwtR2xhemVkLURvdWdobnV0LnBuZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vd3d3LmtyaXNweWtyZW1lLmNvbS5hdS9tZWRpYS9jYXRhbG9nL3Byb2R1Y3QvY2FjaGUvYjJhNTNlOGE5YmI4YzQ0ZTc2ZDE0NWQ0MDE3MWExMTIvay9yL2tyaXNweS1rcmVtZV93ZWJzaXRlX3Byb2R1Y3Qtc3RyYXdiZXJyeS1zcHJpbmtsZXMucG5nIn0seyJiZyI6IiMwMDg0ZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9pbWcuYnV6emZlZWQuY29tL3N0b3JlLWFuLWltYWdlLXByb2QtdXMtZWFzdC0xL1dBc2g0Z2JVMS5wbmcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL2NoZWF0ZGF5ZGVzaWduLmNvbS93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8wMS9Qb3dkZXJlZC1DYWtlLURvbnV0LnBuZy53ZWJwIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9pbWFnZXMuc3F1YXJlc3BhY2UtY2RuLmNvbS9jb250ZW50L3YxLzU2ZGRlY2Q2MWJiZWUwYWJmY2Y3MWIwYi8xNDU4MzMxMzQwOTQ0LU1BMUlTWFhNVVNPQkg4TDZFU0RKLzI3MjY4MTEyOC5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDJweCAycHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL3N0YXRpYy50YWtlYXdheS5jb20vaW1hZ2VzL3Jlc3RhdXJhbnRzL3BsLzM3N043TzdOL3Byb2R1Y3RzL21ybWFybWVsYWRlLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgNHB4IDRweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vY2RuLnNob3BpZnkuY29tL3MvZmlsZXMvMS8wNjA0LzA1NTQvNzE3MS9wcm9kdWN0cy9UcmFjZXlBaC1LZWVfR2x1dGVuRnJlZV9DaG9jSGF6ZWxudXREb251dF9UcmFuc3BhcmVudEJhY2tncm91bmRfV2hvbGVfVG9wU2hvdF9MYW5kc2NhcGVfMTAwMHgxMDAwLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgNnB4IDZweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vd3d3LmtyaXNweWtyZW1lLmNvbS5hdS9tZWRpYS9jYXRhbG9nL3Byb2R1Y3QvY2FjaGUvYjJhNTNlOGE5YmI4YzQ0ZTc2ZDE0NWQ0MDE3MWExMTIvay9yL2tyaXNweS1rcmVtZV93ZWJzaXRlX3Byb2R1Y3QtY2hvYy1pY2VkLXNwcmlua2xlcy5wbmcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDhweCA4cHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzM5cnN2dTE0OW00ejQ4d2FyeDI0dTRjdC13cGVuZ2luZS5uZXRkbmEtc3NsLmNvbS93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8wNC9UaG9ybnRvbnMtU3R1ZGlvLVRvcC1Eb3duX1N1cmZhY2VzXzE0NjkucG5nIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCA4cHggOHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9mcmVuY2hpZXNkb3VnaG51dHMuY2Evd3AtY29udGVudC91cGxvYWRzLzIwMjIvMDEvMjVBMDAyOS1QTkcucG5nIn1dLCJtb3JlZW5hYmxlZCI6ZmFsc2UsImVsZW1lbnRNb3JlIjpbW10sW11dLCJnYW1ldGhlbSI6W3siYmciOiJyZ2IoMTI4LCAxOTAsIDEyOCkiLCJ0ZXh0Y29sIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwiYm94c2hhZG93IjoiIn0sIiNjODdhZmYiLCIjZjFiYWZmIiwiI2ZmZDlkNCIsIiNjZjcwZmYiLCJXaWxkQ2FyZCJdLCJlbmNvZGVkcHJvcGVybHkiOiJpdF93b3Jrc19wbHNfZG9udF9tZXNzX3dpdGhfdGhpc19vdGhlcndpc2VfaXRfYnJlYWtzIn0=">Doughnuts</a></li>
+            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2Y5YTJiYyIsInRleHRjb2wiOiIjZjlhMmJjIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmOWEyYmMiLCJ0ZXh0Y29sIjoiI2Y5YTJiYyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmZmZmZmIiwidGV4dGNvbCI6IiMwMDAwMDAiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yLmpwZyJ9LHsiYmciOiIjNTRjMTU0IiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy80LmpwZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy84LmpwZyJ9LHsiYmciOiIjMDA4NGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xNi5qcGcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvMzIuanBnIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzY0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMnB4IDJweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMjguanBnIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCA0cHggNHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly8weDA4MDAuZ2l0aHViLmlvLzIwNDgtQ1VQQ0FLRVMvc3R5bGUvaW1nLzI1Ni5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDZweCA2cHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzB4MDgwMC5naXRodWIuaW8vMjA0OC1DVVBDQUtFUy9zdHlsZS9pbWcvNTEyLmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8xMDI0LmpwZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vMHgwODAwLmdpdGh1Yi5pby8yMDQ4LUNVUENBS0VTL3N0eWxlL2ltZy8yMDQ4LmpwZyJ9XSwibW9yZWVuYWJsZWQiOmZhbHNlLCJlbGVtZW50TW9yZSI6W1tdLFtdXSwiZ2FtZXRoZW0iOlt7ImJnIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwidGV4dGNvbCI6InJnYigxMjgsIDE5MCwgMTI4KSIsImJveHNoYWRvdyI6IiJ9LCIjZjY3MDk4IiwiI2ZiZjdmZiIsIiM2MzNmNGQiLCIjZjY3MDk4IiwiQ3VwY2FrZXMiXSwiZW5jb2RlZHByb3Blcmx5IjoiaXRfd29ya3NfcGxzX2RvbnRfbWVzc193aXRoX3RoaXNfb3RoZXJ3aXNlX2l0X2JyZWFrcyJ9=">Cupcakes</a></li>
+            <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2JiNjlkYiIsInRleHRjb2wiOiIjYmI2OWRiIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNiYjY5ZGIiLCJ0ZXh0Y29sIjoiI2JiNjlkYiIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmZmZmZmIiwidGV4dGNvbCI6IiMwMDAwMDAiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vd3d3LmtyaXNweWtyZW1lLmNvLnVrL21lZGlhL2NhdGFsb2cvcHJvZHVjdC9jYWNoZS8yNDQ5Zjc3ZmQxMDdlYTA5NzE0ZDVmNGJjNzcwZDU5Mi91L2svdWstd2Vic2l0ZS0yMDE4LXByb2R1Y3RzLS0tY2FyYW1lbC1pY2VkLXRvcGRvd24ucG5nIn0seyJiZyI6IiM1NGMxNTQiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9jaGVhdGRheWRlc2lnbi5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjAvMDMvT3JpZ2luYWwtR2xhemVkLURvdWdobnV0LnBuZyJ9LHsiYmciOiIjNDJmZmUwIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vd3d3LmtyaXNweWtyZW1lLmNvbS5hdS9tZWRpYS9jYXRhbG9nL3Byb2R1Y3QvY2FjaGUvYjJhNTNlOGE5YmI4YzQ0ZTc2ZDE0NWQ0MDE3MWExMTIvay9yL2tyaXNweS1rcmVtZV93ZWJzaXRlX3Byb2R1Y3Qtc3RyYXdiZXJyeS1zcHJpbmtsZXMucG5nIn0seyJiZyI6IiMwMDg0ZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9pbWcuYnV6emZlZWQuY29tL3N0b3JlLWFuLWltYWdlLXByb2QtdXMtZWFzdC0xL1dBc2g0Z2JVMS5wbmcifSx7ImJnIjoiIzAwNTFmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL2NoZWF0ZGF5ZGVzaWduLmNvbS93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8wMS9Qb3dkZXJlZC1DYWtlLURvbnV0LnBuZy53ZWJwIn0seyJiZyI6IiMxOTAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9pbWFnZXMuc3F1YXJlc3BhY2UtY2RuLmNvbS9jb250ZW50L3YxLzU2ZGRlY2Q2MWJiZWUwYWJmY2Y3MWIwYi8xNDU4MzMxMzQwOTQ0LU1BMUlTWFhNVVNPQkg4TDZFU0RKLzI3MjY4MTEyOC5qcGcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDJweCAycHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL3N0YXRpYy50YWtlYXdheS5jb20vaW1hZ2VzL3Jlc3RhdXJhbnRzL3BsLzM3N043TzdOL3Byb2R1Y3RzL21ybWFybWVsYWRlLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgNHB4IDRweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vY2RuLnNob3BpZnkuY29tL3MvZmlsZXMvMS8wNjA0LzA1NTQvNzE3MS9wcm9kdWN0cy9UcmFjZXlBaC1LZWVfR2x1dGVuRnJlZV9DaG9jSGF6ZWxudXREb251dF9UcmFuc3BhcmVudEJhY2tncm91bmRfV2hvbGVfVG9wU2hvdF9MYW5kc2NhcGVfMTAwMHgxMDAwLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgNnB4IDZweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vd3d3LmtyaXNweWtyZW1lLmNvbS5hdS9tZWRpYS9jYXRhbG9nL3Byb2R1Y3QvY2FjaGUvYjJhNTNlOGE5YmI4YzQ0ZTc2ZDE0NWQ0MDE3MWExMTIvay9yL2tyaXNweS1rcmVtZV93ZWJzaXRlX3Byb2R1Y3QtY2hvYy1pY2VkLXNwcmlua2xlcy5wbmcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDhweCA4cHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovLzM5cnN2dTE0OW00ejQ4d2FyeDI0dTRjdC13cGVuZ2luZS5uZXRkbmEtc3NsLmNvbS93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8wNC9UaG9ybnRvbnMtU3R1ZGlvLVRvcC1Eb3duX1N1cmZhY2VzXzE0NjkucG5nIn0seyJiZyI6IiM2MjAwZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCA4cHggOHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9mcmVuY2hpZXNkb3VnaG51dHMuY2Evd3AtY29udGVudC91cGxvYWRzLzIwMjIvMDEvMjVBMDAyOS1QTkcucG5nIn1dLCJtb3JlZW5hYmxlZCI6ZmFsc2UsImVsZW1lbnRNb3JlIjpbW10sW11dLCJnYW1ldGhlbSI6W3siYmciOiJyZ2IoMTI4LCAxOTAsIDEyOCkiLCJ0ZXh0Y29sIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwiYm94c2hhZG93IjoiIn0sIiNjODdhZmYiLCIjZjFiYWZmIiwiI2ZmZDlkNCIsIiNjZjcwZmYiLCJEb3VnaG51dHMiXSwiZW5jb2RlZHByb3Blcmx5IjoiaXRfd29ya3NfcGxzX2RvbnRfbWVzc193aXRoX3RoaXNfb3RoZXJ3aXNlX2l0X2JyZWFrcyJ9=">Doughnuts</a></li>
             <li><a href="https://maxtyson123.github.io/Games/wildcard_2048/index.html?rawTheme=eyJ6ZXJvIjp7ImJnIjoiI2ZmOWM5YyIsInRleHRjb2wiOiIjZmY5YzljIiwiYm94c2hhZG93IjoiIn0sIm51bWJlciI6WyIwIiwiMSIsIjIiLCIzIiwiNCIsIjUiLCI2IiwiNyIsIjgiLCI5IiwiMTAiLCIxMSJdLCJvcHRpb25zIjpbeyJiZyI6IiNmZjljOWMiLCJ0ZXh0Y29sIjoiI2ZmOWM5YyIsImJveHNoYWRvdyI6IiJ9LHsiYmciOiIjZmZmZmZmIiwidGV4dGNvbCI6IiMwMDAwMDAiLCJib3hzaGFkb3ciOiIwIDAgMHB4IDBweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vcXBoLmNmMi5xdW9yYWNkbi5uZXQvbWFpbi1xaW1nLTQ4ZGFhOWJkZjg2NGVkMTczNWE1Y2IxODRkMDUwNDFkIn0seyJiZyI6IiM1NGMxNTQiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly9hc3NldHMua29nYW4uY29tL2ltYWdlcy9hcm91bmRhdXN0cmFsaWEvQVJBLTUzNDU0MjYyOTE1LzEtNDRlZjc1Y2Q4Yi1zYWxtb24tcm9sbF8wMS5wbmcifSx7ImJnIjoiIzQyZmZlMCIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL3N1c2hpYXRhcmFzaGkuY29tL3dwLWNvbnRlbnQvdXBsb2Fkcy8yMDIxLzEwL2NhbGlmb3JuaWEtcm9sbF9hZG9iZXNwYXJrLW1pbi5wbmcifSx7ImJnIjoiIzAwODRmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL3N1c2hpYXRhcmFzaGkuY29tL3dwLWNvbnRlbnQvdXBsb2Fkcy8yMDIxLzEwL2dvbGRlbi1kcmFnb25fYWRvYmVzcGFyay1taW4ucG5nIn0seyJiZyI6IiMwMDUxZmYiLCJ0ZXh0Y29sIjoiIzc3NmU2NSIsImJveHNoYWRvdyI6IjAgMCAwcHggMHB4ICNmZmZmZmYiLCJpbWFnZW1vZGUiOnRydWUsImltYWdldXJsIjoiaHR0cHM6Ly93d3cuc2hpbnRvLml0L3dwLWNvbnRlbnQvdXBsb2Fkcy8yMDE3LzExL25pZ2lyaS10b25uby1iaWctNjAweDYwMC5qcGcifSx7ImJnIjoiIzE5MDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDBweCAwcHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL3NhY2hpa29zdXNoaS5jb20vaW1hZ2VzL2Z1dG8tc2FrZS11cmEtbWFraS1zYWNoaWtvLXN1c2hpLWJlcmxpbi5wbmcifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDJweCAycHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL2VuY3J5cHRlZC10Ym4wLmdzdGF0aWMuY29tL2ltYWdlcz9xPXRibjpBTmQ5R2NUT0tsb3M3azlCOUN6TTFTbWRpWWs4TFlLSzVhZXdIVHRmakEmdXNxcD1DQVUifSx7ImJnIjoiIzYyMDBmZiIsInRleHRjb2wiOiIjNzc2ZTY1IiwiYm94c2hhZG93IjoiMCAwIDRweCA0cHggI2ZmZmZmZiIsImltYWdlbW9kZSI6dHJ1ZSwiaW1hZ2V1cmwiOiJodHRwczovL3VyYW1ha2Vycy5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjEvMDUvU0FMTU9OX0ZMQU1FQURPLW1pbi0zMDB4MzAwLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgNnB4IDZweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vY2RuLnNpdGVkaXNoLm5sL2Jlc3RlbGxlbi5pY2hpYmEubmwvaW1nL2dlcmVjaHRlbi82MDYxOWM2MDIxNzNjX0d1bmthbl9LYW5pLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vY2RuLnNpdGVkaXNoLm5sL2Jlc3RlbGxlbi5pY2hpYmEubmwvaW1nL2dlcmVjaHRlbi82MDYxYTYwYTM2NzU3X1RlbWFraV9TYWtlLnBuZyJ9LHsiYmciOiIjNjIwMGZmIiwidGV4dGNvbCI6IiM3NzZlNjUiLCJib3hzaGFkb3ciOiIwIDAgOHB4IDhweCAjZmZmZmZmIiwiaW1hZ2Vtb2RlIjp0cnVlLCJpbWFnZXVybCI6Imh0dHBzOi8vZW5jcnlwdGVkLXRibjAuZ3N0YXRpYy5jb20vaW1hZ2VzP3E9dGJuOkFOZDlHY1RldWdEWjhNc2JveVU3Xy1aTFh3ZEgydGVFQ1dWTDBTLURiUSZ1c3FwPUNBVSJ9XSwibW9yZWVuYWJsZWQiOmZhbHNlLCJlbGVtZW50TW9yZSI6W1tdLFtdXSwiZ2FtZXRoZW0iOlt7ImJnIjoicmdiKDEyOCwgMTkwLCAxMjgpIiwidGV4dGNvbCI6InJnYigxMjgsIDE5MCwgMTI4KSIsImJveHNoYWRvdyI6IiJ9LCIjZmY2YjkzIiwiI2ZmYmZjYiIsIiNiMzIwNjAiLCIjZmY1ZTg5IiwiU3VzaGkiXSwiZW5jb2RlZHByb3Blcmx5IjoiaXRfd29ya3NfcGxzX2RvbnRfbWVzc193aXRoX3RoaXNfb3RoZXJ3aXNlX2l0X2JyZWFrcyJ9=">Sushi</a></li>
 
         </ul>
@@ -67,270 +82,272 @@
         <button id="loadbutton">Load Theme</button>
 
     </div>
+
     <div class="newboarddiv">
         <h1 class="newboardtect">Press key for "left"</h1>
     </div>
-    <div class="row">
+    <div class="row" id="controlbuttons">
         <button class="openbtn" onclick="openReplay()">☰ Open Replay Controls</button>
         <div>
             <br>
             <div class="row">
                 <button class="openbtn" onclick="openNav()">☰ Open Customization Options</button>
                 <div>
-                </div>
-                <div class="replaypannel" id="replaypannel">
-                    <a href="javascript:void(0)" class="replay_close">×</a>
-                    <h2>Replays</h2>
+                    <br>
+                    <div class="row">
+                        <button class="openbtn theme_openbtn">☰ Open Theme Maker</button>
+                        <div>
 
-                    <h3>Open Replay:</h3>
-                    <div class="settingrow">
-                        <p>File: </p>
-                        <input type="file" id="openreplayfile">
-                    </div>
-                    <div class="settingrow">
-                        <p>Text: </p>
-                        <input id="sharereplaydata" type="textarea">
-                    </div>
-                    <div class="settingrow">
-                        <button id="loadReplay">Load From Text</button>
-                    </div>
-
-                    <br>
-                    <h3>Past Replays:</h3>
-                    <div id="historycontinaer">
-
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                </div>
-                <div class="themepannel">
-                    <a href="javascript:void(0)" class="theme_closebtn">×</a>
-                    <div class="settingrow">
-                        <h2>Theme Maker </h2>
-                    </div>
-                    <div class="settingrow">
-                        <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
-                        </p>
-                    </div>
-                    <div class="settingrow">
-                        <p>Realtime:&nbsp;&nbsp;</p>
-                        <input type="checkbox" id="realtime">
-                    </div>
-                    <div class="settingrow">
-                        <h2>Game</h2>
-                    </div>
-                    <div class="settingrow">
-                        <p>Empty Col: </p>
-                        <div id="zeropicker"></div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Board Col: </p>
-                        <div id="boardpicker"></div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Bg Col: </p>
-                        <div id="worldbgpicker"></div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Body Text: </p>
-                        <div id="worldtextpicker"></div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Tag Line:</p>
-                    </div>
-                    <div class="settingrow">
-                        <p style="font-size: 18px">Press Enter To Update</p>
-                    </div>
-
-                    <div class="settingrow">
-                        <input id="taginput" type="textarea">
-                    </div>
-                    <div class="settingrow">
-                        <p>Score Colour: </p>
-                        <div id="worldscore"></div>
-                    </div>
-                    <div class="settingrow">
-                        <h2>Tiles</h2>
-                    </div>
-                    <div class="settingrow">
-                        <p>Tile:&nbsp;&nbsp;</p>
-                        <button id="themeTiledecrese">-</button>
-                        <div id="themeTile">
-                            <p>2</p>
                         </div>
-                        <button id="themeTileincrese">+</button>
-                    </div>
-                    <div class="settingrow">
-                        <p>Mode:</p>
-                    </div>
-                    <div class="makeTileConatiner">
-                        <div class="settingrow">
-                            <button id="themeModedecrese"><</button>
-                            <div id="themeMode">
-                                <p>Colour</p>
+                        <div class="replaypannel" id="replaypannel">
+                            <a href="javascript:void(0)" class="replay_close">×</a>
+                            <h2>Replays</h2>
+
+                            <h3>Open Replay:</h3>
+                            <div class="settingrow">
+                                <p>File: </p>
+                                <input type="file" id="openreplayfile">
                             </div>
-                            <button id="themeModeincrese">></button>
-                        </div>
-                    </div>
-                    <div class="imagemode">
-                        <div class="settingrow">
-                            <p>Image URL:</p>
-                        </div>
-                        <div class="settingrow">
-                            <p style="font-size: 18px">Press Enter To Update</p>
-                        </div>
-                        <div class="settingrow">
-                            <input id="imgurl" type="textarea">
-                        </div>
-                        <br>
-                        <br>
-                    </div>
-
-                    <div class="colourmode">
-
-                        <div class="settingrow">
-                            <p>Num Col: </p>
-                            <div id="textcolpciker"></div>
-                        </div>
-                        <div class="settingrow">
-                            <p>Bg Col: </p>
-                            <div id="bgcolpciker"></div>
-                        </div>
-                        <div class="settingrow">
-                            <p>Glow Amount:&nbsp;&nbsp;</p>
-                            <button id="themeglowAmtdecrese">-</button>
-                            <div id="themeglowAmt">
-                                <p>0px</p>
+                            <div class="settingrow">
+                                <p>Text: </p>
+                                <input id="sharereplaydata" type="textarea">
                             </div>
-                            <button id="themeglowAmtincrese">+</button>
-                        </div>
-                        <div class="settingrow">
-                            <p>Glow Col:</p>
-                            <div id="glowcolpciker"></div>
-                        </div>
-                    </div>
-                    <div class="settingrow">
-                        <div class="makeTileConatiner">
-                            <button class="makeTile">Set Tile</button>
-                        </div>
-                    </div>
-                    <div class="settingrow">
-                        <div class="makeTileConatiner">
-                            <button id="sharethemebutton">Share Theme</button>
-                        </div>
-                    </div>
-                    <div class="settingrow">
-                        <div class="makeTileConatiner">
-                            <button id="loadthemebutton">Load Theme</button>
-                        </div>
-                    </div>
-                    <div class="settingrow">
-                        <div class="makeTileConatiner">
-                            <button id="presetthemebutton">Preset Theme</button>
-                        </div>
-                    </div>
-                    <div class="settingrow">
-                        <div class="makeTileConatiner">
-                            <button onclick="resetTheme()">Reset Theme</button>
-                        </div>
-                    </div>
-                    <div class="settingrow">
-                        <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
-                    </div>
-                    <div class="settingrow">
-                        <p>2022</p>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                </div>
-                <div id="settingspannel" class="sidepanel">
-                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                    <div id="settings">
-                        <div class="settingrow">
-                            <p>Goal:&nbsp;&nbsp;</p>
-                            <button id="goaldecrease">-</button>
-                            <div id="goal">--</div>
-                            <button id="goalincrease">+</button>
-                        </div>
-                        <div class="settingrow">
-                            <p>Spawn Tile:&nbsp;&nbsp;</p>
-                            <button id="spawndecrease">-</button>
-                            <div id="spawn">--</div>
-                            <button id="spawnincrease">+</button>
-                        </div>
-                        <div class="settingrow">
-                            <p>Size:&nbsp;&nbsp;</p>
-                            <button id="sizedecrease">-</button>
-                            <div id="size">--</div>
-                            <button id="sizeincrease">+</button>
-                        </div>
-                        <div class="settingrow">
-                            <p>Move Cap:&nbsp;&nbsp;</p>
-                            <button id="movedecrease">-</button>
-                            <div id="movecap">--</div>
-                            <button id="moveincrease">+</button>
-                        </div>
-                        <div class="settingrow">
-                            <p>Zoom:&nbsp;&nbsp;</p>
-                            <button id="zoomdecrease">-</button>
-                            <div id="zoom">--</div>
-                            <button id="zoomincrease">+</button>
-                        </div>
-                        <div class="settingrow">
-                            <p>Gamemode:</p>
-                        </div>
-
-                        <div class="settingrow">
-                            <button id="gameModedecrese"><</button>
-                            <div id="gameMode">
-                                <p>Deafult</p>
+                            <div class="settingrow">
+                                <button id="loadReplay">Load From Text</button>
                             </div>
-                            <button id="gameModeincrease">></button>
-                        </div>
 
-                        <div class="settingrow">
-                            <p>Reverse:&nbsp;&nbsp;</p>
-                            <input type="checkbox" id="reverse">
-                        </div>
-                        <div class="settingrow">
-                            <p>Autoplay:&nbsp;&nbsp;</p>
-                            <input type="checkbox" id="auto">
-                        </div>
-                        <div class="settingrow">
-                            <p>Allow  Saving?:&nbsp;&nbsp;</p>
-                            <input type="checkbox" id="savemode">
-                        </div>
-                        <div class="settingrow">
-                            <button class="newboard">   New Board</button>
-                        </div>
-                        <br>
+                            <br>
+                            <h3>Past Replays:</h3>
+                            <div id="historycontinaer">
 
-                        <div class="settingrow">
-                            <button class="theme_openbtn">☰ Open Theme Maker</button>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="themepannel">
+                            <a href="javascript:void(0)" class="theme_closebtn">×</a>
+                            <div class="settingrow">
+                                <h2>Theme Maker </h2>
+                            </div>
+                            <div class="settingrow">
+                                <p>Use this to desgin custom game page and custom tiles. (scroll for more options). Make sure to apply the theme before reloading or leaving the site.</p>
+                                </p>
+                            </div>
+                            <div class="settingrow">
+                                <p>Realtime:&nbsp;&nbsp;</p>
+                                <input type="checkbox" id="realtime">
+                            </div>
+                            <div class="settingrow">
+                                <h2>Game</h2>
+                            </div>
+                            <div class="settingrow">
+                                <p>Empty Col: </p>
+                                <div id="zeropicker"></div>
+                            </div>
+                            <div class="settingrow">
+                                <p>Board Col: </p>
+                                <div id="boardpicker"></div>
+                            </div>
+                            <div class="settingrow">
+                                <p>Bg Col: </p>
+                                <div id="worldbgpicker"></div>
+                            </div>
+                            <div class="settingrow">
+                                <p>Body Text: </p>
+                                <div id="worldtextpicker"></div>
+                            </div>
+                            <div class="settingrow">
+                                <p>Tag Line:</p>
+                            </div>
+                            <div class="settingrow">
+                                <p style="font-size: 18px">Press Enter To Update</p>
+                            </div>
+
+                            <div class="settingrow">
+                                <input id="taginput" type="textarea">
+                            </div>
+                            <div class="settingrow">
+                                <p>Score Colour: </p>
+                                <div id="worldscore"></div>
+                            </div>
+                            <div class="settingrow">
+                                <h2>Tiles</h2>
+                            </div>
+                            <div class="settingrow">
+                                <p>Tile:&nbsp;&nbsp;</p>
+                                <button id="themeTiledecrese">-</button>
+                                <div id="themeTile">
+                                    <p>2</p>
+                                </div>
+                                <button id="themeTileincrese">+</button>
+                            </div>
+                            <div class="settingrow">
+                                <p>Mode:</p>
+                            </div>
+                            <div class="makeTileConatiner">
+                                <div class="settingrow">
+                                    <button id="themeModedecrese"><</button>
+                                    <div id="themeMode">
+                                        <p>Colour</p>
+                                    </div>
+                                    <button id="themeModeincrese">></button>
+                                </div>
+                            </div>
+                            <div class="imagemode">
+                                <div class="settingrow">
+                                    <p>Image URL:</p>
+                                </div>
+                                <div class="settingrow">
+                                    <p style="font-size: 18px">Press Enter To Update</p>
+                                </div>
+                                <div class="settingrow">
+                                    <input id="imgurl" type="textarea">
+                                </div>
+                                <br>
+                                <br>
+                            </div>
+
+                            <div class="colourmode">
+
+                                <div class="settingrow">
+                                    <p>Num Col: </p>
+                                    <div id="textcolpciker"></div>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Bg Col: </p>
+                                    <div id="bgcolpciker"></div>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Glow Amount:&nbsp;&nbsp;</p>
+                                    <button id="themeglowAmtdecrese">-</button>
+                                    <div id="themeglowAmt">
+                                        <p>0px</p>
+                                    </div>
+                                    <button id="themeglowAmtincrese">+</button>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Glow Col:</p>
+                                    <div id="glowcolpciker"></div>
+                                </div>
+                            </div>
+                            <div class="settingrow">
+                                <div class="makeTileConatiner">
+                                    <button class="makeTile">Set Tile</button>
+                                </div>
+                            </div>
+                            <div class="settingrow">
+                                <div class="makeTileConatiner">
+                                    <button id="sharethemebutton">Share Theme</button>
+                                </div>
+                            </div>
+                            <div class="settingrow">
+                                <div class="makeTileConatiner">
+                                    <button id="loadthemebutton">Load Theme</button>
+                                </div>
+                            </div>
+                            <div class="settingrow">
+                                <div class="makeTileConatiner">
+                                    <button id="presetthemebutton">Preset Theme</button>
+                                </div>
+                            </div>
+                            <div class="settingrow">
+                                <div class="makeTileConatiner">
+                                    <button onclick="resetTheme()">Reset Theme</button>
+                                </div>
+                            </div>
+                            <div class="settingrow">
+                                <p>Theme maker by Max Tyson, colour wheels by James Daniel</p>
+                            </div>
+                            <div class="settingrow">
+                                <p>2022</p>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </div>
+                        <div id="settingspannel" class="sidepanel">
+                            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+                            <div id="settings">
+                                <div class="settingrow">
+                                    <p>Goal:&nbsp;&nbsp;</p>
+                                    <button id="goaldecrease">-</button>
+                                    <div id="goal">--</div>
+                                    <button id="goalincrease">+</button>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Spawn Tile:&nbsp;&nbsp;</p>
+                                    <button id="spawndecrease">-</button>
+                                    <div id="spawn">--</div>
+                                    <button id="spawnincrease">+</button>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Size:&nbsp;&nbsp;</p>
+                                    <button id="sizedecrease">-</button>
+                                    <div id="size">--</div>
+                                    <button id="sizeincrease">+</button>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Move Cap:&nbsp;&nbsp;</p>
+                                    <button id="movedecrease">-</button>
+                                    <div id="movecap">--</div>
+                                    <button id="moveincrease">+</button>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Zoom:&nbsp;&nbsp;</p>
+                                    <button id="zoomdecrease">-</button>
+                                    <div id="zoom">--</div>
+                                    <button id="zoomincrease">+</button>
+                                </div>
+                                <div class="settingrow">
+                                    <p>Gamemode:</p>
+                                </div>
+
+                                <div class="settingrow">
+                                    <button id="gameModedecrese"><</button>
+                                    <div id="gameMode">
+                                        <p>Deafult</p>
+                                    </div>
+                                    <button id="gameModeincrease">></button>
+                                </div>
+
+                                <div class="settingrow">
+                                    <p>Reverse:&nbsp;&nbsp;</p>
+                                    <input type="checkbox" id="reverse">
+                                </div>
+                                <div class="settingrow">
+                                    <p>Autoplay:&nbsp;&nbsp;</p>
+                                    <input type="checkbox" id="auto">
+                                </div>
+                                <div class="settingrow">
+                                    <p>Allow  Saving?:&nbsp;&nbsp;</p>
+                                    <input type="checkbox" id="savemode">
+                                </div>
+                                <div class="settingrow">
+                                    <button class="newboard">   New Board</button>
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+
+                            </div>
                         </div>
                         <br>
                         <br>
                         <br>
                         <br>
+                        <br>	<br>
                         <br>
-
-                    </div>
-                </div>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>	<br>
-                <br>
-                <br>
-                <br>
-                <br>
+                        <br>
+                        <br>
+                        <br>
 </body>
 
 </html>

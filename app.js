@@ -6,17 +6,18 @@ openNav = "";
 closeNav = "";
 //__________________Done this update___________________________
 
-//Mode Selector
-//Upsidedown
+//Fixed Replay saving/loading
+//Added How to Play
+//Theme Details
+//Moved Around Game Controls
 
 //_______________________NEXT__________________________________
 
 //Game modes
 
-//--Mode Description
 
 //--Modes
-//----tertirs
+//----tetris
 //----cnsl ver
 //Gamemode exporting
 
@@ -42,7 +43,7 @@ function loaded() {
 
     vecookie = getCookie("version");
     if (vecookie != "21") {
-        setCookie("version", "21", 356);
+        setCookie("version", "21", 356); //22
         setCookie("settingsData", "", 356);
         setCookie("savedgames", "", 356);
 
@@ -72,6 +73,8 @@ function loaded() {
         settingsData.reverse = false;
         settingsData.savemode = true;
         settingsData.opened = false;
+        settingsData.theme_opened = false;
+        settingsData.themeopened = false;
         settingsData.movecap = 0;
         settingsData.gamemode = "Default";
         settingsData.currentgamemode = 0;
@@ -503,16 +506,19 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
     ///////////UI//////////////
     function openThemeMaker() {
-        debug("funct_openthememaker", 2);
+
         closeReplay();
+        settingsData.theme_opened = true;
+        setCookie("settingsData", JSON.stringify(settingsData), 365);
         themeMakerDisplay.style.width = "250px";
-        setCookie("theme-open", "yes", 1);
+
     }
 
     function closeThemeMaker() {
         debug("funct_closethememaker", 2);
         themeMakerDisplay.style.width = "0";
-        setCookie("theme-open", "no", 1);
+        settingsData.theme_opened = false;
+        setCookie("settingsData", JSON.stringify(settingsData), 365);
     }
 
 
@@ -823,6 +829,7 @@ function loaded() {
         makeintotile();
     }
     ///////////Loading
+
     function loadtilefromsave(initial = false) {
         debug("loadfromsave", 1);
         storedtheme = getCookie("customTheme");
@@ -1338,7 +1345,7 @@ function loaded() {
     function setTHeming() {
         let thememakerOpened = getCookie("theme-open");
         if (thememakerOpened != "") {
-            if (thememakerOpened == "yes")
+            if (settingsData.theme_opened)
                 openThemeMaker();
 
             else
@@ -1397,7 +1404,7 @@ function loaded() {
             fr.readAsText(fileList[0]);
         }
     });
-    loadReplay.addEventListener('click',function(){
+    loadReplay.addEventListener('click', function () {
         openreplfile(sharereplaydata.value);
     })
 
@@ -1422,10 +1429,10 @@ function loaded() {
                 historyData = JSON.parse(historyJson.saved[x]);
                 historyItem = document.createElement("div");
                 historyTitle = document.createElement("p");
-                if(historyData.best != undefined){
-                    historyTitle.innerHTML = historyData.time +", "+historyData.best;
-                }else{
-                    historyTitle.innerHTML = historyData.time +", "+historyData.settings.goal;
+                if (historyData.best != undefined) {
+                    historyTitle.innerHTML = historyData.time + ", " + historyData.best;
+                } else {
+                    historyTitle.innerHTML = historyData.time + ", " + historyData.settings.goal;
                 }
 
                 historyItem.appendChild(historyTitle);
@@ -1498,7 +1505,7 @@ function loaded() {
 
     function genarateReplay(game, type) {
         var today = new Date().toLocaleDateString();
-        function ReplayData(initial, states, max, settings,best) {
+        function ReplayData(initial, states, max, settings, best) {
             this.id = game.gameId;
             this.time = today;
             this.initial = initial;
@@ -1523,10 +1530,10 @@ function loaded() {
 
 
 
-    function begin_sharereplay(){
+    function begin_sharereplay() {
         shareReplay(resdata.replaydata)
     }
-    function begin_savereplay(){
+    function begin_savereplay() {
         var hiddenElement = document.createElement('a');
         hiddenElement.href = 'data:attachment/text,' + encodeURI(btoa(JSON.stringify(resdata.replaydata)));
         hiddenElement.target = '_blank';
@@ -1534,11 +1541,11 @@ function loaded() {
         hiddenElement.click();
 
     }
-    function begin_restarting(){
-        replay(resdata.game,resdata.replaydata)
+    function begin_restarting() {
+        replay(resdata.game, JSON.stringify(resdata.replaydata))
 
     }
-    function shareReplay(data){
+    function shareReplay(data) {
         sharethemediv.style.display = "block";
         loadbutton.style.display = "none";
         sharetitle.innerHTML = "Share Replay";
@@ -1546,30 +1553,28 @@ function loaded() {
         var encoded = btoa(JSON.stringify(data));
         sharethemeinputbox.value = encoded;
         sharethemeinputbox.style.display = "block";
-        sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or copy the text above and email it via this link: <a href='mailto:example@example.com?subject=I've shared my replay with you!&body=Copy the text below into the replay section of this website: "+website[0]+" Data to Copy: INSERT_TEXT_FROM_WEBSITE'>Email Link</a>";
+        sharetext.innerHTML = "Copy this text and share it with whoever. (Click inside and press ctrl-a then copy) or copy the text above and email it via this link: <a href='mailto:example@example.com?subject=I've shared my replay with you!&body=Copy the text below into the replay section of this website: " + website[0] + " Data to Copy: INSERT_TEXT_FROM_WEBSITE'>Email Link</a>";
     }
 
     //////////////////////////       Playback
     function openreplfile(repfile) {
+
         decodedfile = atob(repfile);
-        try
-        {
+        try {
             repdata = JSON.parse(decodedfile);
         }
-        catch (err)
-        {
+        catch (err) {
             sharereplaydata.value = "Error Loading";
         }
 
-        try
-        {
+        try {
             parseInt(repdata.id)
         }
-        catch (err)
-        {
+        catch (err) {
             sharereplaydata.value = "Error Loading";
         }
         for (let x = 0; x < games.length; x++) {
+            console.log(repdata.id)
             if (games[x].gameId == repdata.id) {
                 settingsData = repdata.settings;
                 loadsettingstovar();
@@ -1579,6 +1584,7 @@ function loaded() {
                 SetUpGame(games[x], games[x].keycodes)
                 games[x].createBoard();
                 replay(games[x], JSON.stringify(repdata))
+
             }
         }
     };
@@ -1589,7 +1595,7 @@ function loaded() {
         a = replayspeed.pop();
         replayspeed = replayspeed.join("");
         replayspeed = parseInt(replayspeed)
-        if(replayspeed == 0){
+        if (replayspeed == 0) {
             replayspeed = 0.5;
         }
         replayspeed = 500 / replayspeed;
@@ -1598,15 +1604,15 @@ function loaded() {
         game.scoreResult.style.display = "none";
         game.allowInput = false;
         resdata.game = game;
-        resdata.replaydata = JSON.stringify(replaydata);
-        if(game.replaying){
+        resdata.replaydata = replaydata;
+        if (game.replaying) {
             cancelothers = true;
             setTimeout(function () {
                 cancelothers = false;
                 game.replaying = false;
                 replay(game, JSON.stringify(replaydata))
-            },(replayspeed+200))
-        }else{
+            }, (replayspeed + 200))
+        } else {
             game.replaying = true;
             loadgame(replaydata.initial, game, true)
             replayStep(1, game, replaydata)
@@ -1618,7 +1624,7 @@ function loaded() {
     function replayStep(x, game, replaydata,) {
 
         play_pause.html = document.getElementById('play_pause-' + game.gameId);
-        if(play_pause.html.innerHTML == "Play"){
+        if (play_pause.html.innerHTML == "Play") {
             play_pause.x = x;
             play_pause.game = game;
             play_pause.replaydata = replaydata;
@@ -1629,23 +1635,23 @@ function loaded() {
         a = replayspeed.pop();
         replayspeed = replayspeed.join("");
         replayspeed = parseInt(replayspeed)
-        if(replayspeed == 0){
+        if (replayspeed == 0) {
             replayspeed = 0.5;
         }
         replayspeed = 500 / replayspeed;
-        if(replaydata.state[x].keyPressed == "inital"){
+        if (replaydata.state[x].keyPressed == "inital") {
             replayspeed = 100;
         }
         setTimeout(function () {
             loadgame(replaydata.state[x - 1], game, true)
             key = replaydata.state[x].keyPressed;
             bardisplay = document.getElementById("bar-" + game.gameId);
-            if(key == "inital"){
+            if (key == "inital") {
                 bardisplay.innerHTML = x + " / Loading";
                 bardisplay.style.width = "100%";
-            }else{
-                bardisplay.innerHTML = x + "/"+(replaydata.max-1);
-                bardisplay.style.width = (x/(replaydata.max-1))*100 + "%";
+            } else {
+                bardisplay.innerHTML = x + "/" + (replaydata.max - 1);
+                bardisplay.style.width = (x / (replaydata.max - 1)) * 100 + "%";
             }
 
 
@@ -1669,7 +1675,7 @@ function loaded() {
             }
             game.movesdisplay.innerHTML = parseInt(game.movesdisplay.innerHTML) + 1;
 
-            if (x != replaydata.max-1 && !cancelothers)
+            if (x != replaydata.max - 1 && !cancelothers)
                 replayStep(x + 1, game, replaydata)
             else {
                 bardisplay.innerHTML = "Finished"
@@ -1932,7 +1938,7 @@ function loaded() {
             document.getElementById('remove-' + selector).addEventListener('click', this.remove.bind(this), false); ///BINDING
             document.getElementById('speed-' + selector).addEventListener('click', this.replayspeed.bind(this), false); ///BINDING
             document.getElementById('play_pause-' + selector).addEventListener('click', this.playpause.bind(this), false); ///BINDING
-            document.getElementById('close_replay-' + selector).addEventListener('click', function(){location.href = website[0] + ".html";}, false); ///BINDING
+            document.getElementById('close_replay-' + selector).addEventListener('click', function () { location.href = website[0] + ".html"; }, false); ///BINDING
             document.getElementById('share_replay-' + selector).addEventListener('click', begin_sharereplay, false); ///BINDING
             document.getElementById('save_replay-' + selector).addEventListener('click', begin_savereplay, false); ///BINDING
             document.getElementById('restart_replay-' + selector).addEventListener('click', begin_restarting, false); ///BINDING
@@ -1981,27 +1987,27 @@ function loaded() {
 
 
         },
-        replayspeed: function(){
+        replayspeed: function () {
 
             spped = document.querySelector('#speed-' + this.gameId);
 
-            if(spped.innerHTML == "1x"){
+            if (spped.innerHTML == "1x") {
                 spped.innerHTML = "2x";
-            }else if(spped.innerHTML == "2x"){
+            } else if (spped.innerHTML == "2x") {
                 spped.innerHTML = "4x";
-            }else if(spped.innerHTML == "4x"){
+            } else if (spped.innerHTML == "4x") {
                 spped.innerHTML = "0.5x";
-            }else if(spped.innerHTML == "0.5x"){
+            } else if (spped.innerHTML == "0.5x") {
                 spped.innerHTML = "1x";
             }
 
         },
-        playpause: function(){
+        playpause: function () {
             play_pause.html = document.getElementById('play_pause-' + this.gameId);
-            if(play_pause.html.innerHTML == "Play"){
+            if (play_pause.html.innerHTML == "Play") {
                 play_pause.html.innerHTML = "Pause";
-                replayStep(play_pause.x,play_pause.game,play_pause.replaydata)
-            }else{
+                replayStep(play_pause.x, play_pause.game, play_pause.replaydata)
+            } else {
                 play_pause.html.innerHTML = "Play";
             }
         },
@@ -2042,8 +2048,10 @@ function loaded() {
                 tile = document.createElement("div");
                 tile.className = "tile";
                 tile.innerHTML = 0;
-                if(gamemode == "Upsidedown")
+                if (gamemode == "Upsidedown"){
                     tile.style.transform = "rotate(180deg)";
+                }
+
                 square.appendChild(tile)
                 this.gridDisplay.appendChild(square);
                 this.squares.push(tile);
@@ -2325,22 +2333,22 @@ function loaded() {
             if (this.moves >= movecap) {
                 game_die(this);
             }
-        function game_die(game){
+        function game_die(game) {
             game.paused = true;
             game.scoreResult.style.display = "block";
             game.scoreResult.style.left = game.gridDisplay.getBoundingClientRect().left + "px";
             game.scoreResult.style.width = (width * zoom) + 8 + "px";
             game.scoreResult.style.height = (width * zoom) + 8 + "px";
             game.scoreResult.className = "result gameoverbg";
-            if(!game.replaying){
+            if (!game.replaying) {
                 game.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + game.gameId + "'>Restart</button><br><button id='watchreplay-" + game.gameId + "'>Watch Replay</button><button id='savereplay-" + game.gameId + "'>Save Replay</button>";
-            }else{
+            } else {
                 game.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + game.gameId + "'>Close Replay</button>";
             }
             document.getElementById('replay-' + game.gameId).addEventListener('click', function () {
-                if(!game.replaying){
+                if (!game.replaying) {
                     addtoreplayhistory(game);
-                }else{
+                } else {
                     location.href = website[0] + ".html";
                     return;
                 }
@@ -2348,9 +2356,9 @@ function loaded() {
                 game.reset2();
                 game.scoreResult.style.display = "none";
             }.bind(game), false); ///BINDING
-            if(!game.replaying){
+            if (!game.replaying) {
                 document.getElementById('watchreplay-' + game.gameId).addEventListener('click', function () {
-                    if(!game.replaying){
+                    if (!game.replaying) {
                         addtoreplayhistory(game);
                     }
                     replay(game, genarateReplay(game, "json"))
@@ -2385,15 +2393,15 @@ function loaded() {
                 this.scoreResult.style.width = (width * zoom) + 8 + "px";
                 this.scoreResult.style.height = (width * zoom) + 8 + "px";
                 this.scoreResult.className = "result gamewinbg";
-                if(!this.replaying){
+                if (!this.replaying) {
                     this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Restart</button><button id='cont'>Continue</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>"
-                }else{
+                } else {
                     this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Close Replay</button>"
                 }
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function () {
-                    if(!this.replaying){
+                    if (!this.replaying) {
                         addtoreplayhistory(this);
-                    }else{
+                    } else {
                         location.href = website[0] + ".html";
                         return;
                     }
@@ -2401,11 +2409,11 @@ function loaded() {
                     this.reset2();
                     this.scoreResult.style.display = "none";
                 }.bind(this), false);
-                if(!this.replaying){
+                if (!this.replaying) {
                     document.getElementById("cont").addEventListener("click", function () {
                         this.continueGame(this);
                     }.bind(this)); document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function () {
-                        if(!this.replaying){
+                        if (!this.replaying) {
                             addtoreplayhistory(this);
                         }
                         replay(this, genarateReplay(this, "json"))
@@ -2850,12 +2858,12 @@ function loaded() {
         game.checkh_best = checkh_bestFunct;
         game.checkbest = checkbestFunct;
         game.themeBoard = themeBoardFunct;
-        if(gamemode == "Upsidedown"){
+        if (gamemode == "Upsidedown") {
             game.keyLeft = Upsidedown_keyLeftFunct;
             game.keydown = Upsidedown_keyDonwFunct;
             game.keyRight = Upsidedown_keyRightFunct;
             game.keyup = Upsidedown_keyUpfunct;
-        }else{
+        } else {
             game.keyLeft = keyLeftFunct;
             game.keydown = keyDonwFunct;
             game.keyRight = keyRightFunct;
@@ -2871,7 +2879,7 @@ function loaded() {
         return game;
     }
 
-    function StartingGameFunctions(game){
+    function StartingGameFunctions(game) {
         game.createBoard();
         game.generate();
         game.generate();
@@ -2975,6 +2983,218 @@ function loaded() {
         }
 
     }
+
+    function howToPlay() {
+        setTimeout(function () {
+            howtoplaytext = [];
+            if (!settingsData.hotoplay_closed) {
+                howtoplaytext.push("Here is information explaining each section of the game. If you are a new or even a returing 2048 player I would recomend reading this entirely as it explains some features that you might not have used previuosly.")
+                howtoplaytext.push("")
+                howtoplaytext.push("<strong>Gamemode: </strong>" + gamemode);
+                if (reverse) {
+                    type = "subtract"
+                } else {
+                    type = "combine"
+                }
+                if (gamemode == "Upsidedown") {
+                    howtoplaytext.push("Same as regular " + goal + " but instead the controls have been inverted and the tiles have been flipped upside down");
+                } else {
+                    howtoplaytext.push("Using the arrow keys " + type + " tiles until one of them reaches " + goal + ". When you press a key all the tiles on the board move in that direction.");
+                }
+                howtoplaytext.push("")
+                howtoplaytext.push("<strong>Score: </strong>" + games[0].score);
+                howtoplaytext.push("The score increases everytime you combine a tile with another tile, it increases by the sum of that tile");
+                howtoplaytext.push("")
+                howtoplaytext.push("<strong>Current Best: </strong>" + games[0].ctile);
+                howtoplaytext.push("This is the tile on the board that is closest to your goal");
+                howtoplaytext.push("")
+                howtoplaytext.push("<strong>Board's Side Tabs: </strong>");
+                howtoplaytext.push("Press the '&#x21bb' button to reset the board. Press the '&#8592' button to go back one step. This counter '" + games[0].moves + "' displays your moves. This is your time: '" + games[0].time.min + ":" + games[0].time.sec + "'");
+                howtoplaytext.push("")
+                if (games[0].scoreResult.style.display == "block") {
+                    howtoplaytext.push("<strong>Result Screen: </strong> Active");
+                    howtoplaytext.push("The game is over and you have either won or lost, press restart to have another attempt, press watch replay to watch a replay of your game, press save replay to download your replay.");
+                } else {
+                    howtoplaytext.push("<strong>Result Screen: </strong> In-Active");
+                    howtoplaytext.push("This is shown when game is over and you have either won or lost, press restart to have another attempt, press watch replay to watch a replay of your game, press save replay to download your replay.");
+
+                }
+                howtoplaytext.push("")
+                if (settingsData.replayopened) {
+                    howtoplaytext.push("<strong>Replay Controls: </strong> Open");
+                } else {
+                    howtoplaytext.push("<strong>Replay Controls: </strong> Closed");
+                }
+                howtoplaytext.push("Using these controls you can open a replay file that has been saved from your computer or you can input a shared replay that has been shared via text. You can also veiw a list of all your past games and their replays Note: this does not include replays that you have chosen to save to your computer.")
+                howtoplaytext.push("")
+                if (settingsData.opened) {
+                    howtoplaytext.push("<strong>Customization Controls: </strong> Open");
+                } else {
+                    howtoplaytext.push("<strong>Customization Controls: </strong> Closed");
+                }
+                howtoplaytext.push("Use the customization settingns to recreate the game to your desire. Using theese controls you can change the goal, board size, spawn tile, move cap, gamemode and much more.")
+                howtoplaytext.push("")
+                howtoplaytext.push("<strong>New Board: </strong>" + games.length);
+                howtoplaytext.push("Use the this button (which is located at the bottom of the customization options) to create a new board for multiple players at once. Set the keys for input and I would recomend changing the zoom so all games fit on the screen")
+                howtoplaytext.push("")
+                if (settingsData.theme_opened) {
+                    howtoplaytext.push("<strong>Theme Maker [Game]: </strong> Open");
+                } else {
+                    howtoplaytext.push("<strong>Theme Maker [Game]: </strong> Closed");
+                }
+                howtoplaytext.push("Using the controls in the game section of the Theme Maker you are able to set the colour of: empty tiles, board color, text color, tabs color. Other optioal settings are the tagline and also real-time which allows the theme to be previewed in realtime before being set. Note you must Apply Theme before reloading or progress wont be saved.  ")
+                howtoplaytext.push("")
+                howtoplaytext.push("<strong>Theme Maker [Tile]: </strong>" + modename[currentmode]);
+                if (modename[currentmode] == "Image") {
+                    howtoplaytext.push("Using the Image controls in the game section of the Theme Maker you are able to set the background of a tile of your choosing to what ever image you have a direct URL to. Please Note: When cycling through tiles, images may temporally be out of sync - this is a bug so dont be alarmed.")
+                } else {
+                    howtoplaytext.push("Using the Image controls in the game section of the Theme Maker you are able to set the colours of various parts of the tile such as text, backgroud or glow colour. The glow amount is also customsiable.");
+                }
+                howtoplaytext.push("")
+                if (settingsData.theme_opened) {
+                    howtoplaytext.push("<strong>Theme Maker [Bottom]: </strong> Open");
+                } else {
+                    howtoplaytext.push("<strong>Theme Maker [Bottom]: </strong> Closed");
+                }
+                howtoplaytext.push("The buttons at the bottom of the Theme Maker are used to share your current theme or to load a recived theme. Additionaly you can load a pre-set or reset to the default via those buttons.")
+            }
+            howtoplaytext.push("")
+            document.getElementById("howToPlay").innerHTML = howtoplaytext.join("<br>");
+            howToPlay();
+        }, 600)
+
+    }
+    howtoplay_open_close = document.getElementById("howToPlay_top");
+    howtoplay_open_close.addEventListener('click', function () {
+        if (!settingsData.hotoplay_closed) {
+            settingsData.hotoplay_closed = true;
+            howtoplay_open_close.innerHTML = "Show";
+        } else {
+            settingsData.hotoplay_closed = false;
+            howtoplay_open_close.innerHTML = "Hide";
+        }
+
+        setCookie("settingsData", JSON.stringify(settingsData), 265)
+    });
+    if (!settingsData.hotoplay_closed) {
+        howtoplay_open_close.innerHTML = "Hide";
+    } else {
+        howtoplay_open_close.innerHTML = "Show";
+    }
+    howToPlay();
+    var descriptionBoard = {
+        gridDisplay: document.getElementById("themeTiles"),
+        squares: [],
+        tileNum: settingsData.spwantile,
+        createBoard: function () {
+            for (let x = 0; x < 10; x++) {
+                square = document.createElement('div');
+                square.className = "squareItem";
+                tile = document.createElement("div");
+                tile.className = "tile";
+                this.tileNum += this.tileNum;
+                tile.innerHTML = this.tileNum;
+                if (gamemode == "Upsidedown"){
+                    tile.style.transform = "rotate(180deg)";
+                }
+
+                square.appendChild(tile)
+                this.gridDisplay.appendChild(square);
+                this.squares.push(tile);
+            }
+        },};
+    descriptionBoard.themeBoard = themeBoardFunct;
+    descriptionBoard.createBoard();
+    var numBoard = {
+        gridDisplay: document.getElementById("themeNumTiles"),
+        squares: [],
+        tileNum: settingsData.spwantile,
+        createBoard: function () {
+            for (let x = 0; x < 10; x++) {
+                square = document.createElement('div');
+                square.className = "squareItem";
+                tile = document.createElement("div");
+                tile.className = "tile";
+                this.tileNum += this.tileNum;
+                tile.innerHTML = this.tileNum;
+                if (gamemode == "Upsidedown"){
+                    tile.style.transform = "rotate(180deg)";
+                }
+
+                square.appendChild(tile)
+                this.gridDisplay.appendChild(square);
+                this.squares.push(tile);
+            }
+        },};
+    numBoard.themeBoard = themeBoardFunct;
+    numBoard.createBoard();
+    function themingDescription() {
+        setTimeout(function () {
+            themdescripttext = [];
+            if (customThemeLoaded) {
+                if(jsonedTheme.gamethem[5] == "Cupcakes"){
+                    themdescripttext.push("<strong>Active Theme: </strong> Cupcakes");
+                    themdescripttext.push("This is a custom theme based around various cupcakes that was desgined by the developer of this website. It was based of the orginal cupcakes theme by <a href='https://0x0800.github.io/2048-CUPCAKES/'>This Person.</a>");
+                }else if(jsonedTheme.gamethem[5] == "Doughnuts"){
+                    themdescripttext.push("<strong>Active Theme: </strong> Doughnuts");
+                    themdescripttext.push("This is a custom theme based around various Doughnuts that was desgined by the developer of this website.");
+                }else if(jsonedTheme.gamethem[5] == "Sushi"){
+                    themdescripttext.push("<strong>Active Theme: </strong> Sushi");
+                    themdescripttext.push("This is a custom theme based around various Sushi pecies that was desgined by the developer of this website.");
+                }else{
+                    themdescripttext.push("<strong>Active Theme: </strong> Custom");
+                    themdescripttext.push("This is a custom theme that you or another user has designed using the Theme Maker on the right. ");
+                }
+            } else {
+                themdescripttext.push("<strong>Active Theme: </strong> Default");
+                themdescripttext.push("This is the default theme loaded with the game. It is a boring theme and I recomend you change it.");
+            }
+            themdescripttext.push("")
+            if (customThemeLoaded) {
+                themdescripttext.push("<strong>Tiles: </strong> Custom");
+            }else{
+                themdescripttext.push("<strong>Tiles: </strong> Default");
+            }
+            numBoard.themeBoard(def_theme);
+            if (customThemeActive) {
+                descriptionBoard.themeBoard(cus_theme);
+            } else {
+                descriptionBoard.themeBoard(def_theme);
+            }
+            themdescripttext.push("")
+            document.getElementById("themeInfo").innerHTML = themdescripttext.join("<br>");
+            themingDescription();
+        }, 800)
+    }
+    numBoard.themeBoard(def_theme);
+    if (customThemeActive) {
+        descriptionBoard.themeBoard(cus_theme);
+    } else {
+        descriptionBoard.themeBoard(def_theme);
+    }
+    howtotheme_open_close = document.getElementById("themeInfo_top");
+    themeInfoContainer = document.getElementById("themeInfoContainer");
+    howtotheme_open_close.addEventListener('click', function () {
+        if (!settingsData.themeInfo_closed) {
+            settingsData.themeInfo_closed = true;
+            howtotheme_open_close.innerHTML = "Show";
+            themeInfoContainer.style.display = "none";
+        } else {
+            settingsData.themeInfo_closed = false;
+            howtotheme_open_close.innerHTML = "Hide";
+            themeInfoContainer.style.display = "block";
+        }
+
+        setCookie("settingsData", JSON.stringify(settingsData), 265)
+    });
+    if (!settingsData.themeInfo_closed) {
+        howtotheme_open_close.innerHTML = "Hide";
+        themeInfoContainer.style.display = "block";
+    } else {
+        howtotheme_open_close.innerHTML = "Show";
+        themeInfoContainer.style.display = "none";
+    }
+    themingDescription();
 
     var passedTheme = getUrlVar("rawTheme")
     if (passedTheme != undefined) {
