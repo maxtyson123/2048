@@ -6,21 +6,21 @@ openNav = "";
 closeNav = "";
 //__________________Done this update___________________________
 
-//Random tile spawing
-//Tetris Input
-//Tetris Combining
-//Tetris Movement
-//Fixed Tile Num Display
-//Replay speed effects tile anims
+//Fixed gameover not being triggered
+//Fixed autoplay not working after gameover
+//Fixed autoplay breaking at board full
+//Fixed replay storage removal
+//Fixed duplicate replays
+//Fixed fresh cookies save error
+//Fixed hscore is NaN
+//Fixed tetris replaying
+//Clear replay  history button
 
 //_______________________NEXT__________________________________
 
-//Join Mode plus, minus, combine subtract
-//Replay duplication
-//Fix tetris replays again
 
-
-//Gamemode exporting
+//Gamemode exporting (iframes aswell)
+//Fix tetris replays again (a bit janky in spawn area)
 
 //__________________Remake Tiles b4___________________________
 //Remake: save b4 combine, move each tile incrementally using the new filter array methord
@@ -1398,6 +1398,7 @@ function loaded() {
     const replaypannel = document.getElementById("replaypannel");
     const sharereplaydata = document.getElementById("sharereplaydata");
     const loadReplay = document.getElementById("loadReplay");
+    const clearReplay = document.getElementById("clearReplay");
     const historycontinaer = document.getElementById("historycontinaer");
     const openbutton = document.getElementById("openreplayfile");
     const closebutton = document.querySelector(".replay_close");
@@ -1429,6 +1430,11 @@ function loaded() {
     loadReplay.addEventListener('click', function () {
         openreplfile(sharereplaydata.value);
     })
+    clearReplay.addEventListener('click', function () {
+        clearreplay()
+
+    })
+
 
     //--------------------------------------------------------------------------------------------------------------------//
     //________________________________________________Replay-Functions____________________________________________________//
@@ -1443,10 +1449,10 @@ function loaded() {
         replaypannel.style.width = "250px";
         historyJson = { saved: [] }
         savedhistory = localStorage.getItem("replayHistory");
-        if (savedhistory != null) {
-
+        historycontinaer.innerHTML = "";
+        if (savedhistory != null ) {
             historyJson = JSON.parse(savedhistory);
-            historycontinaer.innerHTML = "";
+
             for (x = 0; x < historyJson.saved.length; x++) {
                 historyData = JSON.parse(historyJson.saved[x]);
                 historyItem = document.createElement("div");
@@ -1489,40 +1495,50 @@ function loaded() {
         closeReplay();
 
     ////////////////////////////   Saving
-    function addtoreplayhistory(game) {
 
-        space = localStorageSpace();
-        if (space <= 3000) {
-            newreplay = genarateReplay(game, "json")
-            historyJson = { saved: [] }
-            savedhistory = localStorage.getItem("replayHistory");
-            if (savedhistory != null) {
-                historyJson = JSON.parse(savedhistory);
-            }
-            let size = new Blob([newreplay]).size;
-            if ((space + (size / 1000)) <= 3000) {
-
-                historyJson.saved.push(newreplay)
-                localStorage.setItem("replayHistory", JSON.stringify(historyJson))
-            } else {
-                function removeFromhistory(newreplay) {
-                    historyJson.saved.pop();
-                    localStorage.setItem("replayHistory", JSON.stringify(historyJson));
-                    space = localStorageSpace();
-                    let size = new Blob([newreplay]).size;
-                    if ((space + (size / 1000)) <= 3000) {
-                        historyJson.saved.push(newreplay)
-                    } else {
-                        removeFromhistory(newreplay);
-                    }
-
-                }
-                removeFromhistory(newreplay);
-            }
-            if (settingsData.replayopened) {
-                openReplay();
-            }
+    function clearreplay(){
+        savedhistory = localStorage.getItem("replayHistory");
+        if (savedhistory != null) {
+            localStorage.removeItem("replayHistory")
+            openReplay();
         }
+
+    }
+
+    function addtoreplayhistory(game) {
+        space = localStorageSpace();
+
+        newreplay = genarateReplay(game, "json")
+        historyJson = { saved: [] }
+        savedhistory = localStorage.getItem("replayHistory");
+        if (savedhistory != null) {
+            historyJson = JSON.parse(savedhistory);
+        }
+        let size = new Blob([newreplay]).size;
+        if ((space + (size / 1000)) <= 3000) {
+
+            historyJson.saved.push(newreplay)
+            localStorage.setItem("replayHistory", JSON.stringify(historyJson))
+        } else {
+
+            function removeFromhistory(newreplay) {
+                historyJson.saved.shift();
+                localStorage.setItem("replayHistory", JSON.stringify(historyJson));
+                space = localStorageSpace();
+                let size = new Blob([newreplay]).size;
+                if ((space + (size / 1000)) <= 3000) {
+                    historyJson.saved.push(newreplay)
+                } else {
+                    removeFromhistory(newreplay);
+                }
+
+            }
+            removeFromhistory(newreplay);
+        }
+        if (settingsData.replayopened) {
+            openReplay();
+        }
+
     }
 
     function genarateReplay(game, type) {
@@ -1696,6 +1712,7 @@ function loaded() {
                     if(parseInt(game.squares[y].innerHTML) == 0){
 
                     }else{
+
                         game.checkGameOver.game_die(game);
                     }
                 }
@@ -1704,12 +1721,11 @@ function loaded() {
                 loadgame(replaydata.state[x], game, true);
             }else if (key == "combine_row") {
                 game.combineRow();
-                game.moveDown();
 
             }
             else if (key == "combine_down") {
                 game.combineCol("down");
-
+                game.moveDown();
             }
             if (customThemeActive) {
                 game.themeBoard(cus_theme); //FIX LATER
@@ -2068,65 +2084,67 @@ function loaded() {
         paused: false,
         moved: true,
         frameUpdate: function () {
-            if (gamemode == "Tetris") {
-
-                if (!this.moved) {
-                    if(this.combineCol("down")){
-                        this.moveDown();
-                        this.keyPressed = "combine_down"
-                    }else if (this.combineRow()){
-                        this.keyPressed = "combine_row";
-                    }
-                    else{
-                        for (let y = 0; y < width; y++) {
-                            if(parseInt(this.squares[y].innerHTML) == 0){
-
-                            }else{
-                                this.checkGameOver.game_die(this);
-                            }
+            if (!this.replaying) {
+                if (gamemode == "Tetris") {
+                    if (!this.moved) {
+                        if(this.combineCol("down")){
+                            this.moveDown();
+                            this.keyPressed = "combine_down"
+                        }else if (this.combineRow()){
+                            this.keyPressed = "combine_row";
                         }
-                        this.generate();
-                        this.keyPressed = "gift"
-                    }
+                        else{
+                            for (let y = 0; y < width; y++) {
+                                if(parseInt(this.squares[y].innerHTML) == 0){
 
-                    if (customThemeActive) {
-                        this.themeBoard(cus_theme);
-                    } else {
-                        this.themeBoard(def_theme);
-                    }
+                                }else{
+                                    this.checkGameOver.game_die(this);
+                                }
+                            }
+                            this.generate();
+                            this.keyPressed = "gift"
+                        }
 
-                    savegame(this)
+                        if (customThemeActive) {
+                            this.themeBoard(cus_theme);
+                        } else {
+                            this.themeBoard(def_theme);
+                        }
+
+                        savegame(this)
+                    }
+                    setTimeout(function () {
+
+
+                        if(this.combineCol("down")){
+                            this.keyPressed = "combine_down";
+                            this.moveDown();
+                        }else if (this.combineRow()){
+                            this.keyPressed = "combine_row";
+                        }
+                        else{
+                            this.moveDown();
+
+                            for (let y = 0; y < width; y++) {
+                                if(parseInt(this.squares[y].innerHTML) == 0){
+
+                                }else{
+                                    this.checkGameOver.game_die(this);
+                                }
+                            }
+                            this.keyPressed = "gravity";
+                        }
+
+                        if (customThemeActive) {
+                            this.themeBoard(cus_theme);
+                        } else {
+                            this.themeBoard(def_theme);
+                        }
+
+                        savegame(this);
+                    }.bind(this), 900);
+
                 }
-                setTimeout(function () {
-
-
-                    if(this.combineCol("down")){
-                        this.keyPressed = "combine_down";
-                        this.moveDown();
-                    }else if (this.combineRow()){
-                        this.keyPressed = "combine_row";
-                    }
-                    else{
-                        this.moveDown();
-                        this.keyPressed = "gravity";
-                        for (let y = 0; y < width; y++) {
-                            if(parseInt(this.squares[y].innerHTML) == 0){
-
-                            }else{
-                                this.checkGameOver.game_die(this);
-                            }
-                        }
-                    }
-
-                    if (customThemeActive) {
-                        this.themeBoard(cus_theme);
-                    } else {
-                        this.themeBoard(def_theme);
-                    }
-
-                    savegame(this);
-                }.bind(this), 900);
-
             }
 
         },
@@ -2201,6 +2219,13 @@ function loaded() {
                 gens.push( spwantile * 2)
             }
             randGenNum = Math.floor(Math.random() * gens.length);
+            var zeros = 0;
+            for (let x = 0; x < this.squares.length; x++) {
+                if (this.squares[x].innerHTML == 0) {
+                    zeros++;
+                }
+            }
+
             if (this.squares[randNum].innerHTML == 0) {
                 var newel = this.squares[randNum].cloneNode(true);
                 this.squares[randNum].parentNode.replaceChild(newel, this.squares[randNum]);
@@ -2217,7 +2242,8 @@ function loaded() {
                 if (gamemode == "Tetris") {
                     this.checkGameOver.game_die(this)
                 }else{
-                    this.generate();
+                    if(zeros != 0)
+                        this.generate();
                 }
             }
 
@@ -2751,15 +2777,16 @@ function loaded() {
         for (let x = 0; x < this.squares.length; x++) {
             if (this.squares[x].innerHTML == 0) {
                 zeros++;
-
             }
             tmpsquares.push(this.squares[x])
         }
         if (zeros === 0) {
             let possible = false;
             for (let x = 0; x < (width * width) - 1; x++) {
-                if (tmpsquares[x].innerHTML === tmpsquares[x + 1].innerHTML) {
-                    possible = true;
+                if ((x + 1) % width != 0) {
+                    if (tmpsquares[x].innerHTML === tmpsquares[x + 1].innerHTML) {
+                        possible = true;
+                    }
                 }
             }
             for (let x = 0; x < (width * width) - width; x++) {
@@ -2807,9 +2834,6 @@ function loaded() {
             }.bind(game), false); ///BINDING
             if (!game.replaying) {
                 document.getElementById('watchreplay-' + game.gameId).addEventListener('click', function () {
-                    if (!game.replaying) {
-                        addtoreplayhistory(game);
-                    }
                     replay(game, genarateReplay(game, "json"))
                 }.bind(game), false); ///BINDING
                 document.getElementById('savereplay-' + game.gameId).addEventListener('click', function () {
@@ -2867,9 +2891,6 @@ function loaded() {
                     document.getElementById("cont").addEventListener("click", function () {
                         this.continueGame(this);
                     }.bind(this)); document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function () {
-                        if (!this.replaying) {
-                            addtoreplayhistory(this);
-                        }
                         replay(this, genarateReplay(this, "json"))
                     }.bind(this), false); ///BINDING
                     document.getElementById('savereplay-' + this.gameId).addEventListener('click', function () {
@@ -2887,7 +2908,7 @@ function loaded() {
 
     /////////////////////////SCORES/////////////////
     checkhighFunct = function checkhigh() {
-        if (this.hscore == undefined) {
+        if (this.hscore == undefined || isNaN(this.hscore)) {
             this.hscore = 0;
         }
         if (!reverse) {
@@ -2966,7 +2987,7 @@ function loaded() {
             "boards": []
         };
         let cookiedGame = getCookie("savedgames");
-        if (cookiedGame != "") {
+        if (cookiedGame != "" && cookiedGame != "{}") {
             loadedGame = JSON.parse(cookiedGame);
         }
 
@@ -3091,7 +3112,7 @@ function loaded() {
     }
 
     function resetGame(game, mode) {
-
+        autoplayCheck.addEventListener("change", autoplay);
         loadedGame = {};
         let cookiedGame = getCookie("savedgames");
         if (cookiedGame != "") {
@@ -3756,6 +3777,6 @@ function resetTheme() {
     setCookie("customTheme", "", 365);
     location.href = website[0] + ".html";
 }
-
-//2000+ lines with a messed  up spacekey
-//3000+ lines for replay and dynamic creation, with much less of a headache then from theme-ing
+//1000+ lines with not a care in the world (at least not enough for a sassy comment);
+//2000+ lines with a messed  up spacekey;
+//3000+ lines with much less of a headache from theme-ing than  for replay and dynamic creation;
