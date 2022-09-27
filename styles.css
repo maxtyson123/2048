@@ -278,7 +278,7 @@ h2 {
 .grid .tile {
     top: var(--border-zoom);
     border-radius: var(--border-zoom);
-    animation: spawning 0.2s;
+    animation: spawning var(--anim-speed);
     left: var(--border-zoom);
     position: relative;
     width: var(--tile-zoom);
@@ -292,7 +292,7 @@ h2 {
 
 .animate-down {
     position: relative;
-    animation: animatetop 0.2s;
+    animation: animatetop var(--anim-speed);
 }
 
 :root {
@@ -348,7 +348,7 @@ h2 {
 
 .animate-up {
     position: relative;
-    animation: animatebottom 0.2s
+    animation: animatebottom var(--anim-speed)
 }
 
 @keyframes animatebottom {
@@ -362,7 +362,7 @@ h2 {
 
 .animate-left {
     position: relative;
-    animation: animateright 0.2s
+    animation: animateright var(--anim-speed)
 }
 
 @keyframes animateright {
@@ -376,7 +376,7 @@ h2 {
 
 .animate-right {
     position: relative;
-    animation: animateleft 0.2s
+    animation: animateleft var(--anim-speed)
 }
 
 @keyframes animateleft {
@@ -399,7 +399,7 @@ h2 {
 
 .animate-pop {
     border: 5px #cacece;
-    animation: pop 0.2s;
+    animation: pop var(--anim-speed);
 }
 
 @keyframes pop {

@@ -6,28 +6,31 @@ openNav = "";
 closeNav = "";
 //__________________Done this update___________________________
 
-//Fixed Replay saving/loading
-//Added How to Play
-//Theme Details
-//Moved Around Game Controls
+//Random tile spawing
+//Tetris Input
+//Tetris Combining
+//Tetris Movement
+//Fixed Tile Num Display
+//Replay speed effects tile anims
 
 //_______________________NEXT__________________________________
 
-//Game modes
+//Join Mode plus, minus, combine subtract
+//Replay duplication
+//Fix tetris replays again
 
 
-//--Modes
-//----tetris
-//----cnsl ver
 //Gamemode exporting
 
 //__________________Remake Tiles b4___________________________
+//Remake: save b4 combine, move each tile incrementally using the new filter array methord
 
+//Replay direction backward/forward
+//Animate Back
 //Game modes
 //--flappy
 //--racing
-//Replay direction backward/forward
-//Animate Back
+
 
 //______________________FINAL_________________________________
 
@@ -37,7 +40,7 @@ closeNav = "";
 //_______________________FUTURE________________________________
 
 
-//mod maker
+//mod maker  -  your dreaming if you  expect me to do this
 
 function loaded() {
 
@@ -107,7 +110,12 @@ function loaded() {
         root.style.setProperty('--border-zoom', (zoom / 10) / 2 + "px");
         for (let g = 0; g < games.length; g++) {
             games[g].gridDisplay.style.width = width * zoom + "px";
-            games[g].gridDisplay.style.height = width * zoom + "px";
+            if (gamemode == "Tetris") {
+                games[g].gridDisplay.style.height = (width + 1) * zoom + "px";
+            } else {
+                games[g].gridDisplay.style.height = width * zoom + "px";
+            }
+
             games[g].checkGameOver();
             games[g].checkWin();
             if (customThemeActive) {
@@ -124,7 +132,7 @@ function loaded() {
     const gameModeDisplay = document.querySelector('#gameMode');
     const gameModeincrease = document.querySelector('#gameModeincrease');
     const gameModedecrease = document.querySelector('#gameModedecrese');
-    gamemodename = ["Default", "Upsidedown"]
+    gamemodename = ["Default", "Upsidedown", "Tetris"]
 
 
     //GOAL
@@ -416,6 +424,8 @@ function loaded() {
         closeNav();
 
     function setSettings() {
+        root = document.documentElement;
+        root.style.setProperty('--anim-speed', "0.2s");
         setspawn(0);
         setgoal(0);
         sizeDisplay.innerHTML = "<p>" + width + "</p>";
@@ -1215,7 +1225,9 @@ function loaded() {
         debug("funct_themetheboard", 2);
         debug(Theme, 1);
         debug("CHECK POINT", 1);
-        gameTheme = Theme.gamethem;
+        gameTheme = Theme.gamethem
+        tempwidth = width;
+
         for (let x = 0; x < this.squares.length; x++) {
             tinum = parseInt(this.squares[x].innerHTML);
             firnum = spwantile;
@@ -1312,6 +1324,15 @@ function loaded() {
                 }
 
             }
+            if (gamemode == "Tetris") {
+                if (x < width) {
+                    if (tinum == 0) {
+                        this.squares[x].style.background = boardcol;
+                        this.squares[x].style.color = boardcol;
+                    }
+
+                }
+            }
         }
 
         if (gameTheme != undefined) {
@@ -1340,6 +1361,7 @@ function loaded() {
             }
             // document.getElementsByClassName("grid")
         }
+        width = tempwidth;
     }
 
     function setTHeming() {
@@ -1638,14 +1660,16 @@ function loaded() {
         if (replayspeed == 0) {
             replayspeed = 0.5;
         }
+        root = document.documentElement;
+        root.style.setProperty('--anim-speed', 0.2/replayspeed+"s");
         replayspeed = 500 / replayspeed;
+
         if (replaydata.state[x].keyPressed == "inital") {
             replayspeed = 100;
         }
         setTimeout(function () {
-            loadgame(replaydata.state[x - 1], game, true)
-            key = replaydata.state[x].keyPressed;
             bardisplay = document.getElementById("bar-" + game.gameId);
+            key = replaydata.state[x].keyPressed;
             if (key == "inital") {
                 bardisplay.innerHTML = x + " / Loading";
                 bardisplay.style.width = "100%";
@@ -1653,8 +1677,7 @@ function loaded() {
                 bardisplay.innerHTML = x + "/" + (replaydata.max - 1);
                 bardisplay.style.width = (x / (replaydata.max - 1)) * 100 + "%";
             }
-
-
+            loadgame(replaydata.state[x - 1], game, true)
             console.log(key + "_" + x)
             if (key == "left") {
                 game.keyLeft();
@@ -1667,6 +1690,26 @@ function loaded() {
             }
             else if (key == "down") {
                 game.keydown();
+            }else if (key == "gravity") {
+                game.moveDown();
+                for (let y = 0; y < width; y++) {
+                    if(parseInt(game.squares[y].innerHTML) == 0){
+
+                    }else{
+                        game.checkGameOver.game_die(game);
+                    }
+                }
+            }else if (key == "gift") {
+                game.generate();
+                loadgame(replaydata.state[x], game, true);
+            }else if (key == "combine_row") {
+                game.combineRow();
+                game.moveDown();
+
+            }
+            else if (key == "combine_down") {
+                game.combineCol("down");
+
             }
             if (customThemeActive) {
                 game.themeBoard(cus_theme); //FIX LATER
@@ -2023,7 +2066,72 @@ function loaded() {
             sec: 0,
         },
         paused: false,
+        moved: true,
+        frameUpdate: function () {
+            if (gamemode == "Tetris") {
+
+                if (!this.moved) {
+                    if(this.combineCol("down")){
+                        this.moveDown();
+                        this.keyPressed = "combine_down"
+                    }else if (this.combineRow()){
+                        this.keyPressed = "combine_row";
+                    }
+                    else{
+                        for (let y = 0; y < width; y++) {
+                            if(parseInt(this.squares[y].innerHTML) == 0){
+
+                            }else{
+                                this.checkGameOver.game_die(this);
+                            }
+                        }
+                        this.generate();
+                        this.keyPressed = "gift"
+                    }
+
+                    if (customThemeActive) {
+                        this.themeBoard(cus_theme);
+                    } else {
+                        this.themeBoard(def_theme);
+                    }
+
+                    savegame(this)
+                }
+                setTimeout(function () {
+
+
+                    if(this.combineCol("down")){
+                        this.keyPressed = "combine_down";
+                        this.moveDown();
+                    }else if (this.combineRow()){
+                        this.keyPressed = "combine_row";
+                    }
+                    else{
+                        this.moveDown();
+                        this.keyPressed = "gravity";
+                        for (let y = 0; y < width; y++) {
+                            if(parseInt(this.squares[y].innerHTML) == 0){
+
+                            }else{
+                                this.checkGameOver.game_die(this);
+                            }
+                        }
+                    }
+
+                    if (customThemeActive) {
+                        this.themeBoard(cus_theme);
+                    } else {
+                        this.themeBoard(def_theme);
+                    }
+
+                    savegame(this);
+                }.bind(this), 900);
+
+            }
+
+        },
         timing: function () {
+            this.frameUpdate();
             setTimeout(function () {
                 this.time.sec += 1;
                 if (this.time.sec == 60) {
@@ -2041,33 +2149,78 @@ function loaded() {
         createBoard: function () {
             debug("funct_createboard", 2);
             this.gridDisplay.style.width = width * zoom + "px";
-            this.gridDisplay.style.height = width * zoom + "px";
-            for (let x = 0; x < width * width; x++) {
-                square = document.createElement('div');
-                square.className = "squareItem";
-                tile = document.createElement("div");
-                tile.className = "tile";
-                tile.innerHTML = 0;
-                if (gamemode == "Upsidedown"){
-                    tile.style.transform = "rotate(180deg)";
-                }
-
-                square.appendChild(tile)
-                this.gridDisplay.appendChild(square);
-                this.squares.push(tile);
+            if (gamemode == "Tetris") {
+                this.gridDisplay.style.height = (width + 1) * zoom + "px";
+            } else {
+                this.gridDisplay.style.height = width * zoom + "px";
             }
+            if (gamemode == "Tetris") {
+                for (let x = 0; x < (width * width) + width; x++) {
+                    square = document.createElement('div');
+                    square.className = "squareItem";
+                    tile = document.createElement("div");
+                    tile.className = "tile";
+                    tile.innerHTML = 0;
+                    if (gamemode == "Upsidedown") {
+                        tile.style.transform = "rotate(180deg)";
+                    }
+
+                    square.appendChild(tile)
+                    this.gridDisplay.appendChild(square);
+                    this.squares.push(tile);
+                }
+            } else {
+                for (let x = 0; x < width * width; x++) {
+                    square = document.createElement('div');
+                    square.className = "squareItem";
+                    tile = document.createElement("div");
+                    tile.className = "tile";
+                    tile.innerHTML = 0;
+                    if (gamemode == "Upsidedown") {
+                        tile.style.transform = "rotate(180deg)";
+                    }
+
+                    square.appendChild(tile)
+                    this.gridDisplay.appendChild(square);
+                    this.squares.push(tile);
+                }
+            }
+
         },
         generate: function () {
-            let randNum = Math.floor(Math.random() * this.squares.length);
+            let randNum = 0
+            if (gamemode == "Tetris") {
+                randNum = Math.floor(Math.random() * width);
+            } else {
+                randNum = Math.floor(Math.random() * this.squares.length);
+            }
+            gens = [spwantile, spwantile, spwantile, spwantile]
+            if(reverse){
+                gens.push( spwantile / 2)
+            }else{
+                gens.push( spwantile * 2)
+            }
+            randGenNum = Math.floor(Math.random() * gens.length);
             if (this.squares[randNum].innerHTML == 0) {
                 var newel = this.squares[randNum].cloneNode(true);
                 this.squares[randNum].parentNode.replaceChild(newel, this.squares[randNum]);
                 this.squares[randNum] = newel;
-                this.squares[randNum].innerHTML = spwantile;
+                this.squares[randNum].innerHTML = gens[randGenNum];
+                if (gamemode == "Tetris") {
+                    for (let y = 0; y < this.squares.length; y++) {
+                        this.squares[y].active = false;
+                    }
+                    this.squares[randNum].active = true;
+                }
 
             } else {
-                this.generate();
+                if (gamemode == "Tetris") {
+                    this.checkGameOver.game_die(this)
+                }else{
+                    this.generate();
+                }
             }
+
             this.checkGameOver()
         }
     }
@@ -2078,6 +2231,54 @@ function loaded() {
     //--------------------------------------------------------------------------------------------------------------------//
 
     /////////////////////////MOVEMENT/////////////////
+    Tetris_moveRightFunct = function moveRight() {
+        for (let x = 0; x < (width * width) + width; x++) {
+            if (x % width === 0) {
+                let row = [];
+                let actives = [];
+                for (let y = 0; y < width; y++) {
+                    row.push(parseInt(this.squares[x + y].innerHTML));
+                    actives.push(this.squares[x + y].active);
+
+                }
+                let filteredRow = [];
+                for (let y = 0; y < width; y++) {
+                    filteredRow.push(row[y]);
+                }
+                for (let y = 0; y < filteredRow.length; y++) {
+                    if (row[y] > row[y + 1] && y + 1 != filteredRow.length && row[y + 1] == 0 && actives[y]) {
+
+                        filteredRow[y + 1] = row[y];
+                        filteredRow[y] = row[y + 1];
+                        actives[y + 1] = true;
+                        actives[y] = false;
+                        if (filteredRow[y] == undefined) {
+                            filteredRow[y] = 0;
+                        }
+                        mooved = true;
+                    } else {
+                        //filteredRow[y] = Rowlum[y];
+                    }
+                }
+
+
+                let newRow = filteredRow;
+                for (let y = 0; y < width; y++) {
+                    let oldval = parseInt(this.squares[x + y].innerHTML);
+                    this.squares[x + y].innerHTML = newRow[0 + y];
+                    this.squares[x + y].active = actives[y];
+                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                        this.squares[x + y].parentNode.classList.add("animate-right");
+
+                        this.squares[x + y].parentNode.addEventListener('animationend', function () {
+                            this.squares[x + y].parentNode.classList.remove('animate-right');
+                        }.bind(this))
+                    }
+                }
+            }
+        }
+
+    }
     moveRightFunct = function moveRight() {
         for (let x = 0; x < width * width; x++) {
             if (x % width === 0) {
@@ -2105,7 +2306,52 @@ function loaded() {
 
     }
 
+    Tetris_moveLeftFunct = function moveLeft() {
+        for (let x = 0; x < (width * width) + width; x++) {
+            if (x % width === 0) {
+                let row = [];
+                let actives = [];
+                for (let y = 0; y < width; y++) {
+                    row.push(parseInt(this.squares[x + y].innerHTML));
+                    actives.push(this.squares[x + y].active);
 
+                }
+                let filteredRow = [];
+                for (let y = 0; y < width; y++) {
+                    filteredRow.push(row[y]);
+                }
+
+                for (let y = filteredRow.length; y > 0; y--) {
+
+                    if (row[y] > row[y - 1] && y - 1 != filteredRow.length && row[y - 1] == 0 && actives[y]) {
+                        filteredRow[y - 1] = row[y];
+                        filteredRow[y] = row[y - 1];
+                        actives[y - 1] = true;
+                        actives[y] = false;
+                        if (filteredRow[y] == undefined) {
+                            filteredRow[y] = 0;
+                        }
+                        mooved = true;
+                    } else {
+                        //filteredRow[y] = Rowlum[y];
+                    }
+                }
+                let newRow = filteredRow;
+                for (let y = 0; y < width; y++) {
+                    let oldval = parseInt(this.squares[x + y].innerHTML);
+                    this.squares[x + y].innerHTML = newRow[0 + y];
+                    this.squares[x + y].active = actives[y];
+                    if (newRow[0 + y] != 0 && oldval != newRow[0 + y]) {
+                        this.squares[x + y].parentNode.classList.add("animate-left");
+                        this.squares[x + y].parentNode.addEventListener('animationend', function () {
+                            this.squares[x + y].parentNode.classList.remove('animate-left');
+
+                        }.bind(this))
+                    }
+                }
+            }
+        }
+    }
     moveLeftFunct = function moveLeft() {
         for (let x = 0; x < width * width; x++) {
             if (x % width === 0) {
@@ -2134,7 +2380,58 @@ function loaded() {
         }
 
     }
+    Tetris_moveDownFunct = function moveDown(mode = "def") {
 
+        let mooved = false;
+        for (let x = 0; x < width; x++) { 		//For each collum 1-5
+            let collum = [];
+            let actives = [];
+            for (let y = 0; y < width + 1; y++) {
+                collum.push(parseInt(this.squares[x + y * (width)].innerHTML));
+                actives.push(this.squares[x + y * (width)].active);
+            }
+            let filteredCol = [];
+            for (let y = 0; y < width + 1; y++) {
+                filteredCol.push(collum[y]);
+            }
+            //let filteredCol = collum.filter(num => num);
+
+            for (let y = 0; y < filteredCol.length; y++) {
+                if (collum[y] > collum[y + 1] && y + 1 != filteredCol.length && collum[y + 1] == 0) {
+                    filteredCol[y + 1] = collum[y];
+                    filteredCol[y] = collum[y - 1];
+                    actives[y + 1] = true;
+                    actives[y] = false;
+                    if (filteredCol[y] == undefined) {
+                        filteredCol[y] = 0;
+                    }
+                    mooved = true;
+                } else {
+                    //filteredCol[y] = collum[y];
+                }
+            }
+
+
+            let newCol = filteredCol;
+
+            for (let y = 0; y < width + 1; y++) {
+                let oldval = parseInt(this.squares[x + y * width].innerHTML);
+                this.squares[x + y * width].innerHTML = newCol[0 + y];
+                this.squares[x + y * width].active = actives[y];
+                if (newCol[0 + y] != 0 && oldval != newCol[0 + y]) {
+                    this.squares[x + y * width].parentNode.classList.add("animate-down");
+                    this.squares[x + y * width].parentNode.addEventListener('animationend', function () {
+                        this.squares[x + y * width].parentNode.classList.remove('animate-down');
+                    }.bind(this))
+                }
+
+            }
+        }
+        this.moved = mooved;
+        if (mode != "def" && this.moved) {
+            this.moveDown("press");
+        }
+    }
     moveDownFunct = function moveDown() {
         for (let x = 0; x < width; x++) {
             let collum = [];
@@ -2159,7 +2456,9 @@ function loaded() {
             }
         }
     }
-
+    Tetris_moveUpFunct = function moveUp() {
+        return;
+    }
     moveUpFunct = function moveUp() {
         for (let x = 0; x < width; x++) {
             let collum = [];
@@ -2184,6 +2483,95 @@ function loaded() {
         }
     }
     /////////////////////////COMBINE/////////////////
+    Tetris_combineRowFunct = function combineRow(mode) {
+        returntype = false;
+        for (let x = 0; x < ((width * width) + width) - 1; x++) {
+            dontdo = false;
+            didcombine = false;
+            if (x != ((width * width) + width) - 1) {
+                if (this.squares[x].innerHTML === this.squares[x + 1].innerHTML) {
+                    mode = "left";
+                    didcombine = true;
+                    let combinedTotal = 0;
+                    if (reverse)
+                        combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
+                    else
+                        combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + 1].innerHTML);
+                    if (mode != "nocheck") {
+                        if (combinedTotal != 0) {
+
+                            if ((x + 1) % (width) === 0) {
+                                dontdo = true;
+                            }
+                            if (!dontdo) {
+                                returntype = true;
+                                this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                                this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
+                                setTimeout(function () {
+                                    this.scoreAddDisplay.className = "class_scoreadd";
+                                    this.scoreAddDisplay.innerHTML = "";
+                                }.bind(this), 500);
+                            }
+
+
+                        }
+                        if (!dontdo) {
+                            if(this.squares[x].active){
+                                this.squares[x].innerHTML = combinedTotal;
+                                this.squares[x + 1].innerHTML = 0;
+                            }
+                            if(this.squares[x + 1].active){
+                                this.squares[x].innerHTML = 0;
+                                this.squares[x + 1].innerHTML = combinedTotal;
+                            }
+
+                            this.score += combinedTotal;
+                        }
+                    }
+                }
+            }
+
+            if (didcombine) {
+                this.scoreDisplay.innerHTML = this.score;
+                this.checkhigh();
+                if (!dontdo) {
+
+                    if (mode != "nocheck")
+                        this.checkbest();
+
+                    if (mode == "left") {
+
+                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                            this.squares[x].active = true;
+                            this.squares[x].parentNode.classList.add("animate-pop");
+                            this.squares[x].parentNode.addEventListener('animationend', function () {
+                                this.squares[x].parentNode.classList.remove('animate-pop');
+                            }.bind(this))
+                        }
+                    } else {
+
+                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                            this.squares[x + 1].active = true;
+                            this.squares[x + 1].parentNode.classList.add("animate-pop");
+                            this.squares[x + 1].parentNode.addEventListener('animationend', function () {
+                                this.squares[x + 1].parentNode.classList.remove('animate-pop');
+                            }.bind(this))
+                        }
+                    }
+                }
+
+
+            }
+
+
+        }
+        if (mode != "nocheck")
+            this.checkWin();
+        if (returntype)
+            return true;
+        else
+            return false;
+    }
     combineRowFunct = function combineRow(mode) {
         for (let x = 0; x < (width * width) - 1; x++) {
 
@@ -2248,8 +2636,64 @@ function loaded() {
         }
         if (mode != "nocheck")
             this.checkWin();
-    }
 
+    }
+    Tetris_combineColFunct = function combineCol(mode) {
+        returntype = false;
+        for (let x = 0; x < (width * width); x++) {
+            if (this.squares[x].innerHTML === this.squares[x + width].innerHTML) {
+                let combinedTotal = 0;
+                if (reverse)
+                    combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
+                else
+                    combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + width].innerHTML);
+                if (mode != "nocheck") {
+                    if (combinedTotal != 0) {
+                        this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                        this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
+                        returntype = true;
+                        setTimeout(function () {
+                            this.scoreAddDisplay.className = "class_scoreadd";
+                            this.scoreAddDisplay.innerHTML = "";
+                        }.bind(this), 500);
+
+                    }
+
+                    this.score += combinedTotal;
+                }
+                this.scoreDisplay.innerHTML = this.score;
+                this.checkhigh();
+                this.squares[x].innerHTML = combinedTotal;
+                if (mode == "up") {
+                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                        this.squares[x].parentNode.classList.add("animate-pop");
+                        this.squares[x].parentNode.addEventListener('animationend', function () {
+                            this.squares[x].parentNode.classList.remove('animate-pop');
+                        }.bind(this))
+                    }
+                } else {
+                    if (parseInt(this.squares[x].innerHTML) != 0) {
+
+                        this.squares[x + width].parentNode.classList.add("animate-pop");
+                        this.squares[x + width].parentNode.addEventListener('animationend', function () {
+                            this.squares[x + width].parentNode.classList.remove('animate-pop');
+                        }.bind(this))
+                    }
+                }
+                if (mode != "nocheck")
+                    this.checkbest();
+
+                this.squares[x + width].innerHTML = 0;
+            }
+
+        }
+        if (mode != "nocheck")
+            this.checkWin();
+        if (returntype)
+            return true;
+        else
+            return false;
+    }
     combineColFunct = function combineCol(mode) {
         for (let x = 0; x < (width * width) - width; x++) {
             if (this.squares[x].innerHTML === this.squares[x + width].innerHTML) {
@@ -2338,7 +2782,12 @@ function loaded() {
             game.scoreResult.style.display = "block";
             game.scoreResult.style.left = game.gridDisplay.getBoundingClientRect().left + "px";
             game.scoreResult.style.width = (width * zoom) + 8 + "px";
-            game.scoreResult.style.height = (width * zoom) + 8 + "px";
+            if(gamemode == "Tetris"){
+                game.scoreResult.style.height = ((width+1) * zoom) + 8 + "px";
+            }else{
+                game.scoreResult.style.height = (width * zoom) + 8 + "px";
+            }
+
             game.scoreResult.className = "result gameoverbg";
             if (!game.replaying) {
                 game.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + game.gameId + "'>Restart</button><br><button id='watchreplay-" + game.gameId + "'>Watch Replay</button><button id='savereplay-" + game.gameId + "'>Save Replay</button>";
@@ -2371,6 +2820,7 @@ function loaded() {
             autoplayCheck.removeEventListener("change", autoplay);
             game.allowInput = false;
         }
+        checkGameOver.game_die = game_die;
 
     }
 
@@ -2391,7 +2841,11 @@ function loaded() {
                 this.allowInput = false;
                 this.scoreResult.style.left = this.gridDisplay.getBoundingClientRect().left + "px";
                 this.scoreResult.style.width = (width * zoom) + 8 + "px";
-                this.scoreResult.style.height = (width * zoom) + 8 + "px";
+                if(gamemode == "Tetris"){
+                    this.scoreResult.style.height = ((width+1) * zoom) + 8 + "px";
+                }else{
+                    this.scoreResult.style.height = (width * zoom) + 8 + "px";
+                }
                 this.scoreResult.className = "result gamewinbg";
                 if (!this.replaying) {
                     this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Restart</button><button id='cont'>Continue</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>"
@@ -2547,6 +3001,7 @@ function loaded() {
 
             }
         }
+
         if (!exists) {
             scoredata = [];
 
@@ -2658,7 +3113,11 @@ function loaded() {
             min: 0,
             sec: 0,
         }
-        game.paused = false;
+        if(game.paused){
+            game.paused = false;
+            game.timing();
+        }
+
         game.replaying = false;
         game.keyPressed = "inital"
         game.scoreResult.style.display = "none";
@@ -2668,11 +3127,18 @@ function loaded() {
 
         document.getElementById("replaycontrol-" + game.gameId).style.display = "none";
         game.gridDisplay.innerHTML = "";
+        if(gamemode == "Tetris"){
+            ReloadPage();
+        }
         if (mode != 1) {
             game.createBoard();
-            game.generate();
-            game.generate();
-            game.timing();
+            if (gamemode == "Tetris") {
+                game.generate();
+            } else {
+                game.generate();
+                game.generate();
+            }
+
             if (customThemeActive) {
                 game.themeBoard(cus_theme);
             } else {
@@ -2829,6 +3295,27 @@ function loaded() {
         this.generate();
     }
 
+    Tetris_keyDonwFunct = function keydown() {
+        this.moveDown("press");
+        this.combineCol("down");
+        this.moveDown("press");
+    }
+
+    Tetris_keyUpfunct = function keyup() {
+        return;
+    }
+
+    Tetris_keyRightFunct = function keyRight() {
+
+        this.moveRight();
+
+    }
+
+    Tetris_keyLeftFunct = function keyLeft() {
+        this.moveLeft();
+
+    }
+
     //--------------------------------------------------------------------------------------------------------------------//
     //_________________________________________________Game-Setup_________________________________________________________//
     //--------------------------------------------------------------------------------------------------------------------//
@@ -2845,12 +3332,27 @@ function loaded() {
 
     function SetUpGame(game, keys) {
         game.keycodes = keys;
-        game.moveLeft = moveLeftFunct;
-        game.moveRight = moveRightFunct;
-        game.moveDown = moveDownFunct;
-        game.moveUp = moveUpFunct;
-        game.combineCol = combineColFunct;
-        game.combineRow = combineRowFunct;
+
+        if (gamemode == "Tetris") {
+            game.moveLeft = Tetris_moveLeftFunct;
+            game.moveRight = Tetris_moveRightFunct;
+            game.moveDown = Tetris_moveDownFunct;
+            game.moveUp = Tetris_moveUpFunct;
+
+        } else {
+            game.moveLeft = moveLeftFunct;
+            game.moveRight = moveRightFunct;
+            game.moveDown = moveDownFunct;
+            game.moveUp = moveUpFunct;
+        }
+
+        if (gamemode == "Tetris") {
+            game.combineCol = Tetris_combineColFunct;
+            game.combineRow = Tetris_combineRowFunct;
+        } else {
+            game.combineCol = combineColFunct;
+            game.combineRow = combineRowFunct;
+        }
         game.checkGameOver = checkGameOverFunc;
         game.checkWin = checkWinFunct;
         game.continueGame = continueGameFunct;
@@ -2863,7 +3365,13 @@ function loaded() {
             game.keydown = Upsidedown_keyDonwFunct;
             game.keyRight = Upsidedown_keyRightFunct;
             game.keyup = Upsidedown_keyUpfunct;
-        } else {
+        } else if (gamemode == "Tetris") {
+            game.keyLeft = Tetris_keyLeftFunct;
+            game.keydown = Tetris_keyDonwFunct;
+            game.keyRight = Tetris_keyRightFunct;
+            game.keyup = Tetris_keyUpfunct;
+        }
+        else {
             game.keyLeft = keyLeftFunct;
             game.keydown = keyDonwFunct;
             game.keyRight = keyRightFunct;
@@ -2878,11 +3386,16 @@ function loaded() {
 
         return game;
     }
-
+//P
     function StartingGameFunctions(game) {
         game.createBoard();
-        game.generate();
-        game.generate();
+        if (gamemode == "Tetris") {
+            game.generate();
+        } else {
+            game.generate();
+            game.generate();
+        }
+
         intialLoad(game);
         game.checkbest();
         game.checkhigh();
@@ -2935,7 +3448,7 @@ function loaded() {
         makenew();
         rezizegameovers();
     });
-
+//B
     function makenew() {
         keydiv = document.querySelector(".newboarddiv");
         keytext = document.querySelector(".newboardtect");
@@ -2994,16 +3507,18 @@ function loaded() {
                 if (reverse) {
                     type = "subtract"
                 } else {
-                    type = "combine"
+                    type = "combind"
                 }
                 if (gamemode == "Upsidedown") {
                     howtoplaytext.push("Same as regular " + goal + " but instead the controls have been inverted and the tiles have been flipped upside down");
-                } else {
-                    howtoplaytext.push("Using the arrow keys " + type + " tiles until one of them reaches " + goal + ". When you press a key all the tiles on the board move in that direction.");
+                } else if (gamemode == "Tetris") {
+                    howtoplaytext.push("In this version of " + goal + " the tiles generate at the top of the board and slowly move down. When you press a key only the active tile (tile that moved or recently was "+type+"ed from another) gets moved in that direction. If a tile generates in the top area and it cant fall down then it's game over.");
+                } else{
+                    howtoplaytext.push("Using the arrow keys " + type + " tiles until one of them reaches " + goal + ". When you press a key all the tiles on the board move in that direction. If a tile cannot generate and no more tiles can be "+type+"ed then its game over.");
                 }
                 howtoplaytext.push("")
                 howtoplaytext.push("<strong>Score: </strong>" + games[0].score);
-                howtoplaytext.push("The score increases everytime you combine a tile with another tile, it increases by the sum of that tile");
+                howtoplaytext.push("The score increases everytime you "+type+" a tile with another tile, it increases by the sum of that tile");
                 howtoplaytext.push("")
                 howtoplaytext.push("<strong>Current Best: </strong>" + games[0].ctile);
                 howtoplaytext.push("This is the tile on the board that is closest to your goal");
@@ -3087,14 +3602,15 @@ function loaded() {
         squares: [],
         tileNum: settingsData.spwantile,
         createBoard: function () {
-            for (let x = 0; x < 10; x++) {
+            for (let x = 0; x < 11; x++) {
                 square = document.createElement('div');
                 square.className = "squareItem";
                 tile = document.createElement("div");
                 tile.className = "tile";
-                this.tileNum += this.tileNum;
+
                 tile.innerHTML = this.tileNum;
-                if (gamemode == "Upsidedown"){
+                this.tileNum += this.tileNum;
+                if (gamemode == "Upsidedown") {
                     tile.style.transform = "rotate(180deg)";
                 }
 
@@ -3102,7 +3618,8 @@ function loaded() {
                 this.gridDisplay.appendChild(square);
                 this.squares.push(tile);
             }
-        },};
+        },
+    };
     descriptionBoard.themeBoard = themeBoardFunct;
     descriptionBoard.createBoard();
     var numBoard = {
@@ -3110,14 +3627,15 @@ function loaded() {
         squares: [],
         tileNum: settingsData.spwantile,
         createBoard: function () {
-            for (let x = 0; x < 10; x++) {
+            for (let x = 0; x < 11; x++) {
                 square = document.createElement('div');
                 square.className = "squareItem";
                 tile = document.createElement("div");
                 tile.className = "tile";
-                this.tileNum += this.tileNum;
+
                 tile.innerHTML = this.tileNum;
-                if (gamemode == "Upsidedown"){
+                this.tileNum += this.tileNum;
+                if (gamemode == "Upsidedown") {
                     tile.style.transform = "rotate(180deg)";
                 }
 
@@ -3125,23 +3643,24 @@ function loaded() {
                 this.gridDisplay.appendChild(square);
                 this.squares.push(tile);
             }
-        },};
+        },
+    };
     numBoard.themeBoard = themeBoardFunct;
     numBoard.createBoard();
     function themingDescription() {
         setTimeout(function () {
             themdescripttext = [];
             if (customThemeLoaded) {
-                if(jsonedTheme.gamethem[5] == "Cupcakes"){
+                if (jsonedTheme.gamethem[5] == "Cupcakes") {
                     themdescripttext.push("<strong>Active Theme: </strong> Cupcakes");
                     themdescripttext.push("This is a custom theme based around various cupcakes that was desgined by the developer of this website. It was based of the orginal cupcakes theme by <a href='https://0x0800.github.io/2048-CUPCAKES/'>This Person.</a>");
-                }else if(jsonedTheme.gamethem[5] == "Doughnuts"){
+                } else if (jsonedTheme.gamethem[5] == "Doughnuts") {
                     themdescripttext.push("<strong>Active Theme: </strong> Doughnuts");
                     themdescripttext.push("This is a custom theme based around various Doughnuts that was desgined by the developer of this website.");
-                }else if(jsonedTheme.gamethem[5] == "Sushi"){
+                } else if (jsonedTheme.gamethem[5] == "Sushi") {
                     themdescripttext.push("<strong>Active Theme: </strong> Sushi");
                     themdescripttext.push("This is a custom theme based around various Sushi pecies that was desgined by the developer of this website.");
-                }else{
+                } else {
                     themdescripttext.push("<strong>Active Theme: </strong> Custom");
                     themdescripttext.push("This is a custom theme that you or another user has designed using the Theme Maker on the right. ");
                 }
@@ -3152,7 +3671,7 @@ function loaded() {
             themdescripttext.push("")
             if (customThemeLoaded) {
                 themdescripttext.push("<strong>Tiles: </strong> Custom");
-            }else{
+            } else {
                 themdescripttext.push("<strong>Tiles: </strong> Default");
             }
             numBoard.themeBoard(def_theme);
@@ -3208,7 +3727,7 @@ function loaded() {
 
 }
 
-
+//S
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
