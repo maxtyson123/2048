@@ -226,7 +226,7 @@ h2 {
 .side-item {
     background-color: green;
     font-size: 20px;
-    padding: 5% !important;
+    padding: var(--border-zoom) !important;
     width: 100%;
     margin-top: 4px;
     color: white;

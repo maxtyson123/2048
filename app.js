@@ -8,13 +8,13 @@ closeNav = "";
 //make ai, ai give hint or image
 //NEXT:
 
-//Link theme  not auto  opening
-//Cookies into misc
 
-//Can combine thru walls
-//Co-Op Multiplayer / turnbased
-//Image past2048 auto theming
-//Replay, sharing
+//Replay
+//--Loading from file
+//--game ver data
+//--replay controls speed
+//--sharing
+//--Save history to localstorage, 5  replays?
 
 //Upsidedown
 //tertirs
@@ -23,6 +23,7 @@ closeNav = "";
 //Remake Tiles b4:
 //flappy
 //racing
+//Replay direction
 //Animate Back
 
 //Gamemode exporting
@@ -1240,7 +1241,11 @@ function loaded() {
                         }
                     }
                 } else {
-                    this.squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
+                    if (Theme.elementMore[1][y].imagemode) {
+                        this.squares[x].style.color = "black";
+                    }else{
+                        this.squares[x].style.color = Theme.options[Theme.options.length - 1].textcol;
+                    }
                     this.squares[x].style.background = Theme.options[Theme.options.length - 1].bg;
                     this.squares[x].style.boxShadow = Theme.options[Theme.options.length - 1].boxshadow;
                 }
@@ -1492,7 +1497,8 @@ function loaded() {
         goback: function() {
             if(this.backdata.length >= 2){
                 this.backdata.pop();
-                loadgame(this.backdata[this.backdata.length - 1], this);
+                this.keyPressed = "back";
+                loadgame(this.backdata[this.backdata.length - 1], this,true);
                 this.backdata.splice(this.backdata.length - 1)
             }
 
@@ -1511,6 +1517,7 @@ function loaded() {
         ctile: 0,
         hscore: 0,
         btile: 0,
+        keyPressed:"inital",
         time:{
             min:0,
             sec:0,
@@ -1674,7 +1681,9 @@ function loaded() {
     /////////////////////////COMBINE/////////////////
     combineRowFunct = function combineRow(mode) {
         for (let x = 0; x < (width * width) - 1; x++) {
+
             if (this.squares[x].innerHTML === this.squares[x + 1].innerHTML) {
+                dontdo = false
                 let combinedTotal = 0;
                 if (reverse)
                     combinedTotal = parseInt(this.squares[x].innerHTML) / 2;
@@ -1682,12 +1691,19 @@ function loaded() {
                     combinedTotal = parseInt(this.squares[x].innerHTML) + parseInt(this.squares[x + 1].innerHTML);
                 if (mode != "nocheck") {
                     if (combinedTotal != 0) {
-                        this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
-                        this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
-                        setTimeout(function() {
-                            this.scoreAddDisplay.className = "class_scoreadd";
-                            this.scoreAddDisplay.innerHTML = "";
-                        }.bind(this), 500);
+
+                        if((x+1) % width == 0){
+                            dontdo = true;
+                        }
+                        if(!dontdo){
+                            this.scoreAddDisplay.innerHTML = "+" + combinedTotal;
+                            this.scoreAddDisplay.className = "class_scoreadd scoreanimate";
+                            setTimeout(function() {
+                                this.scoreAddDisplay.className = "class_scoreadd";
+                                this.scoreAddDisplay.innerHTML = "";
+                            }.bind(this), 500);
+                        }
+
 
                     }
 
@@ -1696,26 +1712,28 @@ function loaded() {
 
                 this.scoreDisplay.innerHTML = this.score;
                 this.checkhigh();
-                this.squares[x].innerHTML = combinedTotal;
-                if (mode != "nocheck")
-                    this.checkbest();
-                this.squares[x + 1].innerHTML = 0;
-                if (mode == "left") {
+                if(!dontdo){
+                    this.squares[x].innerHTML = combinedTotal;
+                    if (mode != "nocheck")
+                        this.checkbest();
+                    this.squares[x + 1].innerHTML = 0;
+                    if (mode == "left") {
 
-                    if (parseInt(this.squares[x].innerHTML) != 0) {
-                        this.squares[x].parentNode.classList.add("animate-pop");
-                        this.squares[x].parentNode.addEventListener('animationend', function() {
-                            this.squares[x].parentNode.classList.remove('animate-pop');
-                        }.bind(this))
-                    }
-                } else {
+                        if (parseInt(this.squares[x].innerHTML) != 0) {
+                            this.squares[x].parentNode.classList.add("animate-pop");
+                            this.squares[x].parentNode.addEventListener('animationend', function() {
+                                this.squares[x].parentNode.classList.remove('animate-pop');
+                            }.bind(this))
+                        }
+                    } else {
 
-                    if (parseInt(this.squares[x].innerHTML) != 0) {
+                        if (parseInt(this.squares[x].innerHTML) != 0) {
 
-                        this.squares[x + 1].parentNode.classList.add("animate-pop");
-                        this.squares[x + 1].parentNode.addEventListener('animationend', function() {
-                            this.squares[x + 1].parentNode.classList.remove('animate-pop');
-                        }.bind(this))
+                            this.squares[x + 1].parentNode.classList.add("animate-pop");
+                            this.squares[x + 1].parentNode.addEventListener('animationend', function() {
+                                this.squares[x + 1].parentNode.classList.remove('animate-pop');
+                            }.bind(this))
+                        }
                     }
                 }
 
@@ -1807,11 +1825,16 @@ function loaded() {
                 this.scoreResult.style.width = (width * zoom)+8 + "px";
                 this.scoreResult.style.height = (width * zoom)+8 + "px";
                 this.scoreResult.classList.add("gameoverbg");
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Replay</button>";
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Restart</button><br<<button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>";
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
                     this.reset2();
                     this.scoreResult.style.display = "none";
-                    document.addEventListener('keyup', control);
+                }.bind(this), false); ///BINDING
+                document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function() {
+                    replay(this,genarateReplay(this,"json"))
+                }.bind(this), false); ///BINDING
+                document.getElementById('savereplay-' + this.gameId).addEventListener('click', function() {
+                    genarateReplay(this,"file")
                 }.bind(this), false); ///BINDING
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
@@ -1828,10 +1851,16 @@ function loaded() {
                 this.scoreResult.style.width = (width * zoom)+8 + "px";
                 this.scoreResult.style.height = (width * zoom)+8 + "px";
                 this.scoreResult.classList.add("gameoverbg");
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Replay</button>";
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Lose</h1><button id='replay-" + this.gameId + "'>Restart</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>";
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
                     this.reset2();
                     this.scoreResult.style.display = "none";
+                }.bind(this), false); ///BINDING
+                document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function() {
+                    replay(this,genarateReplay(this,"json"))
+                }.bind(this), false); ///BINDING
+                document.getElementById('savereplay-' + this.gameId).addEventListener('click', function() {
+                    genarateReplay(this,"file")
                 }.bind(this), false); ///BINDING
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
@@ -1860,14 +1889,19 @@ function loaded() {
                 this.scoreResult.style.width = (width * zoom)+8 + "px";
                 this.scoreResult.style.height = (width * zoom)+8 + "px";
                 this.scoreResult.classList.add("gamewinbg");
-                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Replay</button><button id='cont'>Continue</button>"
+                this.scoreResult.innerHTML = "<h1 style='font-size: " + width * 10 + "px;'>You Win!</h1>   <button id='replay-" + this.gameId + "'>Restart</button><button id='cont'>Continue</button><br><button id='watchreplay-" + this.gameId + "'>Watch Replay</button><button id='savereplay-" + this.gameId + "'>Save Replay</button>"
                 document.getElementById('replay-' + this.gameId).addEventListener('click', function() {
                     this.reset2();
                     this.scoreResult.style.display = "none";
                 }.bind(this), false);
                 document.getElementById("cont").addEventListener("click", function() {
                     this.continueGame(this);
-                }.bind(this));
+                }.bind(this));				document.getElementById('watchreplay-' + this.gameId).addEventListener('click', function() {
+                    replay(this,genarateReplay(this,"json"))
+                }.bind(this), false); ///BINDING
+                document.getElementById('savereplay-' + this.gameId).addEventListener('click', function() {
+                    genarateReplay(this,"file")
+                }.bind(this), false); ///BINDING
                 autoplayCheck.checked = false;
                 autoplayCheck.removeEventListener("change", autoplay);
                 this.allowInput = false;
@@ -1961,13 +1995,14 @@ function loaded() {
             loadedGame = JSON.parse(cookiedGame);
         }
 
-        function SaveData(gameId, saveData, hscore, besttile, movekeys,time) {
+        function SaveData(gameId, saveData, hscore, besttile, movekeys,time,keyPressed) {
             this.id = gameId;
             this.data = saveData;
             this.hscore = hscore;
             this.btile = besttile;
             this.movekeys = movekeys;
             this.time = time;
+            this.keyPressed = keyPressed;
         }
         exists = false;
         for (let x = 0; x < loadedGame.boards.length; x++) {
@@ -1984,6 +2019,7 @@ function loaded() {
                 loadedGame.boards[x].hscore = game.hscore;
                 loadedGame.boards[x].btile = game.btile;
                 loadedGame.boards[x].time = game.time;
+                loadedGame.boards[x].keyPressed = game.keyPressed;
                 if(!dontback)
                     game.backdata.push(loadedGame.boards[x]);
                 exists = true;
@@ -1998,11 +2034,12 @@ function loaded() {
             }
             scoredata.push(game.moves);
             scoredata.push(game.score);
-            savedData = new SaveData(game.gameId, scoredata, game.hscore, game.btile, game.keycodes,game.time);
+            savedData = new SaveData(game.gameId, scoredata, game.hscore, game.btile, game.keycodes,game.time,game.keyPressed);
             if(!dontback)
                 game.backdata.push(savedData);
             loadedGame.boards.push(savedData)
         }
+        localStorage.setItem(game.gameId+'_backdata', JSON.stringify(game.backdata));
         setCookie("savedgames", JSON.stringify(loadedGame), 31)
 
     }
@@ -2040,6 +2077,9 @@ function loaded() {
             game.hscoreDisplay.innerHTML = game.hscore;
             timedisplay = document.getElementById('time-' + game.gameId);
             timedisplay.innerHTML = game.time.min +":" + game.time.sec;
+            if(!isback){
+                game.backdata = JSON.parse(localStorage.getItem(game.gameId+'_backdata'));
+            }
             game.checkGameOver();
             game.checkWin();
 
@@ -2052,8 +2092,8 @@ function loaded() {
         } else {
             game.themeBoard(def_theme);
         }
-
-        savegame(game,isback);
+        if(!isback)
+            savegame(game,false);
 
 
     }
@@ -2090,10 +2130,13 @@ function loaded() {
         game.squares.length = 0;
         game.moves = 0;
         game.score = 0;
+        game.backdata = [];
         game.time = {
             min:0,
             sec:0,
         }
+        game.paused = false;
+        game.scoreResult.style.display = "none";
         game.bestDisplay.innerHTML = "2";
         game.movesdisplay.innerHTML = game.moves;
         game.scoreDisplay.innerHTML = game.score;
@@ -2102,6 +2145,7 @@ function loaded() {
             game.createBoard();
             game.generate();
             game.generate();
+            game.timing();
             if (customThemeActive) {
                 game.themeBoard(cus_theme);
             } else {
@@ -2122,19 +2166,22 @@ function loaded() {
         for (let g = 0; g < games.length; g++) {
             if (games[g].allowInput) {
                 if (e.keyCode === games[g].keycodes[1]) {
-
+                    games[g].keyPressed = "right";
                     games[g].keyRight();
                     games[g].moves += 1;
                     games[g].movesdisplay.innerHTML = games[g].moves;
                 } else if (e.keyCode === games[g].keycodes[0]) {
+                    games[g].keyPressed = "left";
                     games[g].keyLeft();
                     games[g].moves += 1;
                     games[g].movesdisplay.innerHTML = games[g].moves;
                 } else if (e.keyCode === games[g].keycodes[2]) {
+                    games[g].keyPressed = "up";
                     games[g].keyup();
                     games[g].moves += 1;
                     games[g].movesdisplay.innerHTML = games[g].moves;
                 } else if (e.keyCode === games[g].keycodes[3]) {
+                    games[g].keyPressed = "down";
                     games[g].keydown();
                     games[g].moves += 1;
                     games[g].movesdisplay.innerHTML = games[g].moves;
@@ -2160,14 +2207,23 @@ function loaded() {
                     let min = Math.ceil(1);
                     let max = Math.floor(5);
                     let rand = Math.floor(Math.random() * (max - min) + min); //The
-                    if (rand == 1)
+                    if (rand == 1){
+                        games[g].keyPressed = "left";
                         games[g].keyLeft();
-                    else if (rand == 2)
+                    }
+                    else if (rand == 2){
+                        games[g].keyPressed = "right";
                         games[g].keyRight();
-                    else if (rand == 3)
+                    }
+                    else if (rand == 3){
+                        games[g].keyPressed = "up";
                         games[g].keyup();
-                    else if (rand == 4)
+                    }
+                    else if (rand == 4){
+                        games[g].keyPressed = "down";
                         games[g].keydown();
+                    }
+
                     if (customThemeActive) {
                         games[g].themeBoard(cus_theme); //FIX LATER
                     } else {
@@ -2185,6 +2241,65 @@ function loaded() {
             document.addEventListener('keyup', control);
         }
 
+    }
+    function genarateReplay(game,type){
+        function ReplayData(initial,states,max){
+            this.id = game.gameId;
+            this.initial = initial;
+            this.state = states;
+            this.max = max;
+        }
+        repdata = new ReplayData(game.backdata[0],game.backdata,game.backdata.length);
+        replaydata = JSON.stringify(repdata);
+        if(type == "file"){
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:attachment/text,' + encodeURI(btoa(replaydata));
+            hiddenElement.target = '_blank';
+            var today = new Date().toLocaleDateString();
+            hiddenElement.download = "("+today+")_"+goal+'["+game.gameId+"]_.replay';
+            hiddenElement.click();
+        }
+        if(type == "json"){
+            return replaydata;
+        }
+    }
+
+    function replay(game,replaydata){
+        replaydata = JSON.parse(replaydata);
+        game.scoreResult.style.display = "none";
+        game.allowInput = false;
+        loadgame(replaydata.initial,game,true)
+        replayStep(1,game,replaydata)
+
+    }
+
+    function replayStep(x,game,replaydata){
+        setTimeout(function() {
+            loadgame(replaydata.state[x-1],game,true)
+            key = replaydata.state[x].keyPressed;
+            console.log(key+"_"+x)
+            if (key == "left"){
+                game.keyLeft();
+            }
+            else if (key == "right"){
+                game.keyRight();
+            }
+            else if (key == "up"){
+                game.keyup();
+            }
+            else if (key == "down"){
+                game.keydown();
+            }
+            if (customThemeActive) {
+                game.themeBoard(cus_theme); //FIX LATER
+            } else {
+                game.themeBoard(def_theme); //FIX LATER
+            }
+            game.movesdisplay.innerHTML = parseInt(game.movesdisplay.innerHTML)+1;
+
+            if(x != replaydata.max)
+                replayStep(x+1,game,replaydata)
+        }, 250);
     }
 
     keyUpfunct = function keyup() {
