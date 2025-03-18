@@ -15,11 +15,13 @@ closeNav = "";
 
 //_______________________NEXT__________________________________
 
+// Fix premature loose bug
+// Optimise replay: doesnt need to save so much, just need to save initial, seed and list of key presses per board & timestamp maybe?
 //Remake Tiles (save me)
 
 //__________________Remake Tiles b4___________________________
 //Remake: save b4 combine, move each tile incrementally using the new filter array methord
-
+// Hiscore in reverse mode cm on its easy
 //Replay direction backward/forward
 //Animate Back
 //Game modes
